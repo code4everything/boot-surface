@@ -13,12 +13,7 @@
     <groupId>org.code4everything</groupId>
     <artifactId>boot-surface</artifactId>
     <version>1.0.0</version>
-    <packaging>pom</packaging>
-
-    <modules>
-        <module>boot-xtool</module>
-        <module>boot-starter</module>
-    </modules>
+    <packaging>jar</packaging>
 
     <name>boot-surface</name>
     <url>https://github.com/code4everything/boot-surface</url>
@@ -32,7 +27,7 @@
         <fastjson.version>1.2.51</fastjson.version>
         <hutool.version>4.1.19</hutool.version>
         <guava.version>27.0-jre</guava.version>
-        <javax.servlet.verion>4.0.1</javax.servlet.verion>
+        <javax.servlet.version>4.0.1</javax.servlet.version>
     </properties>
 
     <dependencies>
@@ -41,6 +36,36 @@
             <artifactId>junit</artifactId>
             <version>${junit.version}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>${log4j.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>${fastjson.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>${javax.servlet.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>${hutool.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 
