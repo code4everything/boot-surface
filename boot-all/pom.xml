@@ -15,7 +15,7 @@
     <dependencies>
         <dependency>
             <groupId>org.code4everything</groupId>
-            <artifactId>boot-stater</artifactId>
+            <artifactId>boot-starter</artifactId>
             <version>${parent.version}</version>
         </dependency>
     </dependencies>
