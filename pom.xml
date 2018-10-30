@@ -13,7 +13,11 @@
     <groupId>org.code4everything</groupId>
     <artifactId>boot-surface</artifactId>
     <version>1.0.0</version>
-    <packaging>jar</packaging>
+    <modules>
+        <module>boot-starter</module>
+        <module>boot-all</module>
+    </modules>
+    <packaging>pom</packaging>
 
     <name>boot-surface</name>
     <url>https://github.com/code4everything/boot-surface</url>
@@ -28,6 +32,7 @@
         <hutool.version>4.1.19</hutool.version>
         <guava.version>27.0-jre</guava.version>
         <javax.servlet.version>4.0.1</javax.servlet.version>
+        <spring.version>5.0.8.RELEASE</spring.version>
     </properties>
 
     <dependencies>
