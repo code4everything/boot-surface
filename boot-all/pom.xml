@@ -18,5 +18,10 @@
             <artifactId>boot-starter</artifactId>
             <version>${parent.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.code4everything</groupId>
+            <artifactId>boot-xtool</artifactId>
+            <version>${parent.version}</version>
+        </dependency>
     </dependencies>
 </project>

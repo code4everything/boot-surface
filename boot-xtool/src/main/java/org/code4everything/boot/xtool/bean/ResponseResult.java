@@ -1,10 +1,13 @@
 package org.code4everything.boot.xtool.bean;
 
+import java.io.Serializable;
+import java.sql.Timestamp;
+
 /**
  * @author pantao
  * @since 2018/10/30
  */
-public class ResponseResult<T> {
+public class ResponseResult<T> implements Serializable {
 
     /**
      * 错误码
@@ -16,7 +19,15 @@ public class ResponseResult<T> {
      */
     private String msg = "请求成功";
 
+    /**
+     * 数据
+     */
     private T data;
+
+    /**
+     * 时间戳
+     */
+    private Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 
     /**
      * 获取错误码
@@ -79,5 +90,14 @@ public class ResponseResult<T> {
     public ResponseResult<T> setData(T data) {
         this.data = data;
         return this;
+    }
+
+    /**
+     * 获取当前时间戳
+     *
+     * @return 时间戳
+     */
+    public Timestamp getTimestamp() {
+        return timestamp;
     }
 }
