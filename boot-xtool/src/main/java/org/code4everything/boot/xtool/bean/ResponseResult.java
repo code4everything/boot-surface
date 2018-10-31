@@ -7,7 +7,7 @@ import java.sql.Timestamp;
  * @author pantao
  * @since 2018/10/30
  */
-public class ResponseResult<T> implements Serializable {
+public class ResponseResult<T extends Serializable> implements Serializable {
 
     /**
      * 错误码
@@ -28,6 +28,43 @@ public class ResponseResult<T> implements Serializable {
      * 时间戳
      */
     private Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+
+    /**
+     * 无参构造函数
+     */
+    public ResponseResult() {}
+
+    /**
+     * 设置数据
+     *
+     * @param data 数据
+     */
+    public ResponseResult(T data) {
+        this.data = data;
+    }
+
+    /**
+     * 设置消息和数据
+     *
+     * @param msg 消息
+     * @param data 数据
+     */
+    public ResponseResult(String msg, T data) {
+        this.msg = msg;
+        this.data = data;
+    }
+
+    /**
+     * 设置错误码和消息
+     *
+     * @param code 错误码
+     * @param msg 消息
+     */
+    public ResponseResult(int code, String msg) {
+        this.code = code;
+        this.msg = msg;
+    }
+
 
     /**
      * 获取错误码
