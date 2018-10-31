@@ -6,6 +6,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 /**
+ * 新建跨域过滤器
+ *
  * @author pantao
  * @since 2018/10/30
  **/
@@ -13,14 +15,33 @@ public class BootCorsUtils {
 
     private BootCorsUtils() {}
 
+    /**
+     * 新建过滤器，默认允许所有请求和路径
+     *
+     * @return {@link CorsFilter}
+     */
     public static CorsFilter newCorsFilter() {
         return newCorsFilter("/**");
     }
 
+    /**
+     * 新建过滤器，默认允许所有请求和路径
+     *
+     * @param path 路径模式
+     *
+     * @return {@link CorsFilter}
+     */
     public static CorsFilter newCorsFilter(String path) {
         return newCorsFilter(new CorsBean().setPath(path).setCredential(true).setHeaders("*").setMethods("*").setOrigins("*"));
     }
 
+    /**
+     * 新建过滤器，默认允许所有请求和路径
+     *
+     * @param corsBean 过滤器配置
+     *
+     * @return {@link CorsFilter}
+     */
     public static CorsFilter newCorsFilter(CorsBean corsBean) {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration corsConfiguration = new CorsConfiguration();
