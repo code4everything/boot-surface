@@ -5,32 +5,24 @@ import org.code4everything.boot.xtool.bean.ResponseResult;
 import org.code4everything.boot.xtool.constant.IntegerConsts;
 import org.code4everything.boot.xtool.constant.MessageConsts;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.Serializable;
 
 /**
  * @author pantao
  * @since 2018/11/2
  **/
-@Component
+@RestController
 public class BaseController {
 
     private static final int DEFAULT_ERROR_CODE = IntegerConsts.FOUR_HUNDRED;
 
     private static final String DEFAULT_OK_MSG = MessageConsts.REQUEST_OK_ZH;
 
-    protected final HttpServletRequest request;
-
-    protected final HttpServletResponse response;
-
     @Autowired
-    public BaseController(HttpServletRequest request, HttpServletResponse response) {
-        this.request = request;
-        this.response = response;
-    }
+    protected HttpServletRequest request;
 
     /**
      * 获取Token
@@ -50,10 +42,11 @@ public class BaseController {
      *
      * @param errMsg 请求失败消息
      * @param isOk 是否请求成功
+     * @param <T> 数据类型
      *
      * @return 结果
      */
-    protected ResponseResult parseBoolResult(String errMsg, boolean isOk) {
+    protected <T extends Serializable> ResponseResult<T> parseBoolResult(String errMsg, boolean isOk) {
         return parseBoolResult(DEFAULT_OK_MSG, errMsg, isOk);
     }
 
@@ -63,11 +56,12 @@ public class BaseController {
      * @param okMsg 请求成功消息
      * @param errMsg 请求失败消息
      * @param isOk 是否请求成功
+     * @param <T> 数据类型
      *
      * @return 结果
      */
-    protected ResponseResult parseBoolResult(String okMsg, String errMsg, boolean isOk) {
-        ResponseResult result = new ResponseResult().setMsg(isOk ? okMsg : errMsg);
+    protected <T extends Serializable> ResponseResult<T> parseBoolResult(String okMsg, String errMsg, boolean isOk) {
+        ResponseResult<T> result = new ResponseResult<T>().setMsg(isOk ? okMsg : errMsg);
         if (!isOk) {
             result.setCode(DEFAULT_ERROR_CODE);
         }
