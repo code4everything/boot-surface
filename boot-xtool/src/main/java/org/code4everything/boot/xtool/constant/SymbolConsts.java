@@ -10,5 +10,7 @@ public class SymbolConsts {
 
     public static final String QUESTION = "?";
 
+    public static final String DOT = ".";
+
     private SymbolConsts() {}
 }
