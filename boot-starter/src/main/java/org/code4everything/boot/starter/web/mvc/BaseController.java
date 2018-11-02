@@ -28,11 +28,13 @@ public class BaseController {
      * 获取Token
      *
      * @return Token
+     *
+     * @since 1.0.0
      */
     protected String getToken() {
-        String token = request.getHeader("token");
+        String token = request.getHeader(MessageConsts.TOKEN_EN);
         if (StrUtil.isEmpty(token)) {
-            token = request.getParameter("token");
+            token = request.getParameter(MessageConsts.TOKEN_EN);
         }
         return token;
     }
@@ -45,6 +47,8 @@ public class BaseController {
      * @param <T> 数据类型
      *
      * @return 结果
+     *
+     * @since 1.0.0
      */
     protected <T extends Serializable> ResponseResult<T> parseBoolResult(String errMsg, boolean isOk) {
         return parseBoolResult(DEFAULT_OK_MSG, errMsg, isOk);
@@ -59,6 +63,8 @@ public class BaseController {
      * @param <T> 数据类型
      *
      * @return 结果
+     *
+     * @since 1.0.0
      */
     protected <T extends Serializable> ResponseResult<T> parseBoolResult(String okMsg, String errMsg, boolean isOk) {
         ResponseResult<T> result = new ResponseResult<T>().setMsg(isOk ? okMsg : errMsg);
@@ -76,6 +82,8 @@ public class BaseController {
      * @param <T> 数据类型
      *
      * @return 结果
+     *
+     * @since 1.0.0
      */
     protected <T extends Serializable> ResponseResult<T> parseResult(String errMsg, T data) {
         return parseResult(DEFAULT_OK_MSG, errMsg, DEFAULT_ERROR_CODE, data);
@@ -90,6 +98,8 @@ public class BaseController {
      * @param <T> 数据类型
      *
      * @return 结果
+     *
+     * @since 1.0.0
      */
     protected <T extends Serializable> ResponseResult<T> parseResult(String errMsg, int errCode, T data) {
         return parseResult(DEFAULT_OK_MSG, errMsg, errCode, data);
@@ -104,6 +114,8 @@ public class BaseController {
      * @param <T> 数据类型
      *
      * @return 结果
+     *
+     * @since 1.0.0
      */
     protected <T extends Serializable> ResponseResult<T> parseResult(String okMsg, String errMsg, T data) {
         return parseResult(okMsg, errMsg, DEFAULT_ERROR_CODE, data);
@@ -119,6 +131,8 @@ public class BaseController {
      * @param <T> 数据类型
      *
      * @return 结果
+     *
+     * @since 1.0.0
      */
     protected <T extends Serializable> ResponseResult<T> parseResult(String okMsg, String errMsg, int errCode, T data) {
         ResponseResult<T> result = new ResponseResult<>();

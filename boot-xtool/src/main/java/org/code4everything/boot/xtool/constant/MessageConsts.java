@@ -10,5 +10,7 @@ public class MessageConsts {
 
     public static final String REQUEST_OK_ZH = "请求成功";
 
+    public static final String TOKEN_EN = "token";
+
     private MessageConsts() {}
 }

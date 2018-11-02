@@ -19,6 +19,8 @@ public class BootCorsUtils {
      * 新建过滤器，默认允许所有请求和路径
      *
      * @return {@link CorsFilter}
+     *
+     * @since 1.0.0
      */
     public static CorsFilter newCorsFilter() {
         return newCorsFilter("/**");
@@ -30,6 +32,8 @@ public class BootCorsUtils {
      * @param path 路径模式
      *
      * @return {@link CorsFilter}
+     *
+     * @since 1.0.0
      */
     public static CorsFilter newCorsFilter(String path) {
         return newCorsFilter(new CorsBean().setPath(path).setCredential(true).setHeaders("*").setMethods("*").setOrigins("*"));
@@ -41,6 +45,8 @@ public class BootCorsUtils {
      * @param corsBean 过滤器配置
      *
      * @return {@link CorsFilter}
+     *
+     * @since 1.0.0
      */
     public static CorsFilter newCorsFilter(CorsBean corsBean) {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
