@@ -6,7 +6,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 /**
- * 新建跨域过滤器
+ * 跨域过滤器工具类
  *
  * @author pantao
  * @since 2018/10/30

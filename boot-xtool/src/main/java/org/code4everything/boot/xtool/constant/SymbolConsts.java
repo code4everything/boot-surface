@@ -1,6 +1,8 @@
 package org.code4everything.boot.xtool.constant;
 
 /**
+ * 符号常量类
+ *
  * @author pantao
  * @since 2018/10/31
  **/

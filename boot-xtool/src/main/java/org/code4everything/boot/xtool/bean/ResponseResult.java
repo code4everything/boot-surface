@@ -6,6 +6,8 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 
 /**
+ * HTTP响应实体
+ *
  * @author pantao
  * @since 2018/10/30
  */
@@ -33,6 +35,8 @@ public class ResponseResult<T extends Serializable> implements Serializable {
 
     /**
      * 无参构造函数
+     *
+     * @since 1.0.0
      */
     public ResponseResult() {}
 
@@ -40,6 +44,8 @@ public class ResponseResult<T extends Serializable> implements Serializable {
      * 设置数据
      *
      * @param data 数据
+     *
+     * @since 1.0.0
      */
     public ResponseResult(T data) {
         this.data = data;
@@ -50,6 +56,8 @@ public class ResponseResult<T extends Serializable> implements Serializable {
      *
      * @param msg 消息
      * @param data 数据
+     *
+     * @since 1.0.0
      */
     public ResponseResult(String msg, T data) {
         this.msg = msg;
@@ -61,6 +69,8 @@ public class ResponseResult<T extends Serializable> implements Serializable {
      *
      * @param code 错误码
      * @param msg 消息
+     *
+     * @since 1.0.0
      */
     public ResponseResult(int code, String msg) {
         this.code = code;
@@ -72,6 +82,8 @@ public class ResponseResult<T extends Serializable> implements Serializable {
      * 获取错误码
      *
      * @return 错误码
+     *
+     * @since 1.0.0
      */
     public int getCode() {
         return code;
@@ -83,6 +95,8 @@ public class ResponseResult<T extends Serializable> implements Serializable {
      * @param code 错误码
      *
      * @return 当前对象
+     *
+     * @since 1.0.0
      */
     public ResponseResult<T> setCode(int code) {
         this.code = code;
@@ -93,6 +107,8 @@ public class ResponseResult<T extends Serializable> implements Serializable {
      * 获取消息
      *
      * @return 消息
+     *
+     * @since 1.0.0
      */
     public String getMsg() {
         return msg;
@@ -104,6 +120,8 @@ public class ResponseResult<T extends Serializable> implements Serializable {
      * @param msg 消息
      *
      * @return 当前对象
+     *
+     * @since 1.0.0
      */
     public ResponseResult<T> setMsg(String msg) {
         this.msg = msg;
@@ -114,6 +132,8 @@ public class ResponseResult<T extends Serializable> implements Serializable {
      * 获取数据
      *
      * @return 数据
+     *
+     * @since 1.0.0
      */
     public T getData() {
         return data;
@@ -125,6 +145,8 @@ public class ResponseResult<T extends Serializable> implements Serializable {
      * @param data 数据
      *
      * @return 当前对象
+     *
+     * @since 1.0.0
      */
     public ResponseResult<T> setData(T data) {
         this.data = data;
@@ -135,6 +157,8 @@ public class ResponseResult<T extends Serializable> implements Serializable {
      * 获取当前时间戳
      *
      * @return 时间戳
+     *
+     * @since 1.0.0
      */
     public Timestamp getTimestamp() {
         return timestamp;

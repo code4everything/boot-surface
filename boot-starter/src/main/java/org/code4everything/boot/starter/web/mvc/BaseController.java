@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 
 /**
+ * 控制器基类
+ *
  * @author pantao
  * @since 2018/11/2
  **/
