@@ -1,5 +1,6 @@
 package org.code4everything.boot.starter.web.mvc;
 
+import cn.hutool.core.lang.Validator;
 import cn.hutool.core.util.StrUtil;
 import org.code4everything.boot.xtool.bean.ResponseResult;
 import org.code4everything.boot.xtool.constant.IntegerConsts;
@@ -138,7 +139,7 @@ public class BaseController {
      */
     protected <T extends Serializable> ResponseResult<T> parseResult(String okMsg, String errMsg, int errCode, T data) {
         ResponseResult<T> result = new ResponseResult<>();
-        if (null == data) {
+        if (Validator.isNull(data)) {
             result.setCode(errCode);
             result.setMsg(errMsg);
         } else {
