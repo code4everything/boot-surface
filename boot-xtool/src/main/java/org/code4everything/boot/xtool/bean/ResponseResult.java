@@ -1,5 +1,7 @@
 package org.code4everything.boot.xtool.bean;
 
+import org.code4everything.boot.xtool.constant.IntegerConsts;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
 
@@ -12,7 +14,7 @@ public class ResponseResult<T extends Serializable> implements Serializable {
     /**
      * 错误码
      */
-    private int code = 200;
+    private int code = IntegerConsts.TWO_HUNDRED;
 
     /**
      * 消息

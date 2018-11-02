@@ -8,5 +8,7 @@ public class MessageConsts {
 
     public static final String ERROR_EN = "error";
 
+    public static final String REQUEST_OK_ZH = "请求成功";
+
     private MessageConsts() {}
 }
