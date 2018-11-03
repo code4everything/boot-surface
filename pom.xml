@@ -34,6 +34,7 @@
         <guava.version>27.0-jre</guava.version>
         <javax.servlet.version>4.0.1</javax.servlet.version>
         <spring.version>5.0.8.RELEASE</spring.version>
+        <aspectj.version>1.9.2</aspectj.version>
     </properties>
 
     <dependencies>
