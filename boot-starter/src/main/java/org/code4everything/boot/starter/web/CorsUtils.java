@@ -11,9 +11,9 @@ import org.springframework.web.filter.CorsFilter;
  * @author pantao
  * @since 2018/10/30
  **/
-public class BootCorsUtils {
+public class CorsUtils {
 
-    private BootCorsUtils() {}
+    private CorsUtils() {}
 
     /**
      * 新建过滤器，默认允许所有请求和路径
