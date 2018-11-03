@@ -1,5 +1,6 @@
 package org.code4everything.boot.starter.web;
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.digest.DigestUtil;
@@ -10,9 +11,11 @@ import org.code4everything.boot.xtool.bean.ResponseResult;
 import org.code4everything.boot.xtool.constant.IntegerConsts;
 import org.code4everything.boot.xtool.util.FileUtils;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Map;
 
 /**
@@ -25,7 +28,67 @@ public class HttpUtils {
 
     private static final Logger LOGGER = Logger.getLogger(HttpUtils.class);
 
+    private static final String NO_FILES_HERE = "没有可上传的文件";
+
     private HttpUtils() {}
+
+    /**
+     * 批量上传文件
+     *
+     * @param request 文件请求 {@link MultipartHttpServletRequest}
+     * @param storagePath 文件存储路径，如：/root/boot/
+     * @param digestBytes 是否计算文件的MD5码（大文件不建议计算，防止堆内存泄漏）
+     * @param <T> 数据表类型
+     *
+     * @return 响应结果
+     *
+     * @since 1.0.0
+     */
+    public static <T extends Serializable> ResponseResult<ArrayList<ResponseResult<T>>> multiUpload(MultipartHttpServletRequest request, String storagePath, boolean digestBytes) {
+        return multiUpload(new FileService<T>() {}, request, storagePath, digestBytes, null);
+    }
+
+    /**
+     * 批量上传文件
+     *
+     * @param fileService 文件服务 {@link FileService}
+     * @param request 文件请求 {@link MultipartHttpServletRequest}
+     * @param storagePath 文件存储路径，如：/root/boot/
+     * @param digestBytes 是否计算文件的MD5码（大文件不建议计算，防止堆内存泄漏）
+     * @param <T> 数据表类型
+     *
+     * @return 响应结果
+     *
+     * @since 1.0.0
+     */
+    public static <T extends Serializable> ResponseResult<ArrayList<ResponseResult<T>>> multiUpload(FileService<T> fileService, MultipartHttpServletRequest request, String storagePath, boolean digestBytes) {
+        return multiUpload(fileService, request, storagePath, digestBytes, null);
+    }
+
+    /**
+     * 批量上传文件
+     *
+     * @param fileService 文件服务 {@link FileService}
+     * @param request 文件请求 {@link MultipartHttpServletRequest}
+     * @param storagePath 文件存储路径，如：/root/boot/
+     * @param digestBytes 是否计算文件的MD5码（大文件不建议计算，防止堆内存泄漏）
+     * @param params 自定义参数，在自己实现的 {@link FileService}方法中使用
+     * @param <T> 数据表类型
+     *
+     * @return 响应结果
+     *
+     * @since 1.0.0
+     */
+    public static <T extends Serializable> ResponseResult<ArrayList<ResponseResult<T>>> multiUpload(FileService<T> fileService, MultipartHttpServletRequest request, String storagePath, boolean digestBytes, Map<String, Serializable> params) {
+        Map<String, MultipartFile> fileMap = request.getFileMap();
+        if (CollectionUtil.isEmpty(fileMap)) {
+            return new ResponseResult<>(IntegerConsts.FOUR_HUNDRED, NO_FILES_HERE);
+        } else {
+            ArrayList<ResponseResult<T>> fileList = new ArrayList<>();
+            fileMap.values().forEach(file -> fileList.add(upload(fileService, file, storagePath, digestBytes, params)));
+            return new ResponseResult<>(fileList);
+        }
+    }
 
     /**
      * 文件上传（无数据表）
@@ -70,7 +133,7 @@ public class HttpUtils {
      * @param file 文件 {@link MultipartFile}
      * @param storagePath 文件存储路径，如：/root/boot/
      * @param digestBytes 是否计算文件的MD5码（大文件不建议计算，防止堆内存泄漏）
-     * @param otherParam 附加参数，在自己实现的 {@link FileService}接口中使用
+     * @param params 自定义参数，在自己实现的 {@link FileService}方法中使用
      * @param <T> 数据表类型
      *
      * @return 响应结果 {@link ResponseResult}。如果文件上传成功且最后得到的 {@link ResponseResult#getData()}为NULL，则{@link
@@ -80,7 +143,7 @@ public class HttpUtils {
      */
     public static <T extends Serializable> ResponseResult<T> upload(FileService<T> fileService, MultipartFile file,
                                                                     String storagePath, boolean digestBytes,
-                                                                    Map<String, Serializable> otherParam) {
+                                                                    Map<String, Serializable> params) {
         ResponseResult<T> result = new ResponseResult<>();
         MultipartFileBean fileBean = new MultipartFileBean();
         // 设置文件信息
@@ -97,7 +160,7 @@ public class HttpUtils {
         } else {
             fileBean.setFilename(file.getOriginalFilename());
         }
-        fileBean.setOriginalFilename(ofn).setSize(file.getSize()).setOtherParams(otherParam);
+        fileBean.setOriginalFilename(ofn).setSize(file.getSize()).setParams(params);
         // 检测文件是否存在
         Boolean exists = fileService.exists(fileBean);
         boolean shouldWrite = false;

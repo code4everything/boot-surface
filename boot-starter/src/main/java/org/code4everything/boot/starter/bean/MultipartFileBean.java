@@ -44,7 +44,7 @@ public class MultipartFileBean implements Serializable {
      *
      * @since 1.0.0
      */
-    private Map<String, Serializable> otherParams;
+    private Map<String, Serializable> params;
 
     /**
      * 获取自定义参数
@@ -53,21 +53,21 @@ public class MultipartFileBean implements Serializable {
      *
      * @since 1.0.0
      */
-    public Map<String, Serializable> getOtherParams() {
-        return otherParams;
+    public Map<String, Serializable> getParams() {
+        return params;
     }
 
     /**
      * 设置自定义参数
      *
-     * @param otherParams 自定义参数
+     * @param params 自定义参数
      *
      * @return {@link MultipartFileBean}
      *
      * @since 1.0.0
      */
-    public MultipartFileBean setOtherParams(Map<String, Serializable> otherParams) {
-        this.otherParams = otherParams;
+    public MultipartFileBean setParams(Map<String, Serializable> params) {
+        this.params = params;
         return this;
     }
 
