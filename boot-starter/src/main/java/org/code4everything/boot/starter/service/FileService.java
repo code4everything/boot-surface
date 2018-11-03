@@ -13,9 +13,8 @@ import java.io.Serializable;
 public interface FileService<T extends Serializable> {
 
     /**
-     * 检测当前 {@link MultipartFileBean}是否存在，如果文件不存在则写入磁盘，否则不写入。返回 NULL 时会尝试调用
-     * {@link #getByMultipartFile(MultipartFileBean)}。<br/>如果文件存在时也需要返回文件信息，请实现
-     * {@link #getByMultipartFile(MultipartFileBean)}方法，不要实现本方法
+     * 检测当前 {@link MultipartFileBean}是否存在，如果文件不存在则写入磁盘，否则不写入，返回NULL时会尝试调用 {@link #getBy(MultipartFileBean)}。
+     * <br/>如果文件存在时也需要返回文件信息，请实现 {@link #getBy(MultipartFileBean)}方法，不要实现本方法
      *
      * @param fileBean {@link MultipartFileBean}
      *
@@ -34,7 +33,7 @@ public interface FileService<T extends Serializable> {
      *
      * @since 1.0.0
      */
-    default T getByMultipartFile(MultipartFileBean fileBean) {return null;}
+    default T getBy(MultipartFileBean fileBean) {return null;}
 
     /**
      * 定义将数据写入数据库中的方法

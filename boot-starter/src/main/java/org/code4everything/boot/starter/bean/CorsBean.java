@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * 跨域配置，流式编程
+ * 跨域配置
  *
  * @author pantao
  * @since 2018/10/30

@@ -35,7 +35,7 @@ public class HttpUtils {
      * @param storagePath 文件存储路径，如：/root/boot/
      * @param <T> 数据表类型
      *
-     * @return 响应结果 {@link ResponseResult}，{@link ResponseResult#getMsg()}返回文件的MD5文件名
+     * @return 响应结果 {@link ResponseResult}。如果上传成功，{@link ResponseResult#getMsg()}返回文件的MD5文件名
      *
      * @since 1.0.0
      */
@@ -51,7 +51,7 @@ public class HttpUtils {
      * @param storagePath 文件存储路径，如：/root/boot/
      * @param <T> 数据表类型
      *
-     * @return 响应结果 {@link ResponseResult}，如果最后得到的 {@link ResponseResult#getData()}为NULL，则{@link
+     * @return 响应结果 {@link ResponseResult}。如果文件上传成功且最后得到的 {@link ResponseResult#getData()}为NULL，则{@link
      *         ResponseResult#getMsg()}将返回文件的MD5文件名
      *
      * @since 1.0.0
@@ -70,7 +70,7 @@ public class HttpUtils {
      * @param otherParam 附加参数，在自己实现的 {@link FileService}接口中使用
      * @param <T> 数据表类型
      *
-     * @return 响应结果 {@link ResponseResult}，如果最后得到的 {@link ResponseResult#getData()}为NULL，则{@link
+     * @return 响应结果 {@link ResponseResult}。如果文件上传成功且最后得到的 {@link ResponseResult#getData()}为NULL，则{@link
      *         ResponseResult#getMsg()}将返回文件的MD5文件名
      *
      * @since 1.0.0
@@ -83,6 +83,7 @@ public class HttpUtils {
         // 设置文件信息
         String ofn = file.getOriginalFilename();
         try {
+            // 设置MD5
             fileBean.setMd5(new Digester(DigestAlgorithm.MD5).digestHex(file.getBytes()));
         } catch (Exception e) {
             LOGGER.error(StrUtil.format("get md5 of file[{}] failed, message -> {}", ofn, e.getMessage()));
@@ -95,7 +96,7 @@ public class HttpUtils {
         boolean shouldWrite = false;
         T t = null;
         if (Validator.isNull(exists)) {
-            t = fileService.getByMultipartFile(fileBean);
+            t = fileService.getBy(fileBean);
             if (Validator.isNull(t)) {
                 // 不存在时则可以写入磁盘
                 shouldWrite = true;
@@ -115,11 +116,6 @@ public class HttpUtils {
             // 将数据写入数据库
             t = fileService.save(fileBean);
         }
-        if (Validator.isNull(t)) {
-            result.setMsg(fileBean.getFilename());
-        } else {
-            result.setData(t);
-        }
-        return result;
+        return Validator.isNull(t) ? result.setMsg(fileBean.getFilename()) : result.setData(t);
     }
 }

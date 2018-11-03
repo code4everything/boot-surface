@@ -15,21 +15,29 @@ public class ResponseResult<T extends Serializable> implements Serializable {
 
     /**
      * 错误码
+     *
+     * @since 1.0.0
      */
     private int code = IntegerConsts.TWO_HUNDRED;
 
     /**
      * 消息
+     *
+     * @since 1.0.0
      */
     private String msg = "请求成功";
 
     /**
      * 数据
+     *
+     * @since 1.0.0
      */
     private T data;
 
     /**
      * 时间戳
+     *
+     * @since 1.0.0
      */
     private Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 
@@ -162,5 +170,19 @@ public class ResponseResult<T extends Serializable> implements Serializable {
      */
     public Timestamp getTimestamp() {
         return timestamp;
+    }
+
+    /**
+     * 设置时间戳
+     *
+     * @param timestamp 时间戳
+     *
+     * @return {@link ResponseResult}
+     *
+     * @since 1.0.0
+     */
+    public ResponseResult<T> setTimestamp(Timestamp timestamp) {
+        this.timestamp = timestamp;
+        return this;
     }
 }
