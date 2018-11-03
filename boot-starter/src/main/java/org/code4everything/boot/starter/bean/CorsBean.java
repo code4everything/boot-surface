@@ -1,5 +1,6 @@
 package org.code4everything.boot.starter.bean;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 
@@ -9,7 +10,7 @@ import java.util.List;
  * @author pantao
  * @since 2018/10/30
  **/
-public class CorsBean {
+public class CorsBean implements Serializable {
 
     private String path;
 
