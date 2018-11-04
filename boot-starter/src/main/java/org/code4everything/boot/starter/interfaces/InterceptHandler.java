@@ -51,10 +51,10 @@ public interface InterceptHandler {
      * @param response {@link HttpServletResponse}
      * @param handler {@link Object}
      *
+     * @return {@link Boolean}
+     *
      * @throws Exception 异常
      * @since 1.0.0
      */
-    default boolean handleInterceptList(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        return true;
-    }
+    default boolean handleInterceptList(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {return true;}
 }

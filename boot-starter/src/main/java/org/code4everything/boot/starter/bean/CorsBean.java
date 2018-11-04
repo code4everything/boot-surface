@@ -12,14 +12,39 @@ import java.util.List;
  **/
 public class CorsBean implements Serializable {
 
+    /**
+     * 路径模式
+     *
+     * @since 1.0.0
+     */
     private String path;
 
+    /**
+     * 请求源
+     *
+     * @since 1.0.0
+     */
     private List<String> origins;
 
+    /**
+     * 请求头
+     *
+     * @since 1.0.0
+     */
     private List<String> headers;
 
+    /**
+     * 请求方法
+     *
+     * @since 1.0.0
+     */
     private List<String> methods;
 
+    /**
+     * 证书
+     *
+     * @since 1.0.0
+     */
     private Boolean credential;
 
     /**
@@ -28,6 +53,8 @@ public class CorsBean implements Serializable {
      * @param origins 请求源
      *
      * @return {@link CorsBean}
+     *
+     * @since 1.0.0
      */
     public CorsBean setOrigins(List<String> origins) {
         this.origins = origins;
@@ -40,6 +67,8 @@ public class CorsBean implements Serializable {
      * @param headers 请求头
      *
      * @return {@link CorsBean}
+     *
+     * @since 1.0.0
      */
     public CorsBean setHeaders(List<String> headers) {
         this.headers = headers;
@@ -52,6 +81,8 @@ public class CorsBean implements Serializable {
      * @param methods 方法
      *
      * @return {@link CorsBean}
+     *
+     * @since 1.0.0
      */
     public CorsBean setMethods(List<String> methods) {
         this.methods = methods;
@@ -62,6 +93,8 @@ public class CorsBean implements Serializable {
      * 获取路径模式
      *
      * @return 路径模式
+     *
+     * @since 1.0.0
      */
     public String getPath() {
         return path;
@@ -73,6 +106,8 @@ public class CorsBean implements Serializable {
      * @param path 路径模式
      *
      * @return {@link CorsBean}
+     *
+     * @since 1.0.0
      */
     public CorsBean setPath(String path) {
         this.path = path;
@@ -83,6 +118,8 @@ public class CorsBean implements Serializable {
      * 获取请求源
      *
      * @return 请求源
+     *
+     * @since 1.0.0
      */
     public List<String> getOrigins() {
         return origins;
@@ -94,6 +131,8 @@ public class CorsBean implements Serializable {
      * @param origins 请求源
      *
      * @return {@link CorsBean}
+     *
+     * @since 1.0.0
      */
     public CorsBean setOrigins(String... origins) {
         this.origins = Arrays.asList(origins);
@@ -104,6 +143,8 @@ public class CorsBean implements Serializable {
      * 获取请求头
      *
      * @return 请求头
+     *
+     * @since 1.0.0
      */
     public List<String> getHeaders() {
         return headers;
@@ -115,6 +156,8 @@ public class CorsBean implements Serializable {
      * @param headers 请求头
      *
      * @return {@link CorsBean}
+     *
+     * @since 1.0.0
      */
     public CorsBean setHeaders(String... headers) {
         this.headers = Arrays.asList(headers);
@@ -125,6 +168,8 @@ public class CorsBean implements Serializable {
      * 获取请求方法
      *
      * @return 请求方法
+     *
+     * @since 1.0.0
      */
     public List<String> getMethods() {
         return methods;
@@ -136,6 +181,8 @@ public class CorsBean implements Serializable {
      * @param methods 请求方法
      *
      * @return {@link CorsBean}
+     *
+     * @since 1.0.0
      */
     public CorsBean setMethods(String... methods) {
         this.methods = Arrays.asList(methods);
@@ -146,6 +193,8 @@ public class CorsBean implements Serializable {
      * 获取证书
      *
      * @return 证书
+     *
+     * @since 1.0.0
      */
     public Boolean getCredential() {
         return credential;
@@ -157,6 +206,8 @@ public class CorsBean implements Serializable {
      * @param credential 证书
      *
      * @return {@link CorsBean}
+     *
+     * @since 1.0.0
      */
     public CorsBean setCredential(Boolean credential) {
         this.credential = credential;
