@@ -1,6 +1,6 @@
 package org.code4everything.boot.xtool.bean;
 
-import org.code4everything.boot.xtool.constant.IntegerConsts;
+import cn.hutool.http.HttpStatus;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -18,7 +18,7 @@ public class ResponseResult<T extends Serializable> implements Serializable {
      *
      * @since 1.0.0
      */
-    private int code = IntegerConsts.TWO_HUNDRED;
+    private int code = HttpStatus.HTTP_OK;
 
     /**
      * 消息

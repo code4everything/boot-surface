@@ -2,8 +2,8 @@ package org.code4everything.boot.starter.web.mvc;
 
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.http.HttpStatus;
 import org.code4everything.boot.xtool.bean.ResponseResult;
-import org.code4everything.boot.xtool.constant.IntegerConsts;
 import org.code4everything.boot.xtool.constant.MessageConsts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,7 +20,7 @@ import java.io.Serializable;
 @RestController
 public class BaseController {
 
-    private static final int DEFAULT_ERROR_CODE = IntegerConsts.FOUR_HUNDRED;
+    private static final int DEFAULT_ERROR_CODE = HttpStatus.HTTP_BAD_REQUEST;
 
     private static final String DEFAULT_OK_MSG = MessageConsts.REQUEST_OK_ZH;
 

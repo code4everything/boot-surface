@@ -4,11 +4,11 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.digest.DigestUtil;
+import cn.hutool.http.HttpStatus;
 import org.apache.log4j.Logger;
 import org.code4everything.boot.starter.bean.MultipartFileBean;
 import org.code4everything.boot.starter.service.FileService;
 import org.code4everything.boot.xtool.bean.ResponseResult;
-import org.code4everything.boot.xtool.constant.IntegerConsts;
 import org.code4everything.boot.xtool.util.FileUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -82,7 +82,7 @@ public class HttpUtils {
     public static <T extends Serializable> ResponseResult<ArrayList<ResponseResult<T>>> multiUpload(FileService<T> fileService, MultipartHttpServletRequest request, String storagePath, boolean digestBytes, Map<String, Serializable> params) {
         Map<String, MultipartFile> fileMap = request.getFileMap();
         if (CollectionUtil.isEmpty(fileMap)) {
-            return new ResponseResult<>(IntegerConsts.FOUR_HUNDRED, NO_FILES_HERE);
+            return new ResponseResult<>(HttpStatus.HTTP_BAD_REQUEST, NO_FILES_HERE);
         } else {
             ArrayList<ResponseResult<T>> fileList = new ArrayList<>();
             fileMap.values().forEach(file -> fileList.add(upload(fileService, file, storagePath, digestBytes, params)));
@@ -154,7 +154,7 @@ public class HttpUtils {
                 fileBean.setMd5(DigestUtil.md5Hex(file.getBytes()));
             } catch (Exception e) {
                 LOGGER.error(StrUtil.format("get md5 of file[{}] failed, message -> {}", ofn, e.getMessage()));
-                return result.setCode(IntegerConsts.FOUR_HUNDRED).setMsg(ofn + " upload failed");
+                return result.setCode(HttpStatus.HTTP_UNAVAILABLE).setMsg(ofn + " upload failed");
             }
             fileBean.setFilename(fileBean.getMd5() + FileUtils.getSuffix(file.getOriginalFilename()));
         } else {
@@ -181,7 +181,7 @@ public class HttpUtils {
                 file.transferTo(new File(storagePath + fileBean.getFilename()));
             } catch (Exception e) {
                 LOGGER.error("upload file failed, message -> " + e.getMessage());
-                return result.setCode(IntegerConsts.FOUR_HUNDRED).setMsg(ofn + " upload failed");
+                return result.setCode(HttpStatus.HTTP_UNAVAILABLE).setMsg(ofn + " upload failed");
             }
             // 将数据写入数据库
             t = fileService.save(fileBean);

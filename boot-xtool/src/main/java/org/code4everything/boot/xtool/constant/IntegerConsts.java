@@ -8,9 +8,5 @@ package org.code4everything.boot.xtool.constant;
  **/
 public class IntegerConsts {
 
-    public static final int FOUR_HUNDRED = 400;
-
-    public static final int TWO_HUNDRED = 200;
-
     private IntegerConsts() {}
 }
