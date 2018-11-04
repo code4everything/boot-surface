@@ -1,6 +1,8 @@
 package org.code4everything.boot.xtool.bean;
 
 import cn.hutool.http.HttpStatus;
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.annotation.JSONField;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -39,6 +41,7 @@ public class ResponseResult<T extends Serializable> implements Serializable {
      *
      * @since 1.0.0
      */
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss.SSS")
     private Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 
     /**
@@ -184,5 +187,10 @@ public class ResponseResult<T extends Serializable> implements Serializable {
     public ResponseResult<T> setTimestamp(Timestamp timestamp) {
         this.timestamp = timestamp;
         return this;
+    }
+
+    @Override
+    public String toString() {
+        return JSONObject.toJSONString(this);
     }
 }
