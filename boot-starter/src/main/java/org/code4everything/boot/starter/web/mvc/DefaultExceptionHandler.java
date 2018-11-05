@@ -2,6 +2,7 @@ package org.code4everything.boot.starter.web.mvc;
 
 import cn.hutool.core.lang.Validator;
 import com.alibaba.fastjson.support.spring.FastJsonJsonView;
+import org.apache.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
@@ -19,6 +20,8 @@ import java.util.Map;
  * @since 2018/11/4
  */
 public class DefaultExceptionHandler implements HandlerExceptionResolver {
+
+    private final Logger logger = Logger.getLogger(DefaultExceptionHandler.class);
 
     /**
      * 获取默认的异常信息
@@ -60,6 +63,7 @@ public class DefaultExceptionHandler implements HandlerExceptionResolver {
     @Override
     public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object object,
                                          Exception exception) {
+        logger.error("url -> " + request.getServletPath() + ", message -> " + exception.getMessage());
         return parseModelAndView(request, exception);
     }
 }
