@@ -8,5 +8,7 @@ package org.code4everything.boot.constant;
  **/
 public class SymbolConsts {
 
+    public static final String QUESTION = "?";
+
     private SymbolConsts() {}
 }
