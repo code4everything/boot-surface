@@ -25,11 +25,11 @@ public class LogBean implements Serializable {
     private String methodName;
 
     /**
-     * 参数
+     * 参数集合
      *
      * @since 1.0.0
      */
-    private Object[] args;
+    private String args;
 
     /**
      * 方法描述
@@ -95,7 +95,7 @@ public class LogBean implements Serializable {
      *
      * @since 1.0.0
      */
-    public Object[] getArgs() {
+    public String getArgs() {
         return args;
     }
 
@@ -108,7 +108,7 @@ public class LogBean implements Serializable {
      *
      * @since 1.0.0
      */
-    public LogBean setArgs(Object[] args) {
+    public LogBean setArgs(String args) {
         this.args = args;
         return this;
     }
