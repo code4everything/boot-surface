@@ -2,6 +2,8 @@ package org.code4everything.boot.base;
 
 import cn.hutool.core.util.StrUtil;
 
+import java.nio.file.Paths;
+
 /**
  * 文件工具类
  *
@@ -10,30 +12,16 @@ import cn.hutool.core.util.StrUtil;
  **/
 public class FileUtils {
 
-    /**
-     * 获取文件后缀（包括点号）
-     *
-     * @param filename 文件名
-     *
-     * @return 文件后缀
-     *
-     * @since 1.0.0
-     */
-    public static String getSuffix(String filename) {
-        return getSuffix(filename, true);
-    }
+    private FileUtils() {}
 
     /**
-     * 获取文件后缀
+     * 获取当前工作路径
      *
-     * @param filename 文件名
-     * @param withDot 是否包括点号
-     *
-     * @return 文件后缀
+     * @return 当前工作路径
      *
      * @since 1.0.0
      */
-    public static String getSuffix(String filename, boolean withDot) {
-        return filename.substring(filename.lastIndexOf(StrUtil.DOT) + (withDot ? 0 : 1));
+    public static String currentWorkDir() {
+        return Paths.get(StrUtil.DOT).toAbsolutePath().normalize().toString();
     }
 }

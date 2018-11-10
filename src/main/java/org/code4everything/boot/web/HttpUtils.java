@@ -1,13 +1,13 @@
 package org.code4everything.boot.web;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.digest.DigestUtil;
 import cn.hutool.http.HttpStatus;
 import org.apache.log4j.Logger;
 import org.code4everything.boot.bean.MultipartFileBean;
-import org.code4everything.boot.base.FileUtils;
 import org.code4everything.boot.bean.ResponseResult;
 import org.code4everything.boot.service.FileService;
 import org.springframework.web.multipart.MultipartFile;
@@ -156,9 +156,9 @@ public class HttpUtils {
                 LOGGER.error(StrUtil.format("get md5 of file[{}] failed, message -> {}", ofn, e.getMessage()));
                 return result.setCode(HttpStatus.HTTP_UNAVAILABLE).setMsg(ofn + " upload failed");
             }
-            fileBean.setFilename(fileBean.getMd5() + FileUtils.getSuffix(file.getOriginalFilename()));
+            fileBean.setFilename(fileBean.getMd5() + StrUtil.DOT + FileUtil.extName(ofn));
         } else {
-            fileBean.setFilename(file.getOriginalFilename());
+            fileBean.setFilename(ofn);
         }
         fileBean.setOriginalFilename(ofn).setSize(file.getSize()).setParams(params);
         // 检测文件是否存在
