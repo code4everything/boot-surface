@@ -88,7 +88,6 @@ public class ResponseResult<T extends Serializable> implements Serializable {
         this.msg = msg;
     }
 
-
     /**
      * 获取错误码
      *
@@ -187,6 +186,33 @@ public class ResponseResult<T extends Serializable> implements Serializable {
     public ResponseResult<T> setTimestamp(Timestamp timestamp) {
         this.timestamp = timestamp;
         return this;
+    }
+
+    /**
+     * 请求错误
+     *
+     * @param errMsg 错误消息
+     *
+     * @return {@link ResponseResult}
+     *
+     * @since 1.0.0
+     */
+    public ResponseResult<T> error(String errMsg) {
+        return this.error(HttpStatus.HTTP_BAD_REQUEST, errMsg);
+    }
+
+    /**
+     * 请求错误
+     *
+     * @param errCode 错误码
+     * @param errMsg 错误消息
+     *
+     * @return {@link ResponseResult}
+     *
+     * @since 1.0.0
+     */
+    public ResponseResult<T> error(int errCode, String errMsg) {
+        return this.setCode(errCode).setMsg(errMsg).setData(null);
     }
 
     @Override

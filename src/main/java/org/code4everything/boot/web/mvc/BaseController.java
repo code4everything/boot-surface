@@ -138,14 +138,6 @@ public class BaseController {
      * @since 1.0.0
      */
     protected <T extends Serializable> ResponseResult<T> parseResult(String okMsg, String errMsg, int errCode, T data) {
-        ResponseResult<T> result = new ResponseResult<>();
-        if (Validator.isNull(data)) {
-            result.setCode(errCode);
-            result.setMsg(errMsg);
-        } else {
-            result.setMsg(okMsg);
-            result.setData(data);
-        }
-        return result;
+        return Validator.isNull(data) ? new ResponseResult<>(errCode, errMsg) : new ResponseResult<>(okMsg, data);
     }
 }

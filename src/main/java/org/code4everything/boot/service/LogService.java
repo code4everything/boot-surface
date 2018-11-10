@@ -40,7 +40,7 @@ public interface LogService<T> {
      *
      * @return 日志信息
      *
-     * @since 1.0.0[
+     * @since 1.0.0
      */
     T getLog(LogBean logBean);
 }
