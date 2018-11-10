@@ -42,14 +42,45 @@ public class BaseController {
         return token;
     }
 
+    /**
+     * 请求成功
+     *
+     * @param okMsg 成功消息
+     * @param <T> 数据类
+     *
+     * @return {@link ResponseResult}
+     *
+     * @since 1.0.0
+     */
     protected <T extends Serializable> ResponseResult<T> successResult(String okMsg) {
         return new ResponseResult<T>().setMsg(okMsg);
     }
 
+    /**
+     * 请求失败
+     *
+     * @param errMsg 错误消息
+     * @param <T> 数据类
+     *
+     * @return {@link ResponseResult}
+     *
+     * @since 1.0.0
+     */
     protected <T extends Serializable> ResponseResult<T> errorResult(String errMsg) {
         return new ResponseResult<T>().error(errMsg);
     }
 
+    /**
+     * 请求失败
+     *
+     * @param errCode 错误码
+     * @param errMsg 错误消息
+     * @param <T> 数据类
+     *
+     * @return {@link ResponseResult}
+     *
+     * @since 1.0.0
+     */
     protected <T extends Serializable> ResponseResult<T> errorResult(int errCode, String errMsg) {
         return new ResponseResult<T>().error(errCode, errMsg);
     }

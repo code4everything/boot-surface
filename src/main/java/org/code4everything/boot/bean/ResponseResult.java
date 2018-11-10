@@ -189,7 +189,7 @@ public class ResponseResult<T extends Serializable> implements Serializable {
     }
 
     /**
-     * 请求错误
+     * 请求失败
      *
      * @param errMsg 错误消息
      *
@@ -202,7 +202,7 @@ public class ResponseResult<T extends Serializable> implements Serializable {
     }
 
     /**
-     * 请求错误
+     * 请求失败
      *
      * @param errCode 错误码
      * @param errMsg 错误消息
