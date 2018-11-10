@@ -47,13 +47,12 @@ public class BaseController {
      *
      * @param errMsg 请求失败消息
      * @param isOk 是否请求成功
-     * @param <T> 数据类型
      *
      * @return 结果
      *
      * @since 1.0.0
      */
-    protected <T extends Serializable> ResponseResult<T> parseBoolResult(String errMsg, boolean isOk) {
+    protected ResponseResult<Boolean> parseBoolResult(String errMsg, boolean isOk) {
         return parseBoolResult(DEFAULT_OK_MSG, errMsg, isOk);
     }
 
@@ -63,18 +62,13 @@ public class BaseController {
      * @param okMsg 请求成功消息
      * @param errMsg 请求失败消息
      * @param isOk 是否请求成功
-     * @param <T> 数据类型
      *
      * @return 结果
      *
      * @since 1.0.0
      */
-    protected <T extends Serializable> ResponseResult<T> parseBoolResult(String okMsg, String errMsg, boolean isOk) {
-        ResponseResult<T> result = new ResponseResult<T>().setMsg(isOk ? okMsg : errMsg);
-        if (!isOk) {
-            result.setCode(DEFAULT_ERROR_CODE);
-        }
-        return result;
+    protected ResponseResult<Boolean> parseBoolResult(String okMsg, String errMsg, boolean isOk) {
+        return new ResponseResult<Boolean>().setMsg(isOk ? okMsg : errMsg);
     }
 
     /**
