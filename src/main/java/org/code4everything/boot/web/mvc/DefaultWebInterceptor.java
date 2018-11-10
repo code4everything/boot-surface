@@ -1,7 +1,9 @@
 package org.code4everything.boot.web.mvc;
 
 import cn.hutool.core.util.StrUtil;
+import org.apache.log4j.Logger;
 import org.code4everything.boot.bean.ConfigBean;
+import org.code4everything.boot.config.BootConfig;
 import org.code4everything.boot.interfaces.InterceptHandler;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -16,12 +18,14 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class DefaultWebInterceptor implements HandlerInterceptor {
 
+    private static final Logger LOGGER = Logger.getLogger(DefaultWebInterceptor.class);
+
     /**
      * 配置信息
      *
      * @since 1.0.0
      */
-    private ConfigBean configBean;
+    private static ConfigBean configBean;
 
     /**
      * 拦截处理器
@@ -33,26 +37,32 @@ public class DefaultWebInterceptor implements HandlerInterceptor {
     /**
      * 构造函数
      *
-     * @param configBean 配置信息
-     *
      * @since 1.0.0
      */
-    public DefaultWebInterceptor(ConfigBean configBean) {
-        this.configBean = configBean;
+    public DefaultWebInterceptor() {
         this.interceptHandler = new InterceptHandler() {};
     }
 
     /**
      * 构造函数
      *
-     * @param configBean 配置信息
      * @param interceptHandler 拦截处理器
      *
      * @since 1.0.0
      */
-    public DefaultWebInterceptor(ConfigBean configBean, InterceptHandler interceptHandler) {
-        this.configBean = configBean;
+    public DefaultWebInterceptor(InterceptHandler interceptHandler) {
         this.interceptHandler = interceptHandler;
+    }
+
+    /**
+     * 设置配置类
+     *
+     * @param configBean {@link ConfigBean}
+     *
+     * @since 1.0.0
+     */
+    public static void setConfigBean(ConfigBean configBean) {
+        DefaultWebInterceptor.configBean = configBean;
     }
 
     /**
@@ -70,17 +80,26 @@ public class DefaultWebInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String url = request.getServletPath();
         // 黑名单
-        if (StrUtil.startWithAny(url, configBean.getBlackPrefixes())) {
+        if (StrUtil.startWithAny(url, DefaultWebInterceptor.configBean.getBlackPrefixes())) {
+            if (BootConfig.isDebug()) {
+                LOGGER.info(StrUtil.format("url -> {}, in black list", url));
+            }
             interceptHandler.handleBlackList(request, response, handler);
             return false;
         }
         // 白名单
-        if (StrUtil.startWithAny(url, configBean.getWhitePrefixes())) {
+        if (StrUtil.startWithAny(url, DefaultWebInterceptor.configBean.getWhitePrefixes())) {
+            if (BootConfig.isDebug()) {
+                LOGGER.info(StrUtil.format("url -> {}, in white list", url));
+            }
             interceptHandler.handleWhiteList(request, response, handler);
             return true;
         }
         // 拦截名单
-        if (StrUtil.startWithAny(url, configBean.getInterceptPrefixes())) {
+        if (StrUtil.startWithAny(url, DefaultWebInterceptor.configBean.getInterceptPrefixes())) {
+            if (BootConfig.isDebug()) {
+                LOGGER.info(StrUtil.format("url -> {}, in intercept list", url));
+            }
             return interceptHandler.handleInterceptList(request, response, handler);
         }
         return true;

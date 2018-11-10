@@ -5,6 +5,8 @@ import cn.hutool.core.io.watch.WatchMonitor;
 import cn.hutool.core.io.watch.Watcher;
 import cn.hutool.core.io.watch.watchers.DelayWatcher;
 import cn.hutool.core.util.StrUtil;
+import org.apache.log4j.Logger;
+import org.code4everything.boot.config.BootConfig;
 import org.code4everything.boot.interfaces.FileWatcher;
 
 import java.nio.file.Path;
@@ -18,6 +20,8 @@ import java.nio.file.WatchEvent;
  * @since 2018/11/2
  **/
 public class FileUtils {
+
+    private static final Logger LOGGER = Logger.getLogger(FileUtils.class);
 
     private FileUtils() {}
 
@@ -45,12 +49,18 @@ public class FileUtils {
     public static void watchFile(String file, FileWatcher fileWatcher, boolean shouldFirstExecute) {
         if (shouldFirstExecute) {
             fileWatcher.doSomething();
+            if (BootConfig.isDebug()) {
+                LOGGER.info("load file -> " + file);
+            }
         }
         SimpleWatcher simpleWatcher = new SimpleWatcher() {
             @Override
             public void onModify(WatchEvent<?> event, Path currentPath) {
                 fileWatcher.onModify(event, currentPath);
                 fileWatcher.doSomething();
+                if (BootConfig.isDebug()) {
+                    LOGGER.info("load file -> " + file);
+                }
             }
         };
         // 文件发生变化时延迟一秒钟执行
@@ -66,9 +76,7 @@ public class FileUtils {
      * @since 1.0.0
      */
     public static void watchFile(String file, Watcher watcher) {
-        try (WatchMonitor monitor = WatchMonitor.createAll(file, watcher)) {
-            monitor.start();
-        }
+        WatchMonitor.createAll(file, watcher).start();
     }
 
     /**

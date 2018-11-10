@@ -1,15 +1,17 @@
 package org.code4everything.boot.web.mvc;
 
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Validator;
 import com.alibaba.fastjson.support.spring.FastJsonJsonView;
 import org.apache.log4j.Logger;
+import org.code4everything.boot.config.BootConfig;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.sql.Timestamp;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,6 +22,8 @@ import java.util.Map;
  * @since 2018/11/4
  */
 public class DefaultExceptionHandler implements HandlerExceptionResolver {
+
+    private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";
 
     private final Logger logger = Logger.getLogger(DefaultExceptionHandler.class);
 
@@ -39,7 +43,7 @@ public class DefaultExceptionHandler implements HandlerExceptionResolver {
         Map<String, Object> attributes = new HashMap<>(4);
         attributes.put("code", "500");
         attributes.put("msg", exception.getMessage());
-        attributes.put("timestamp", new Timestamp(System.currentTimeMillis()));
+        attributes.put("timestamp", DateUtil.format(new Date(), DATE_FORMAT));
         String queryString = request.getQueryString();
         attributes.put("data", request.getRequestURI() + (Validator.isEmpty(queryString) ? "" : "?" + queryString));
         view.setAttributesMap(attributes);
@@ -63,6 +67,9 @@ public class DefaultExceptionHandler implements HandlerExceptionResolver {
     @Override
     public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object object,
                                          Exception exception) {
+        if (BootConfig.isDebug()) {
+            exception.printStackTrace();
+        }
         logger.error("url -> " + request.getServletPath() + ", message -> " + exception.getMessage());
         return parseModelAndView(request, exception);
     }
