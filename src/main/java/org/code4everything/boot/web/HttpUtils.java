@@ -9,6 +9,7 @@ import cn.hutool.http.HttpStatus;
 import org.apache.log4j.Logger;
 import org.code4everything.boot.bean.MultipartFileBean;
 import org.code4everything.boot.bean.ResponseResult;
+import org.code4everything.boot.config.BootConfig;
 import org.code4everything.boot.service.FileService;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -145,6 +146,9 @@ public class HttpUtils {
                                                                     String storagePath, boolean digestBytes,
                                                                     Map<String, Serializable> params) {
         ResponseResult<T> result = new ResponseResult<>();
+        if (file.getSize() > BootConfig.getMaxUploadFileSize()) {
+            return result.error("file size must less than " + BootConfig.getMaxUploadFileSize());
+        }
         MultipartFileBean fileBean = new MultipartFileBean();
         // 设置文件信息
         String ofn = file.getOriginalFilename();
@@ -154,7 +158,7 @@ public class HttpUtils {
                 fileBean.setMd5(DigestUtil.md5Hex(file.getBytes()));
             } catch (Exception e) {
                 LOGGER.error(StrUtil.format("get md5 of file[{}] failed, message -> {}", ofn, e.getMessage()));
-                return result.setCode(HttpStatus.HTTP_UNAVAILABLE).setMsg(ofn + " upload failed");
+                return result.error(HttpStatus.HTTP_UNAVAILABLE, ofn + " upload failed");
             }
             fileBean.setFilename(fileBean.getMd5() + StrUtil.DOT + FileUtil.extName(ofn));
         } else {
@@ -181,7 +185,7 @@ public class HttpUtils {
                 file.transferTo(new File(storagePath + fileBean.getFilename()));
             } catch (Exception e) {
                 LOGGER.error("upload file failed, message -> " + e.getMessage());
-                return result.setCode(HttpStatus.HTTP_UNAVAILABLE).setMsg(ofn + " upload failed");
+                return result.error(HttpStatus.HTTP_UNAVAILABLE, ofn + " upload failed");
             }
             // 将数据写入数据库
             t = fileService.save(fileBean);

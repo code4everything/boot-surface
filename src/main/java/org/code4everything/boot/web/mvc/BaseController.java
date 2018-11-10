@@ -42,6 +42,18 @@ public class BaseController {
         return token;
     }
 
+    protected <T extends Serializable> ResponseResult<T> successResult(String okMsg) {
+        return new ResponseResult<T>().setMsg(okMsg);
+    }
+
+    protected <T extends Serializable> ResponseResult<T> errorResult(String errMsg) {
+        return new ResponseResult<T>().error(errMsg);
+    }
+
+    protected <T extends Serializable> ResponseResult<T> errorResult(int errCode, String errMsg) {
+        return new ResponseResult<T>().error(errCode, errMsg);
+    }
+
     /**
      * 解析结果
      *
@@ -68,7 +80,7 @@ public class BaseController {
      * @since 1.0.0
      */
     protected ResponseResult<Boolean> parseBoolResult(String okMsg, String errMsg, boolean isOk) {
-        return new ResponseResult<Boolean>().setMsg(isOk ? okMsg : errMsg);
+        return new ResponseResult<Boolean>().setMsg(isOk ? okMsg : errMsg).setData(isOk);
     }
 
     /**
@@ -132,6 +144,12 @@ public class BaseController {
      * @since 1.0.0
      */
     protected <T extends Serializable> ResponseResult<T> parseResult(String okMsg, String errMsg, int errCode, T data) {
-        return Validator.isNull(data) ? new ResponseResult<>(errCode, errMsg) : new ResponseResult<>(okMsg, data);
+        boolean isError = Validator.isNull(data);
+        if (!isError) {
+            if (data instanceof Boolean && !(Boolean) data) {
+                isError = true;
+            }
+        }
+        return isError ? new ResponseResult<>(errCode, errMsg) : new ResponseResult<>(okMsg, data);
     }
 }

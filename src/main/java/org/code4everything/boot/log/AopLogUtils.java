@@ -7,6 +7,7 @@ import com.google.common.cache.Cache;
 import org.aspectj.lang.JoinPoint;
 import org.code4everything.boot.annotations.AopLog;
 import org.code4everything.boot.bean.LogBean;
+import org.code4everything.boot.config.BootConfig;
 import org.code4everything.boot.service.LogService;
 
 import java.lang.reflect.Method;
@@ -20,36 +21,7 @@ import java.util.Objects;
  */
 public class AopLogUtils {
 
-    /**
-     * 调试
-     *
-     * @since 1.0.0
-     */
-    private static boolean debug = false;
-
     private AopLogUtils() {}
-
-    /**
-     * 是否调试
-     *
-     * @return 是否调试
-     *
-     * @since 1.0.0
-     */
-    public static boolean isDebug() {
-        return debug;
-    }
-
-    /**
-     * 设置是否调试
-     *
-     * @param debug 是否调试
-     *
-     * @since 1.0.0
-     */
-    public static void setDebug(boolean debug) {
-        AopLogUtils.debug = debug;
-    }
 
     /**
      * 保存日志信息
@@ -71,7 +43,7 @@ public class AopLogUtils {
         if (Objects.isNull(throwable)) {
             log = service.save(service.getLog(parse(point)));
             cache.put(key, log);
-            if (AopLogUtils.isDebug()) {
+            if (BootConfig.isDebug()) {
                 Console.log(log);
             }
         } else {
@@ -81,7 +53,7 @@ public class AopLogUtils {
                 cache.asMap().remove(key);
             }
             log = service.saveException(log, throwable);
-            if (AopLogUtils.isDebug()) {
+            if (BootConfig.isDebug()) {
                 Console.error(throwable, log.toString());
             }
         }

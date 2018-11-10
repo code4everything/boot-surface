@@ -8,5 +8,20 @@ package org.code4everything.boot.constant;
  **/
 public class IntegerConsts {
 
+    public static final int ONE_THOUSAND_AND_TWENTY_FOUR = 1024;
+
     private IntegerConsts() {}
+
+    public static class FileSize {
+
+        public static final long KB = ONE_THOUSAND_AND_TWENTY_FOUR;
+
+        public static final long MB = KB * ONE_THOUSAND_AND_TWENTY_FOUR;
+
+        public static final long GB = MB * ONE_THOUSAND_AND_TWENTY_FOUR;
+
+        public static final long TB = GB * ONE_THOUSAND_AND_TWENTY_FOUR;
+
+        private FileSize() {}
+    }
 }
