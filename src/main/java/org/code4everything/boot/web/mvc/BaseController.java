@@ -1,9 +1,11 @@
 package org.code4everything.boot.web.mvc;
 
-import cn.hutool.core.lang.Validator;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpStatus;
+import org.apache.log4j.Logger;
 import org.code4everything.boot.bean.ResponseResult;
+import org.code4everything.boot.config.BootConfig;
 import org.code4everything.boot.constant.MessageConsts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,6 +25,8 @@ public class BaseController {
     private static final int DEFAULT_ERROR_CODE = HttpStatus.HTTP_BAD_REQUEST;
 
     private static final String DEFAULT_OK_MSG = MessageConsts.REQUEST_OK_ZH;
+
+    private static final Logger LOGGER = Logger.getLogger(BaseController.class);
 
     @Autowired
     protected HttpServletRequest request;
@@ -126,7 +130,23 @@ public class BaseController {
      * @since 1.0.0
      */
     protected <T extends Serializable> ResponseResult<T> parseResult(String errMsg, T data) {
-        return parseResult(DEFAULT_OK_MSG, errMsg, DEFAULT_ERROR_CODE, data);
+        return parseResult(errMsg, data, BootConfig.isSealed());
+    }
+
+    /**
+     * 解析结果（对数据进行NULL判断）
+     *
+     * @param errMsg 请求失败的消息
+     * @param data 数据
+     * @param sealed 是否对字段进行加密
+     * @param <T> 数据类型
+     *
+     * @return 结果
+     *
+     * @since 1.0.0
+     */
+    protected <T extends Serializable> ResponseResult<T> parseResult(String errMsg, T data, boolean sealed) {
+        return parseResult(DEFAULT_OK_MSG, errMsg, DEFAULT_ERROR_CODE, data, sealed);
     }
 
     /**
@@ -142,7 +162,25 @@ public class BaseController {
      * @since 1.0.0
      */
     protected <T extends Serializable> ResponseResult<T> parseResult(String errMsg, int errCode, T data) {
-        return parseResult(DEFAULT_OK_MSG, errMsg, errCode, data);
+        return parseResult(errMsg, errCode, data, BootConfig.isSealed());
+    }
+
+    /**
+     * 解析结果（对数据进行NULL判断）
+     *
+     * @param errMsg 请求失败的消息
+     * @param errCode 错误码
+     * @param data 数据
+     * @param sealed 是否对字段进行加密
+     * @param <T> 数据类型
+     *
+     * @return 结果
+     *
+     * @since 1.0.0
+     */
+    protected <T extends Serializable> ResponseResult<T> parseResult(String errMsg, int errCode, T data,
+                                                                     boolean sealed) {
+        return parseResult(DEFAULT_OK_MSG, errMsg, errCode, data, sealed);
     }
 
     /**
@@ -158,7 +196,25 @@ public class BaseController {
      * @since 1.0.0
      */
     protected <T extends Serializable> ResponseResult<T> parseResult(String okMsg, String errMsg, T data) {
-        return parseResult(okMsg, errMsg, DEFAULT_ERROR_CODE, data);
+        return parseResult(okMsg, errMsg, data, BootConfig.isSealed());
+    }
+
+    /**
+     * 解析结果（对数据进行NULL判断）
+     *
+     * @param okMsg 请求成功的消息
+     * @param errMsg 请求失败的消息
+     * @param data 数据
+     * @param sealed 是否对字段进行加密
+     * @param <T> 数据类型
+     *
+     * @return 结果
+     *
+     * @since 1.0.0
+     */
+    protected <T extends Serializable> ResponseResult<T> parseResult(String okMsg, String errMsg, T data,
+                                                                     boolean sealed) {
+        return parseResult(okMsg, errMsg, DEFAULT_ERROR_CODE, data, sealed);
     }
 
     /**
@@ -175,10 +231,31 @@ public class BaseController {
      * @since 1.0.0
      */
     protected <T extends Serializable> ResponseResult<T> parseResult(String okMsg, String errMsg, int errCode, T data) {
-        boolean isError = Validator.isNull(data);
+        return parseResult(okMsg, errMsg, errCode, data, BootConfig.isSealed());
+    }
+
+    /**
+     * 解析结果（对数据进行NULL判断）
+     *
+     * @param okMsg 请求成功的消息
+     * @param errMsg 请求失败的消息
+     * @param errCode 错误码
+     * @param data 数据
+     * @param sealed 是否对字段进行加密
+     * @param <T> 数据类型
+     *
+     * @return 结果
+     *
+     * @since 1.0.0
+     */
+    protected <T extends Serializable> ResponseResult<T> parseResult(String okMsg, String errMsg, int errCode, T data
+            , boolean sealed) {
+        boolean isError = ObjectUtil.isNull(data);
         if (!isError) {
             if (data instanceof Boolean && !(Boolean) data) {
                 isError = true;
+            } else if (sealed) {
+                BootConfig.getFieldEncoder().encode(data);
             }
         }
         return isError ? new ResponseResult<>(errCode, errMsg) : new ResponseResult<>(okMsg, data);

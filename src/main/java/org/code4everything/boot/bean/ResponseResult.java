@@ -3,6 +3,7 @@ package org.code4everything.boot.bean;
 import cn.hutool.http.HttpStatus;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
+import org.code4everything.boot.config.BootConfig;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -213,6 +214,18 @@ public class ResponseResult<T extends Serializable> implements Serializable {
      */
     public ResponseResult<T> error(int errCode, String errMsg) {
         return this.setCode(errCode).setMsg(errMsg).setData(null);
+    }
+
+    /**
+     * 对字段进行加密
+     *
+     * @return {@link ResponseResult}
+     *
+     * @since 1.0.0
+     */
+    public ResponseResult<T> encode() {
+        BootConfig.getFieldEncoder().encode(this.getData());
+        return this;
     }
 
     @Override
