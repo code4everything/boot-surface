@@ -1,6 +1,7 @@
 package org.code4everything.boot.web.mvc;
 
 import cn.hutool.core.util.StrUtil;
+import com.google.common.base.Preconditions;
 import org.apache.log4j.Logger;
 import org.code4everything.boot.bean.ConfigBean;
 import org.code4everything.boot.config.BootConfig;
@@ -78,6 +79,7 @@ public class DefaultWebInterceptor implements HandlerInterceptor {
      */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        Preconditions.checkNotNull(DefaultWebInterceptor.configBean);
         String url = request.getServletPath();
         // 黑名单
         if (StrUtil.startWithAny(url, DefaultWebInterceptor.configBean.getBlackPrefixes())) {

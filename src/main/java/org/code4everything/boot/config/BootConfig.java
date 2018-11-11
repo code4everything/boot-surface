@@ -22,6 +22,8 @@ public class BootConfig {
      */
     private static long maxUploadFileSize = Long.MAX_VALUE;
 
+    private BootConfig() {}
+
     /**
      * 是否调试
      *

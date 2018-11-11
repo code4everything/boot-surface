@@ -48,14 +48,14 @@ public class AopLogUtils {
             }
         } else {
             log = cache.asMap().get(key);
-            if (ObjectUtil.isNotNull(log)) {
+            if (ObjectUtil.isNull(log)) {
                 log = service.getLog(parse(point));
-                cache.asMap().remove(key);
             }
             log = service.saveException(log, throwable);
             if (BootConfig.isDebug()) {
                 Console.error(throwable, log.toString());
             }
+            cache.asMap().remove(key);
         }
         return log;
     }
