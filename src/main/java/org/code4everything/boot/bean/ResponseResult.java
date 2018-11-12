@@ -17,6 +17,13 @@ import java.sql.Timestamp;
 public class ResponseResult<T extends Serializable> implements Serializable {
 
     /**
+     * 是否对数据进行加密
+     *
+     * @since 1.0.0
+     */
+    private boolean sealed = false;
+
+    /**
      * 错误码
      *
      * @since 1.0.0
@@ -160,6 +167,9 @@ public class ResponseResult<T extends Serializable> implements Serializable {
      * @since 1.0.0
      */
     public ResponseResult<T> setData(T data) {
+        if (sealed) {
+            BootConfig.getFieldEncoder().encode(data);
+        }
         this.data = data;
         return this;
     }
@@ -225,6 +235,7 @@ public class ResponseResult<T extends Serializable> implements Serializable {
      */
     public ResponseResult<T> encode() {
         BootConfig.getFieldEncoder().encode(this.getData());
+        sealed = true;
         return this;
     }
 
