@@ -239,6 +239,33 @@ public class ResponseResult<T extends Serializable> implements Serializable {
         return this;
     }
 
+    /**
+     * 复制当前响应对象，不包括数据
+     *
+     * @param <E> 新的数据类型
+     *
+     * @return 新的响应对象
+     *
+     * @since 1.0.0
+     */
+    public <E extends Serializable> ResponseResult<E> copy() {
+        return new ResponseResult<E>(code, msg).setTimestamp(timestamp);
+    }
+
+    /**
+     * 复制当前响应对象
+     *
+     * @param newData 新的类型数据
+     * @param <E> 新的数据类型
+     *
+     * @return 新的响应对象
+     *
+     * @since 1.0.0
+     */
+    public <E extends Serializable> ResponseResult<E> copy(E newData) {
+        return new ResponseResult<E>(code, msg).setTimestamp(timestamp).setData(newData);
+    }
+
     @Override
     public String toString() {
         return JSONObject.toJSONString(this);
