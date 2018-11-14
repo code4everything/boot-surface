@@ -8,11 +8,9 @@ package org.code4everything.boot.constant;
  */
 public class MessageConsts {
 
-    public static final String ERROR_EN = "error";
-
     public static final String REQUEST_OK_ZH = "请求成功";
 
-    public static final String TOKEN_EN = "token";
+    public static final String REQUEST_OK_EN = "request ok";
 
     private MessageConsts() {}
 }

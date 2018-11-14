@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 import org.code4everything.boot.bean.ResponseResult;
 import org.code4everything.boot.config.BootConfig;
 import org.code4everything.boot.constant.MessageConsts;
+import org.code4everything.boot.constant.StringConsts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -39,9 +40,9 @@ public class BaseController {
      * @since 1.0.0
      */
     protected String getToken() {
-        String token = request.getHeader(MessageConsts.TOKEN_EN);
+        String token = request.getHeader(StringConsts.TOKEN);
         if (StrUtil.isEmpty(token)) {
-            token = request.getParameter(MessageConsts.TOKEN_EN);
+            token = request.getParameter(StringConsts.TOKEN);
         }
         return token;
     }

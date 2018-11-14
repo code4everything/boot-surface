@@ -1,12 +1,16 @@
 package org.code4everything.boot.constant;
 
 /**
- * 符号常量类
+ * 字符常量类
  *
  * @author pantao
  * @since 2018/10/31
  **/
-public class SymbolConsts {
+public class StringConsts {
+
+    public static final String TOKEN = "token";
+
+    public static final String ERROR = "error";
 
     public static final String QUESTION = "?";
 
@@ -30,5 +34,5 @@ public class SymbolConsts {
 
     public static final String TEN = "10";
 
-    private SymbolConsts() {}
+    private StringConsts() {}
 }
