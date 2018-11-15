@@ -42,7 +42,7 @@ public class ResponseResult<T extends Serializable> implements Serializable {
      *
      * @since 1.0.0
      */
-    private T data;
+    private T data = null;
 
     /**
      * 时间戳
