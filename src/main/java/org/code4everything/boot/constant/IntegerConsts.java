@@ -10,6 +10,8 @@ public class IntegerConsts {
 
     public static final int ONE_THOUSAND_AND_TWENTY_FOUR = 1024;
 
+    public static final int EIGHT = 8;
+
     private IntegerConsts() {}
 
     public static class FileSize {
