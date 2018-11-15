@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * 默认异常处理器
@@ -27,6 +28,13 @@ public class DefaultExceptionHandler implements HandlerExceptionResolver {
     private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";
 
     private final Logger logger = Logger.getLogger(DefaultExceptionHandler.class);
+
+    /**
+     * 默认异常信息
+     *
+     * @since 1.0.0
+     */
+    private final ExceptionBean bean = new ExceptionBean().setCode(500).setStatus(HttpStatus.INTERNAL_SERVER_ERROR);
 
     /**
      * 异常信息在项目启动时就应该配置好了，所以无需考虑并发情况
@@ -45,18 +53,19 @@ public class DefaultExceptionHandler implements HandlerExceptionResolver {
      *
      * @since 1.0.0
      */
-    public static ModelAndView parseModelAndView(HttpServletRequest request, Exception exception) {
+    protected ModelAndView parseModelAndView(HttpServletRequest request, Exception exception, ExceptionBean bean) {
+        Objects.requireNonNull(bean);
         ModelAndView modelAndView = new ModelAndView();
         FastJsonJsonView view = new FastJsonJsonView();
         Map<String, Object> attributes = new HashMap<>(4);
-        attributes.put("code", "500");
-        attributes.put("msg", exception.getMessage());
+        attributes.put("code", bean.getCode());
+        attributes.put("msg", Validator.isEmpty(bean.getMsg()) ? exception.getMessage() : bean.getMsg());
         attributes.put("timestamp", DateUtil.format(new Date(), DATE_FORMAT));
         String queryString = request.getQueryString();
         attributes.put("data", request.getRequestURI() + (Validator.isEmpty(queryString) ? "" : "?" + queryString));
         view.setAttributesMap(attributes);
         modelAndView.setView(view);
-        modelAndView.setStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+        modelAndView.setStatus(bean.getStatus());
         return modelAndView;
     }
 
@@ -72,7 +81,7 @@ public class DefaultExceptionHandler implements HandlerExceptionResolver {
     }
 
     /**
-     * 自定义异常信息，在项目启动时就应该配置好了，所以无需考虑并发情况
+     * 自定义异常信息，使用异常类的类名作为键值
      *
      * @param exceptionMap 异常信息
      *
@@ -90,9 +99,9 @@ public class DefaultExceptionHandler implements HandlerExceptionResolver {
      * @param msg 消息
      * @param status {@link HttpStatus} 状态
      */
-    public void addException(Exception e, int code, String msg, HttpStatus status) {
-        ExceptionBean bean = new ExceptionBean();
-        exceptionMap.put(e.getClass().getName(), bean.setCode(code).setException(e).setMsg(msg).setStatus(status));
+    public <T extends Exception> void addException(int code, String msg, HttpStatus status, Class<T> e) {
+        Objects.requireNonNull(e);
+        exceptionMap.put(e.getName(), new ExceptionBean().setCode(code).setMsg(msg).setStatus(status));
     }
 
     /**
@@ -110,9 +119,9 @@ public class DefaultExceptionHandler implements HandlerExceptionResolver {
     @Override
     public ModelAndView resolveException(HttpServletRequest req, HttpServletResponse res, Object o, Exception e) {
         if (BootConfig.isDebug()) {
-            e.printStackTrace();
+            logger.error("url -> " + req.getServletPath() + ", ip -> " + req.getRemoteAddr() + ", message -> " + e.getMessage());
         }
-        logger.error("url -> " + req.getServletPath() + ", message -> " + e.getMessage());
-        return parseModelAndView(req, e);
+        ExceptionBean exceptionBean = exceptionMap.get(e.getClass().getName());
+        return parseModelAndView(req, e, Objects.isNull(exceptionBean) ? bean : exceptionBean);
     }
 }

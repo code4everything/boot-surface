@@ -34,38 +34,6 @@ public class ExceptionBean implements Serializable {
     private HttpStatus status;
 
     /**
-     * 异常
-     *
-     * @since 1.0.0
-     */
-    private Exception exception;
-
-    /**
-     * 获取异常
-     *
-     * @return 异常
-     *
-     * @since 1.0.0
-     */
-    public Exception getException() {
-        return exception;
-    }
-
-    /**
-     * 设置异常信息
-     *
-     * @param exception 异常
-     *
-     * @return {@link ExceptionBean}
-     *
-     * @since 1.0.0
-     */
-    public ExceptionBean setException(Exception exception) {
-        this.exception = exception;
-        return this;
-    }
-
-    /**
      * 获取错误码
      *
      * @return 错误码
