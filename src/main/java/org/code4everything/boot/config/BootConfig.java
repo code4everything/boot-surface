@@ -1,6 +1,7 @@
 package org.code4everything.boot.config;
 
 import org.code4everything.boot.encoder.FieldEncoder;
+import org.code4everything.boot.redis.RedisTemplateUtils;
 
 /**
  * 工具配置类
@@ -39,6 +40,43 @@ public class BootConfig {
     private static FieldEncoder fieldEncoder = new FieldEncoder();
 
     private BootConfig() {}
+
+    /**
+     * 初始化 Redis 连接池
+     *
+     * @param hostName 主机
+     * @param port 端口
+     * @param database 数据库
+     *
+     * @since 1.0.0
+     */
+    public static void initJedisConnectionFactory(String hostName, Integer port, Integer database) {
+        RedisTemplateUtils.initJedisConnectionFactory(hostName, port, database);
+    }
+
+    /**
+     * 初始化 Redis 连接池
+     *
+     * @param hostName 主机
+     * @param port 端口
+     *
+     * @since 1.0.0
+     */
+    public static void initJedisConnectionFactory(String hostName, Integer port) {
+        RedisTemplateUtils.initJedisConnectionFactory(hostName, port);
+    }
+
+    /**
+     * 初始化 Redis 连接池
+     *
+     * @param hostName 主机
+     *
+     * @since 1.0.0
+     */
+    public static void initJedisConnectionFactory(String hostName) {
+        RedisTemplateUtils.initJedisConnectionFactory(hostName);
+    }
+
 
     /**
      * 获取字段加密器

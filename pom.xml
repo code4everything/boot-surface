@@ -30,6 +30,8 @@
         <javax.servlet.version>4.0.1</javax.servlet.version>
         <spring.version>5.0.8.RELEASE</spring.version>
         <aspectj.version>1.9.2</aspectj.version>
+        <spring.redis.version>2.1.0.RC2</spring.redis.version>
+        <redis.version>2.9.0</redis.version>
     </properties>
 
     <dependencies>
@@ -116,6 +118,22 @@
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
             <version>${javax.servlet.version}</version>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
+
+        <!--REDIS缓存-->
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-redis</artifactId>
+            <version>${spring.redis.version}</version>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>${redis.version}</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
