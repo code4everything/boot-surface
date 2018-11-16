@@ -113,7 +113,6 @@ public class RedisTemplateUtils {
     /**
      * 获取模板
      *
-     * @param <K> 键类型
      * @param <V> 值类型
      * @param type 值类型
      *
@@ -121,14 +120,8 @@ public class RedisTemplateUtils {
      *
      * @since 1.0.0
      */
-    public static <K, V> RedisTemplate<K, V> newTemplate(Class<V> type) {
-        RedisTemplate<K, V> redisTemplate = new RedisTemplate<>();
-        redisTemplate.setConnectionFactory(getJedisConnectionFactory());
-        redisTemplate.setKeySerializer(new StringRedisSerializer());
-        if (ObjectUtil.isNotNull(type)) {
-            redisTemplate.setValueSerializer(new FastJsonRedisSerializer<>(type));
-        }
-        return redisTemplate;
+    public static <V> RedisTemplate<String, V> newTemplate(Class<V> type) {
+        return newTemplate(String.class, type);
     }
 
     /**
@@ -136,12 +129,39 @@ public class RedisTemplateUtils {
      *
      * @param <K> 键类型
      * @param <V> 值类型
+     * @param valueType 值类型
      *
      * @return {@link RedisTemplate}
      *
      * @since 1.0.0
      */
-    public static <K, V> RedisTemplate<K, V> newTemplate() {
+    public static <K, V> RedisTemplate<K, V> newTemplate(Class<K> keyType, Class<V> valueType) {
+        RedisTemplate<K, V> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(getJedisConnectionFactory());
+        if (ObjectUtil.isNotNull(keyType)) {
+            if (keyType == String.class) {
+                redisTemplate.setKeySerializer(new StringRedisSerializer());
+            } else {
+                redisTemplate.setKeySerializer(new FastJsonRedisSerializer<>(keyType));
+            }
+        }
+        if (ObjectUtil.isNotNull(valueType)) {
+            redisTemplate.setValueSerializer(new FastJsonRedisSerializer<>(valueType));
+        }
+        return redisTemplate;
+    }
+
+
+    /**
+     * 获取模板
+     *
+     * @param <V> 值类型
+     *
+     * @return {@link RedisTemplate}
+     *
+     * @since 1.0.0
+     */
+    public static <V> RedisTemplate<String, V> newTemplate() {
         return newTemplate(null);
     }
 }
