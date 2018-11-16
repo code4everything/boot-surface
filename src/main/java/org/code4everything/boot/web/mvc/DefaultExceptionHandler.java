@@ -13,8 +13,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -67,13 +65,6 @@ public class DefaultExceptionHandler implements HandlerExceptionResolver {
         String queryString = request.getQueryString();
         attributes.put("url", request.getRequestURI() + (Validator.isEmpty(queryString) ? "" : "?" + queryString));
         attributes.put("data", exception.getMessage());
-        if (BootConfig.isDebug()) {
-            // 输出异常详细信息
-            StringWriter stringWriter = new StringWriter();
-            PrintWriter printWriter = new PrintWriter(stringWriter);
-            exception.printStackTrace(printWriter);
-            attributes.put("detail", stringWriter.toString());
-        }
         view.setAttributesMap(attributes);
         modelAndView.setView(view);
         modelAndView.setStatus(bean.getStatus());
@@ -130,6 +121,7 @@ public class DefaultExceptionHandler implements HandlerExceptionResolver {
     @Override
     public ModelAndView resolveException(HttpServletRequest req, HttpServletResponse res, Object o, Exception e) {
         if (BootConfig.isDebug()) {
+            e.printStackTrace();
             logger.error("url -> " + req.getServletPath() + ", ip -> " + req.getRemoteAddr() + ", exception -> " + e.getClass().getName() + ", message -> " + e.getMessage());
         }
         ExceptionBean exceptionBean = exceptionMap.get(e.getClass().getName());
