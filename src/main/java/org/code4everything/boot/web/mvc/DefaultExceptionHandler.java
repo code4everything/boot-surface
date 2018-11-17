@@ -49,6 +49,7 @@ public class DefaultExceptionHandler implements HandlerExceptionResolver {
      *
      * @param request {@link HttpServletRequest}
      * @param exception {@link Exception}
+     * @param bean {@link ExceptionBean}
      *
      * @return {@link ModelAndView}
      *
@@ -100,6 +101,9 @@ public class DefaultExceptionHandler implements HandlerExceptionResolver {
      * @param code 错误码
      * @param msg 消息
      * @param status {@link HttpStatus} 状态
+     * @param <T> 异常类型
+     *
+     * @since 1.0.0
      */
     public <T extends Exception> void addException(int code, String msg, HttpStatus status, Class<T> e) {
         Objects.requireNonNull(e);

@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * 默认拦截器<br/>拦截顺序：黑名单 -> 白名单 -> 拦截名单
+ * 默认拦截器<br>拦截顺序依次为：黑名单 - 白名单 - 拦截名单
  *
  * @author pantao
  * @since 2018/11/4

@@ -30,7 +30,7 @@
         <javax.servlet.version>4.0.1</javax.servlet.version>
         <spring.version>5.0.8.RELEASE</spring.version>
         <aspectj.version>1.9.2</aspectj.version>
-        <spring.redis.version>2.1.0.RC2</spring.redis.version>
+        <spring.redis.version>2.1.2.RELEASE</spring.redis.version>
         <redis.version>2.9.0</redis.version>
     </properties>
 

@@ -129,6 +129,7 @@ public class RedisTemplateUtils {
      *
      * @param <K> 键类型
      * @param <V> 值类型
+     * @param keyType 值类型
      * @param valueType 值类型
      *
      * @return {@link RedisTemplate}
