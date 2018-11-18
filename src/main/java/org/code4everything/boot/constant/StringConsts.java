@@ -8,6 +8,16 @@ package org.code4everything.boot.constant;
  **/
 public class StringConsts {
 
+    public static final String AT = "@";
+
+    public static final String HYPHEN = "-";
+
+    public static final String UNDERLINE = "_";
+
+    public static final String SLASH = "/";
+
+    public static final String BACKSLASH = "\\";
+
     public static final String TOKEN = "token";
 
     public static final String ERROR = "error";
