@@ -1,6 +1,8 @@
 package org.code4everything.boot.config;
 
+import com.google.common.cache.Cache;
 import org.code4everything.boot.encoder.FieldEncoder;
+import org.code4everything.boot.log.AopLogUtils;
 import org.code4everything.boot.redis.RedisTemplateUtils;
 
 /**
@@ -40,6 +42,17 @@ public class BootConfig {
     private static FieldEncoder fieldEncoder = new FieldEncoder();
 
     private BootConfig() {}
+
+    /**
+     * 设置指定日志缓存
+     *
+     * @param logCache 日志缓存
+     *
+     * @since 1.0.1
+     */
+    public static void setLogCache(Cache<String, ?> logCache) {
+        AopLogUtils.setLogCache(logCache);
+    }
 
     /**
      * 初始化 Redis 连接池

@@ -4,6 +4,7 @@ import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.fastjson.JSONArray;
 import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import org.aspectj.lang.JoinPoint;
 import org.code4everything.boot.annotations.AopLog;
 import org.code4everything.boot.bean.LogBean;
@@ -12,6 +13,7 @@ import org.code4everything.boot.service.LogService;
 
 import java.lang.reflect.Method;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 切面日志工具类
@@ -21,13 +23,32 @@ import java.util.Objects;
  */
 public class AopLogUtils {
 
+    /**
+     * 日志缓存
+     *
+     * @since 1.0.1
+     */
+    private static Cache<String, Object> logCache =
+            CacheBuilder.newBuilder().expireAfterWrite(5, TimeUnit.SECONDS).build();
+
     private AopLogUtils() {}
+
+    /**
+     * 设置指定日志缓存
+     *
+     * @param logCache 日志缓存
+     *
+     * @since 1.0.1
+     */
+    @SuppressWarnings("unchecked")
+    public static void setLogCache(Cache<String, ?> logCache) {
+        AopLogUtils.logCache = (Cache<String, Object>) logCache;
+    }
 
     /**
      * 保存日志信息
      *
      * @param service 日志服务 {@link LogService}
-     * @param cache 日志缓存 {@link Cache}
      * @param key 缓存键，确保每个请求键是唯一的
      * @param point 切点  {@link JoinPoint}
      * @param throwable 异常抛出 {@link Throwable}
@@ -37,17 +58,17 @@ public class AopLogUtils {
      *
      * @since 1.0.0
      */
-    public static <T> T saveLog(LogService<T> service, Cache<String, T> cache, String key, JoinPoint point,
-                                Throwable throwable) {
+    @SuppressWarnings("unchecked")
+    public static <T> T saveLog(LogService<T> service, String key, JoinPoint point, Throwable throwable) {
         T log;
         if (Objects.isNull(throwable)) {
             log = service.save(service.getLog(parse(point)));
-            cache.put(key, log);
+            logCache.put(key, log);
             if (BootConfig.isDebug()) {
                 Console.log(log);
             }
         } else {
-            log = cache.asMap().get(key);
+            log = (T) logCache.asMap().get(key);
             if (ObjectUtil.isNull(log)) {
                 log = service.getLog(parse(point));
             }
@@ -55,7 +76,7 @@ public class AopLogUtils {
             if (BootConfig.isDebug()) {
                 Console.error(throwable, log.toString());
             }
-            cache.asMap().remove(key);
+            logCache.asMap().remove(key);
         }
         return log;
     }
