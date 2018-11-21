@@ -14,7 +14,7 @@ public class IntegerConsts {
 
     private IntegerConsts() {}
 
-    public static class FileSize {
+    public class FileSize {
 
         public static final long KB = ONE_THOUSAND_AND_TWENTY_FOUR;
 
