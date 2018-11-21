@@ -1,9 +1,11 @@
 package org.code4everything.boot.config;
 
 import com.google.common.cache.Cache;
+import org.code4everything.boot.bean.ConfigBean;
 import org.code4everything.boot.encoder.FieldEncoder;
 import org.code4everything.boot.log.AopLogUtils;
 import org.code4everything.boot.redis.RedisTemplateUtils;
+import org.code4everything.boot.web.mvc.DefaultWebInterceptor;
 
 /**
  * 工具配置类
@@ -53,6 +55,18 @@ public class BootConfig {
     public static void setLogCache(Cache<String, ?> logCache) {
         AopLogUtils.setLogCache(logCache);
     }
+
+    /**
+     * 设置配置类
+     *
+     * @param configBean {@link ConfigBean}
+     *
+     * @since 1.0.2
+     */
+    public static void setConfigBean(ConfigBean configBean) {
+        DefaultWebInterceptor.setConfigBean(configBean);
+    }
+
 
     /**
      * 初始化 Redis 连接池

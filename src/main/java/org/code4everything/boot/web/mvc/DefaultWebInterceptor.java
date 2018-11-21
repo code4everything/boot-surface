@@ -7,6 +7,7 @@ import org.code4everything.boot.bean.ConfigBean;
 import org.code4everything.boot.config.BootConfig;
 import org.code4everything.boot.interfaces.InterceptHandler;
 import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author pantao
  * @since 2018/11/4
  */
-public class DefaultWebInterceptor implements HandlerInterceptor {
+public final class DefaultWebInterceptor implements HandlerInterceptor {
 
     private static final Logger LOGGER = Logger.getLogger(DefaultWebInterceptor.class);
 
@@ -105,5 +106,39 @@ public class DefaultWebInterceptor implements HandlerInterceptor {
             return interceptHandler.handleInterceptList(request, response, handler);
         }
         return true;
+    }
+
+    /**
+     * 拦截之后的处理
+     *
+     * @param request {@link HttpServletRequest}
+     * @param response {@link HttpServletResponse}
+     * @param handler {@link Object}
+     * @param modelAndView 数据对象
+     *
+     * @throws Exception 异常
+     * @since 1.0.2
+     */
+    @Override
+    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
+                           ModelAndView modelAndView) throws Exception {
+        interceptHandler.postHandle(request, response, handler, modelAndView);
+    }
+
+    /**
+     * 渲染了响应数据之后的处理
+     *
+     * @param request {@link HttpServletRequest}
+     * @param response {@link HttpServletResponse}
+     * @param handler {@link Object}
+     * @param ex 抛出的异常
+     *
+     * @throws Exception 异常
+     * @since 1.0.2
+     */
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler,
+                                Exception ex) throws Exception {
+        interceptHandler.afterCompletion(request, response, handler, ex);
     }
 }
