@@ -3,6 +3,7 @@ package org.code4everything.boot.web;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Validator;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.digest.DigestUtil;
 import cn.hutool.http.HttpStatus;
@@ -11,10 +12,17 @@ import org.code4everything.boot.bean.MultipartFileBean;
 import org.code4everything.boot.bean.ResponseResult;
 import org.code4everything.boot.config.BootConfig;
 import org.code4everything.boot.service.FileService;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.InputStreamSource;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Map;
@@ -32,6 +40,42 @@ public class HttpUtils {
     private static final String NO_FILES_HERE = "没有可上传的文件";
 
     private HttpUtils() {}
+
+    /**
+     * 向浏览器响应文件
+     *
+     * @param fileService 文件服务 {@link FileService}
+     * @param request HTTP请求
+     *
+     * @return 文件流
+     *
+     * @throws IOException 可能发生的异常
+     * @since 1.0.2
+     */
+    public static <T extends Serializable> ResponseEntity<InputStreamSource> responseDocument(FileService<T> fileService, HttpServletRequest request) throws IOException {
+        return responseDocument(fileService.getLocalPathByAccessUrl(request.getServletPath()));
+    }
+
+    /**
+     * 向浏览器响应文件
+     *
+     * @param localPath 文件本地路径
+     *
+     * @return 文件流
+     *
+     * @throws IOException 可能发生的异常
+     * @since 1.0.2
+     */
+    public static ResponseEntity<InputStreamSource> responseDocument(String localPath) throws IOException {
+        FileSystemResource file = null;
+        if (FileUtil.exist(localPath)) {
+            file = new FileSystemResource(localPath);
+        }
+        if (ObjectUtil.isNull(file)) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok().contentLength(file.contentLength()).contentType(MediaType.APPLICATION_OCTET_STREAM).body(new InputStreamResource(file.getInputStream()));
+    }
 
     /**
      * 批量上传文件

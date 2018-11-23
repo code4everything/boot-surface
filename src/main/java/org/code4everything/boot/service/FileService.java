@@ -45,4 +45,15 @@ public interface FileService<T extends Serializable> {
      * @since 1.0.0
      */
     default T save(MultipartFileBean fileBean) {return null;}
+
+    /**
+     * 通过访问链接获取本地路径
+     *
+     * @param accessUrl 访问路径
+     *
+     * @return 本地路径
+     *
+     * @since 1.0.2
+     */
+    default String getLocalPathByAccessUrl(String accessUrl) {return null;}
 }
