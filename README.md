@@ -1,1 +1,41 @@
-# boot-surface
+### 项目简介
+
+Boot Surface是一个依赖于Spring的Web开发工具类，旨在简化日志的记录、文件的上传、异常的处理等一些繁琐而又必要的代码编写。
+这也是从工作项目中剥离出来的一些公共代码，方便以后一些项目的构建。
+
+
+### 主要功能
+
+- Spring AOP日志记录
+
+- 对HTTP某一些响应数据的字段进行抹掉或加密
+
+- 简化文件的上传
+
+- 默认的异常处理和拦截器
+
+- 封装了一些常用的常量
+
+### 安装使用
+
+项目仅支持 JDK1.8 以上
+
+``` xml
+<dependency>
+    <groupId>org.code4everything</groupId>
+    <artifactId>boot-surface</artifactId>
+    <version>1.0.x</version>
+</dependency>
+```
+
+> 为什么要发布到Maven中央仓库？方便项目打包啊:stuck_out_tongue_winking_eye:
+
+### 使用手册
+
+### 示例项目
+
+[https://gitee.com/code4everything/wanna-spring/tree/master/spring-bee](https://gitee.com/code4everything/wanna-spring/tree/master/spring-bee)
+
+### 写在最后
+
+项目严格遵守阿里巴巴Java开发手册规范，采用MIT开源协议
