@@ -3,6 +3,9 @@ package org.code4everything.boot.redis;
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.fastjson.support.spring.FastJsonRedisSerializer;
+import org.apache.log4j.Logger;
+import org.code4everything.boot.config.BootConfig;
+import org.code4everything.boot.constant.StringConsts;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -17,6 +20,8 @@ import java.util.Objects;
  * @since 2018/11/16
  **/
 public class RedisTemplateUtils {
+
+    private static final Logger LOGGER = Logger.getLogger(RedisTemplateUtils.class);
 
     private static JedisConnectionFactory jedisConnectionFactory = null;
 
@@ -98,16 +103,26 @@ public class RedisTemplateUtils {
      */
     public static void initJedisConnectionFactory(String hostName, Integer port, Integer database) {
         RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration();
+        StringBuilder message = new StringBuilder("connect to redis server on");
         if (Validator.isNotEmpty(hostName)) {
             configuration.setHostName(hostName);
+            message.append(" host -> ").append(hostName).append(" ,");
         }
         if (ObjectUtil.isNotNull(port)) {
             configuration.setPort(port);
+            message.append(" port -> ").append(port).append(" ,");
         }
         if (ObjectUtil.isNotNull(database)) {
             configuration.setDatabase(database);
+            message.append(" database -> ").append(database).append(" ,");
         }
         jedisConnectionFactory = new JedisConnectionFactory(configuration);
+        if (BootConfig.isDebug()) {
+            String msg = message.toString();
+            if (msg.endsWith(StringConsts.Sign.COMMA)) {
+                LOGGER.info(msg.substring(0, msg.length() - 2));
+            }
+        }
     }
 
     /**
