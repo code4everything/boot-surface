@@ -49,7 +49,7 @@ public void addInterceptors(InterceptorRegistry registry) {
 
 > 拦截器主要是根据配置的黑名单、白名单、需要权限验证的名单前缀进行相应的处理
 
-#### 示例代码参考
+#### 完整的示例代码参考
 
 ``` java
 import cn.hutool.core.lang.Validator;

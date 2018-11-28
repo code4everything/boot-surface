@@ -7,8 +7,6 @@
 #### 假设有一个视图对象
 
 ``` java
-package org.code4everything.springbee.model;
-
 import org.code4everything.boot.annotations.Sealed;
 
 import java.io.Serializable;

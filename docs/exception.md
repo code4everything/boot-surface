@@ -36,7 +36,7 @@ public void configureHandlerExceptionResolvers(List<HandlerExceptionResolver> re
 }
 ```
 
-#### 示例代码参考
+#### 完整的示例代码参考
 
 ``` java
 import org.code4everything.boot.web.mvc.DefaultExceptionHandler;
