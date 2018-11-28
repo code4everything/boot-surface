@@ -52,8 +52,9 @@ public class HttpUtils {
      * @throws IOException 可能发生的异常
      * @since 1.0.2
      */
-    public static <T extends Serializable> ResponseEntity<InputStreamSource> responseDocument(FileService<T> fileService, HttpServletRequest request) throws IOException {
-        return responseDocument(fileService.getLocalPathByAccessUrl(request.getServletPath()));
+    public static <T extends Serializable> ResponseEntity<InputStreamSource> responseFile(FileService<T> fileService,
+                                                                                          HttpServletRequest request) throws IOException {
+        return responseFile(fileService.getLocalPathByAccessUrl(request.getServletPath()));
     }
 
     /**
@@ -66,7 +67,7 @@ public class HttpUtils {
      * @throws IOException 可能发生的异常
      * @since 1.0.2
      */
-    public static ResponseEntity<InputStreamSource> responseDocument(String localPath) throws IOException {
+    public static ResponseEntity<InputStreamSource> responseFile(String localPath) throws IOException {
         FileSystemResource file = null;
         if (FileUtil.exist(localPath)) {
             file = new FileSystemResource(localPath);
