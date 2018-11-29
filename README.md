@@ -25,7 +25,7 @@ Boot Surface是一个依赖于Spring的Web开发工具类，旨在简化日志�
 <dependency>
     <groupId>org.code4everything</groupId>
     <artifactId>boot-surface</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
 </dependency>
 ```
 
