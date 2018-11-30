@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 import org.code4everything.boot.bean.ExceptionBean;
 import org.code4everything.boot.config.BootConfig;
 import org.code4everything.boot.constant.IntegerConsts;
+import org.code4everything.boot.exception.BootException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
@@ -128,7 +129,12 @@ public class DefaultExceptionHandler implements HandlerExceptionResolver {
             e.printStackTrace();
             logger.error("url -> " + req.getServletPath() + ", ip -> " + req.getRemoteAddr() + ", exception -> " + e.getClass().getName() + ", message -> " + e.getMessage());
         }
-        ExceptionBean exceptionBean = exceptionMap.get(e.getClass().getName());
+        ExceptionBean exceptionBean;
+        if (e instanceof BootException) {
+            exceptionBean = ((BootException) e).asExceptionBean();
+        } else {
+            exceptionBean = exceptionMap.get(e.getClass().getName());
+        }
         return parseModelAndView(req, e, Objects.isNull(exceptionBean) ? bean : exceptionBean);
     }
 }
