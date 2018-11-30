@@ -39,6 +39,38 @@ public class LogBean implements Serializable {
     private String description;
 
     /**
+     * 方法执行时长（毫秒）
+     *
+     * @since 1.0.4
+     */
+    private Long executedTime;
+
+    /**
+     * 获取方法执行时长（毫秒）
+     *
+     * @return 发放执行时长（毫秒）
+     *
+     * @since 1.0.4
+     */
+    public Long getExecutedTime() {
+        return executedTime;
+    }
+
+    /**
+     * 设置方法执行时长（毫秒）
+     *
+     * @param executedTime 发放执行时长
+     *
+     * @return {@link LogBean}
+     *
+     * @since 1.0.4
+     */
+    public LogBean setExecutedTime(Long executedTime) {
+        this.executedTime = executedTime;
+        return this;
+    }
+
+    /**
      * 获取类名
      *
      * @return 类名

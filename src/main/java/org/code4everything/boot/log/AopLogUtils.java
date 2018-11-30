@@ -6,6 +6,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
 import org.code4everything.boot.annotations.AopLog;
 import org.code4everything.boot.bean.LogBean;
 import org.code4everything.boot.config.BootConfig;
@@ -46,7 +48,42 @@ public class AopLogUtils {
     }
 
     /**
-     * 保存日志信息
+     * 保存日志（不抛出异常），适用于 {@link Around} 注解的方法
+     *
+     * @param service 日志服务 {@link LogService}
+     * @param point 切点  {@link ProceedingJoinPoint}
+     * @param <T> 日志表
+     *
+     * @return 日志信息
+     *
+     * @since 1.0.4
+     */
+    public static <T> T saveLogNoThrowable(LogService<T> service, ProceedingJoinPoint point) {
+        return proceedAround(service, point).log;
+    }
+
+    /**
+     * 保存日志，适用于 {@link Around} 注解的方法
+     *
+     * @param service 日志服务 {@link LogService}
+     * @param point 切点  {@link ProceedingJoinPoint}
+     * @param <T> 日志表
+     *
+     * @return 日志信息
+     *
+     * @throws Throwable 可能发生的异常
+     * @since 1.0.4
+     */
+    public static <T> T saveLog(LogService<T> service, ProceedingJoinPoint point) throws Throwable {
+        LogExBean<T> logExBean = proceedAround(service, point);
+        if (Objects.isNull(logExBean.throwable)) {
+            return logExBean.log;
+        }
+        throw logExBean.throwable;
+    }
+
+    /**
+     * 保存日志信息，适用于非 {@link Around} 注解的方法
      *
      * @param service 日志服务 {@link LogService}
      * @param key 缓存键，确保每个请求键是唯一的
@@ -98,9 +135,80 @@ public class AopLogUtils {
         for (Method method : targetClass.getMethods()) {
             // 找到对应的方法名
             if (method.getName().equals(logBean.getMethodName()) && method.getParameterTypes().length == logBean.getArgs().length()) {
-                return logBean.setDescription(method.getAnnotation(AopLog.class).value());
+                AopLog aopLog = method.getAnnotation(AopLog.class);
+                if (ObjectUtil.isNotNull(aopLog)) {
+                    return logBean.setDescription(aopLog.value());
+                }
             }
         }
         return logBean;
     }
+
+    /**
+     * 执行方法
+     *
+     * @param service 日志服务 {@link LogService}
+     * @param point 切点  {@link ProceedingJoinPoint}
+     * @param <T> 日志表
+     *
+     * @return {@link LogExBean}
+     *
+     * @since 1.0.4
+     */
+    private static <T> LogExBean<T> proceedAround(LogService<T> service, ProceedingJoinPoint point) {
+        // 获取日志信息
+        LogBean logBean = parse(point);
+        Throwable t = null;
+        long beginTime = System.currentTimeMillis();
+        try {
+            // 执行方法
+            point.proceed();
+        } catch (Throwable e) {
+            t = e;
+        }
+        logBean.setExecutedTime(System.currentTimeMillis() - beginTime);
+        T log = service.getLog(logBean);
+        if (Objects.isNull(t)) {
+            service.save(log);
+        } else {
+            service.saveException(log, t);
+        }
+        return new LogExBean<>(Objects.isNull(t) ? service.save(log) : service.saveException(log, t), t);
+    }
 }
+
+/**
+ * 日志信息临时存储类
+ *
+ * @param <T> 日志表
+ */
+class LogExBean<T> {
+
+    /**
+     * 可能抛出的异常
+     *
+     * @since 1.0.4
+     */
+    Throwable throwable;
+
+    /**
+     * 日志
+     *
+     * @since 1.0.4
+     */
+    T log;
+
+    /**
+     * 设置内容
+     *
+     * @param log 日志
+     * @param throwable 可能抛出的异常
+     *
+     * @since 1.0.4
+     */
+    LogExBean(T log, Throwable throwable) {
+        this.log = log;
+        this.throwable = throwable;
+    }
+}
+
