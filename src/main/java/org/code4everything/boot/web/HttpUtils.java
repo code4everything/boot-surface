@@ -12,7 +12,7 @@ import org.code4everything.boot.bean.MultipartFileBean;
 import org.code4everything.boot.bean.ResponseResult;
 import org.code4everything.boot.config.BootConfig;
 import org.code4everything.boot.constant.StringConsts;
-import org.code4everything.boot.exception.BootException;
+import org.code4everything.boot.exception.template.TokenBlankException;
 import org.code4everything.boot.service.FileService;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.InputStreamResource;
@@ -64,14 +64,13 @@ public class HttpUtils {
      *
      * @return Token
      *
-     * @throws BootException TOKEN 为空异常
+     * @throws TokenBlankException TOKEN 为空异常
      * @since 1.0.4
      */
-    public static String requireToken(HttpServletRequest request) throws BootException {
+    public static String requireToken(HttpServletRequest request) throws TokenBlankException {
         String token = getToken(request);
         if (StrUtil.isBlank(token)) {
-            org.springframework.http.HttpStatus status = org.springframework.http.HttpStatus.UNAUTHORIZED;
-            throw new BootException(HttpStatus.HTTP_UNAUTHORIZED, status, "Token不能为空");
+            throw new TokenBlankException();
         }
         return token;
     }

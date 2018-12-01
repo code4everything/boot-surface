@@ -2,16 +2,20 @@ package org.code4everything.boot.web.mvc;
 
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.http.HttpStatus;
+import com.google.common.base.Strings;
 import org.code4everything.boot.bean.ResponseResult;
 import org.code4everything.boot.config.BootConfig;
 import org.code4everything.boot.constant.MessageConsts;
-import org.code4everything.boot.exception.BootException;
+import org.code4everything.boot.exception.template.TokenBlankException;
+import org.code4everything.boot.exception.template.UserUnloggedException;
+import org.code4everything.boot.service.UserService;
 import org.code4everything.boot.web.HttpUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * 控制器基类
@@ -41,14 +45,47 @@ public class BaseController {
     }
 
     /**
+     * 获取用户
+     *
+     * @param userService 用户服务
+     * @param <T> 用户
+     *
+     * @return 用户
+     *
+     * @since 1.0.4
+     */
+    protected <T extends Serializable> T getUser(UserService<T> userService) {
+        return userService.getUserByToken(Strings.nullToEmpty(getToken()));
+    }
+
+    /**
+     * 获取用户
+     *
+     * @param userService 用户服务
+     * @param <T> 用户
+     *
+     * @return 用户
+     *
+     * @throws UserUnloggedException 未登录异常
+     * @since 1.0.4
+     */
+    protected <T extends Serializable> T requireUser(UserService<T> userService) throws UserUnloggedException {
+        T user = userService.getUserByToken(requireToken());
+        if (Objects.isNull(user)) {
+            throw new UserUnloggedException();
+        }
+        return user;
+    }
+
+    /**
      * 获取Token
      *
      * @return Token
      *
-     * @throws BootException TOKEN 为空异常
+     * @throws TokenBlankException TOKEN 为空异常
      * @since 1.0.4
      */
-    protected String requireToken() throws BootException {
+    protected String requireToken() throws TokenBlankException {
         return HttpUtils.requireToken(request);
     }
 
