@@ -8,6 +8,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.digest.DigestUtil;
 import cn.hutool.http.HttpStatus;
 import org.apache.log4j.Logger;
+import org.code4everything.boot.base.AssertUtils;
 import org.code4everything.boot.bean.MultipartFileBean;
 import org.code4everything.boot.bean.ResponseResult;
 import org.code4everything.boot.config.BootConfig;
@@ -68,11 +69,7 @@ public class HttpUtils {
      * @since 1.0.4
      */
     public static String requireToken(HttpServletRequest request) throws TokenBlankException {
-        String token = getToken(request);
-        if (StrUtil.isBlank(token)) {
-            throw new TokenBlankException();
-        }
-        return token;
+        return AssertUtils.assertTokenNotBlank(getToken(request));
     }
 
     /**

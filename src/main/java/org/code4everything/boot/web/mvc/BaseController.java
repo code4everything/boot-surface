@@ -3,6 +3,7 @@ package org.code4everything.boot.web.mvc;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.http.HttpStatus;
 import com.google.common.base.Strings;
+import org.code4everything.boot.base.AssertUtils;
 import org.code4everything.boot.bean.ResponseResult;
 import org.code4everything.boot.config.BootConfig;
 import org.code4everything.boot.constant.MessageConsts;
@@ -15,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
-import java.util.Objects;
 
 /**
  * 控制器基类
@@ -70,11 +70,7 @@ public class BaseController {
      * @since 1.0.4
      */
     protected <T extends Serializable> T requireUser(UserService<T> userService) throws UserUnloggedException {
-        T user = userService.getUserByToken(requireToken());
-        if (Objects.isNull(user)) {
-            throw new UserUnloggedException();
-        }
-        return user;
+        return AssertUtils.assertUserLoggedIn(userService.getUserByToken(requireToken()));
     }
 
     /**
