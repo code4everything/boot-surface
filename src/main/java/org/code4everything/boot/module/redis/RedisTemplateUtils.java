@@ -1,4 +1,4 @@
-package org.code4everything.boot.redis;
+package org.code4everything.boot.module.redis;
 
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.util.ObjectUtil;

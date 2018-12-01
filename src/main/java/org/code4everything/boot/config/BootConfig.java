@@ -4,7 +4,7 @@ import com.google.common.cache.Cache;
 import org.code4everything.boot.bean.ConfigBean;
 import org.code4everything.boot.encoder.FieldEncoder;
 import org.code4everything.boot.log.AopLogUtils;
-import org.code4everything.boot.redis.RedisTemplateUtils;
+import org.code4everything.boot.module.redis.RedisTemplateUtils;
 import org.code4everything.boot.web.mvc.DefaultWebInterceptor;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 
