@@ -1,13 +1,12 @@
 package org.code4everything.boot.web.mvc;
 
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpStatus;
-import org.apache.log4j.Logger;
 import org.code4everything.boot.bean.ResponseResult;
 import org.code4everything.boot.config.BootConfig;
 import org.code4everything.boot.constant.MessageConsts;
-import org.code4everything.boot.constant.StringConsts;
+import org.code4everything.boot.exception.BootException;
+import org.code4everything.boot.web.HttpUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,8 +26,6 @@ public class BaseController {
 
     private static final String DEFAULT_OK_MSG = MessageConsts.REQUEST_OK_ZH;
 
-    private static final Logger LOGGER = Logger.getLogger(BaseController.class);
-
     @Autowired
     protected HttpServletRequest request;
 
@@ -40,11 +37,32 @@ public class BaseController {
      * @since 1.0.0
      */
     protected String getToken() {
-        String token = request.getHeader(StringConsts.TOKEN);
-        if (StrUtil.isEmpty(token)) {
-            token = request.getParameter(StringConsts.TOKEN);
-        }
-        return token;
+        return HttpUtils.getToken(request);
+    }
+
+    /**
+     * 获取Token
+     *
+     * @return Token
+     *
+     * @throws BootException TOKEN 为空异常
+     * @since 1.0.4
+     */
+    protected String requireToken() throws BootException {
+        return HttpUtils.requireToken(request);
+    }
+
+    /**
+     * 请求成功
+     *
+     * @param <T> 数据类
+     *
+     * @return {@link ResponseResult}
+     *
+     * @since 1.0.4
+     */
+    protected <T extends Serializable> ResponseResult<T> successResult() {
+        return new ResponseResult<>();
     }
 
     /**

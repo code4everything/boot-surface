@@ -11,6 +11,8 @@ import org.apache.log4j.Logger;
 import org.code4everything.boot.bean.MultipartFileBean;
 import org.code4everything.boot.bean.ResponseResult;
 import org.code4everything.boot.config.BootConfig;
+import org.code4everything.boot.constant.StringConsts;
+import org.code4everything.boot.exception.BootException;
 import org.code4everything.boot.service.FileService;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.InputStreamResource;
@@ -40,6 +42,39 @@ public class HttpUtils {
     private static final String NO_FILES_HERE = "没有可上传的文件";
 
     private HttpUtils() {}
+
+    /**
+     * 获取Token
+     *
+     * @param request HTTP请求
+     *
+     * @return Token
+     *
+     * @since 1.0.4
+     */
+    public static String getToken(HttpServletRequest request) {
+        String token = request.getHeader(StringConsts.TOKEN);
+        return StrUtil.isBlank(token) ? request.getParameter(StringConsts.TOKEN) : token;
+    }
+
+    /**
+     * 获取Token
+     *
+     * @param request HTTP请求
+     *
+     * @return Token
+     *
+     * @throws BootException TOKEN 为空异常
+     * @since 1.0.4
+     */
+    public static String requireToken(HttpServletRequest request) throws BootException {
+        String token = getToken(request);
+        if (StrUtil.isBlank(token)) {
+            org.springframework.http.HttpStatus status = org.springframework.http.HttpStatus.UNAUTHORIZED;
+            throw new BootException(HttpStatus.HTTP_UNAUTHORIZED, status, "Token must not be blank");
+        }
+        return token;
+    }
 
     /**
      * 向浏览器响应文件
