@@ -6,6 +6,7 @@ import com.alibaba.fastjson.support.spring.FastJsonRedisSerializer;
 import org.apache.log4j.Logger;
 import org.code4everything.boot.config.BootConfig;
 import org.code4everything.boot.constant.StringConsts;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -23,7 +24,7 @@ public class RedisTemplateUtils {
 
     private static final Logger LOGGER = Logger.getLogger(RedisTemplateUtils.class);
 
-    private static JedisConnectionFactory jedisConnectionFactory = null;
+    private static RedisConnectionFactory redisConnectionFactory = null;
 
     private RedisTemplateUtils() {}
 
@@ -34,19 +35,19 @@ public class RedisTemplateUtils {
      *
      * @since 1.0.0
      */
-    public static JedisConnectionFactory getJedisConnectionFactory() {
-        return getJedisConnectionFactory(null, null, null);
+    public static RedisConnectionFactory getRedisConnectionFactory() {
+        return getRedisConnectionFactory(null, null, null);
     }
 
     /**
      * 设置连接池
      *
-     * @param jedisConnectionFactory 连接池
+     * @param redisConnectionFactory 连接池
      *
      * @since 1.0.0
      */
-    public static void setJedisConnectionFactory(JedisConnectionFactory jedisConnectionFactory) {
-        RedisTemplateUtils.jedisConnectionFactory = jedisConnectionFactory;
+    public static void setRedisConnectionFactory(RedisConnectionFactory redisConnectionFactory) {
+        RedisTemplateUtils.redisConnectionFactory = redisConnectionFactory;
     }
 
     /**
@@ -60,12 +61,12 @@ public class RedisTemplateUtils {
      *
      * @since 1.0.0
      */
-    public static JedisConnectionFactory getJedisConnectionFactory(String hostName, Integer port, Integer database) {
+    public static RedisConnectionFactory getRedisConnectionFactory(String hostName, Integer port, Integer database) {
         // 连接池在启动项目时就配置好了，故不考虑并发情况
-        if (Objects.isNull(jedisConnectionFactory)) {
-            initJedisConnectionFactory(hostName, port, database);
+        if (Objects.isNull(redisConnectionFactory)) {
+            initRedisConnectionFactory(hostName, port, database);
         }
-        return jedisConnectionFactory;
+        return redisConnectionFactory;
     }
 
     /**
@@ -76,8 +77,8 @@ public class RedisTemplateUtils {
      *
      * @since 1.0.0
      */
-    public static void initJedisConnectionFactory(String hostName, Integer port) {
-        initJedisConnectionFactory(hostName, port, null);
+    public static void initRedisConnectionFactory(String hostName, Integer port) {
+        initRedisConnectionFactory(hostName, port, null);
     }
 
     /**
@@ -87,8 +88,8 @@ public class RedisTemplateUtils {
      *
      * @since 1.0.0
      */
-    public static void initJedisConnectionFactory(String hostName) {
-        initJedisConnectionFactory(hostName, null, null);
+    public static void initRedisConnectionFactory(String hostName) {
+        initRedisConnectionFactory(hostName, null, null);
     }
 
 
@@ -101,7 +102,7 @@ public class RedisTemplateUtils {
      *
      * @since 1.0.0
      */
-    public static void initJedisConnectionFactory(String hostName, Integer port, Integer database) {
+    public static void initRedisConnectionFactory(String hostName, Integer port, Integer database) {
         RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration();
         StringBuilder message = new StringBuilder("connect to redis server on");
         if (Validator.isNotEmpty(hostName)) {
@@ -116,7 +117,7 @@ public class RedisTemplateUtils {
             configuration.setDatabase(database);
             message.append(" database -> ").append(database).append(" ,");
         }
-        jedisConnectionFactory = new JedisConnectionFactory(configuration);
+        redisConnectionFactory = new JedisConnectionFactory(configuration);
         if (BootConfig.isDebug()) {
             String msg = message.toString();
             if (msg.endsWith(StringConsts.Sign.COMMA)) {
@@ -153,7 +154,7 @@ public class RedisTemplateUtils {
      */
     public static <K, V> RedisTemplate<K, V> newTemplate(Class<K> keyType, Class<V> valueType) {
         RedisTemplate<K, V> redisTemplate = new RedisTemplate<>();
-        redisTemplate.setConnectionFactory(getJedisConnectionFactory());
+        redisTemplate.setConnectionFactory(getRedisConnectionFactory());
         if (ObjectUtil.isNotNull(keyType)) {
             if (keyType == String.class) {
                 redisTemplate.setKeySerializer(new StringRedisSerializer());

@@ -71,7 +71,7 @@ public class HttpUtils {
         String token = getToken(request);
         if (StrUtil.isBlank(token)) {
             org.springframework.http.HttpStatus status = org.springframework.http.HttpStatus.UNAUTHORIZED;
-            throw new BootException(HttpStatus.HTTP_UNAUTHORIZED, status, "Token must not be blank");
+            throw new BootException(HttpStatus.HTTP_UNAUTHORIZED, status, "Token不能为空");
         }
         return token;
     }

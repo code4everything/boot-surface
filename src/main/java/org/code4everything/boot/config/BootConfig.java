@@ -6,6 +6,7 @@ import org.code4everything.boot.encoder.FieldEncoder;
 import org.code4everything.boot.log.AopLogUtils;
 import org.code4everything.boot.redis.RedisTemplateUtils;
 import org.code4everything.boot.web.mvc.DefaultWebInterceptor;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
 
 /**
  * 工具配置类
@@ -77,8 +78,8 @@ public class BootConfig {
      *
      * @since 1.0.0
      */
-    public static void initJedisConnectionFactory(String hostName, Integer port, Integer database) {
-        RedisTemplateUtils.initJedisConnectionFactory(hostName, port, database);
+    public static void initRedisConnectionFactory(String hostName, Integer port, Integer database) {
+        RedisTemplateUtils.initRedisConnectionFactory(hostName, port, database);
     }
 
     /**
@@ -89,8 +90,8 @@ public class BootConfig {
      *
      * @since 1.0.0
      */
-    public static void initJedisConnectionFactory(String hostName, Integer port) {
-        RedisTemplateUtils.initJedisConnectionFactory(hostName, port);
+    public static void initRedisConnectionFactory(String hostName, Integer port) {
+        RedisTemplateUtils.initRedisConnectionFactory(hostName, port);
     }
 
     /**
@@ -100,8 +101,19 @@ public class BootConfig {
      *
      * @since 1.0.0
      */
-    public static void initJedisConnectionFactory(String hostName) {
-        RedisTemplateUtils.initJedisConnectionFactory(hostName);
+    public static void initRedisConnectionFactory(String hostName) {
+        RedisTemplateUtils.initRedisConnectionFactory(hostName);
+    }
+
+    /**
+     * 设置连接池
+     *
+     * @param redisConnectionFactory 连接池
+     *
+     * @since 1.0.4
+     */
+    public static void setRedisConnectionFactory(RedisConnectionFactory redisConnectionFactory) {
+        RedisTemplateUtils.setRedisConnectionFactory(redisConnectionFactory);
     }
 
 
