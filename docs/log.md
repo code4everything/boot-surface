@@ -34,6 +34,8 @@ public class Log implements Serializable {
 
     private String exceptionDetail;
     
+    private Long executedTime;
+    
     ... setter and getter
 }
 ```
@@ -149,8 +151,8 @@ public class LogAspect {
      * 或者使用 {@link Around} 方法
      */
     @Around("serviceAspect()")
-    public void doAround(ProceedingJoinPoint point) {
-        AopLogUtils.saveLogNoThrowable(logService, point);
+    public Object doAround(ProceedingJoinPoint point) {
+        return AopLogUtils.saveLog(logService, point).getResult();
     }
 }
 ```
