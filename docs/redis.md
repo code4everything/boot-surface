@@ -7,8 +7,10 @@
 > 如果是默认的主机和端口无需设置
 
 ``` java
-// 在主类的main方法中设置
-RedisTemplateUtils.initJedisConnectionFactory("192.168.1.210");
+@Autowired
+public YourRedisConfigurationCustructor(RedisConnectionFactory redisConnectionFactory) {
+    BootConfig.setRedisConnectionFactory(redisConnectionFactory);
+}
 ```
 
 #### 新建 `RedisTemplate`

@@ -144,6 +144,14 @@ public class LogAspect {
         String key = request.getHeader(StringConsts.TOKEN) + Thread.currentThread().getId();
         AopLogUtils.saveLog(logLogService, key, joinPoint, throwable);
     }
+    
+    /**
+     * 或者使用 {@link Around} 方法
+     */
+    @Around("serviceAspect()")
+    public void doAround(ProceedingJoinPoint point) {
+        AopLogUtils.saveLogNoThrowable(logService, point);
+    }
 }
 ```
 

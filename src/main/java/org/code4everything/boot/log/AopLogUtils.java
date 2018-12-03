@@ -168,11 +168,6 @@ public class AopLogUtils {
         }
         logBean.setExecutedTime(System.currentTimeMillis() - beginTime);
         T log = service.getLog(logBean);
-        if (Objects.isNull(t)) {
-            service.save(log);
-        } else {
-            service.saveException(log, t);
-        }
         return new LogExBean<>(Objects.isNull(t) ? service.save(log) : service.saveException(log, t), t);
     }
 }
