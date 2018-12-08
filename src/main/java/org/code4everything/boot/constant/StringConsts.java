@@ -88,9 +88,9 @@ public class StringConsts {
 
         public static final String RIGHT_BRACKET = "]";
 
-        public static final String LEFT_PARENTHESE = "(";
+        public static final String LEFT_PARENTHESES = "(";
 
-        public static final String RIGHT_PARENTHESE = ")";
+        public static final String RIGHT_PARENTHESES = ")";
 
         public static final String LESS_THAN = "<";
 
