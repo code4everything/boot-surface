@@ -34,6 +34,8 @@ public class Log implements Serializable {
 
     private String exceptionDetail;
     
+    private Long executedTime;
+    
     ... setter and getter
 }
 ```
@@ -143,6 +145,14 @@ public class LogAspect {
     public void doAfterThrowing(JoinPoint joinPoint, Throwable throwable) {
         String key = request.getHeader(StringConsts.TOKEN) + Thread.currentThread().getId();
         AopLogUtils.saveLog(logLogService, key, joinPoint, throwable);
+    }
+    
+    /**
+     * 或者使用 {@link Around} 方法
+     */
+    @Around("serviceAspect()")
+    public Object doAround(ProceedingJoinPoint point) {
+        return AopLogUtils.saveLog(logService, point).getResult();
     }
 }
 ```
