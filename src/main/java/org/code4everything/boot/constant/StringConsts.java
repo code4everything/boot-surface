@@ -12,6 +12,8 @@ public class StringConsts {
 
     public static final String ERROR = "error";
 
+    public static final String CODE = "code";
+
     private StringConsts() {}
 
     public class Sign {
