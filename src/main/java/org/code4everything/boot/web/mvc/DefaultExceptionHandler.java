@@ -27,9 +27,9 @@ import java.util.Objects;
  */
 public class DefaultExceptionHandler implements HandlerExceptionResolver {
 
-    private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";
+    protected static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";
 
-    private final Logger logger = Logger.getLogger(DefaultExceptionHandler.class);
+    private static final Logger LOGGER = Logger.getLogger(DefaultExceptionHandler.class);
 
     /**
      * 默认异常信息
@@ -56,21 +56,35 @@ public class DefaultExceptionHandler implements HandlerExceptionResolver {
      *
      * @since 1.0.0
      */
-    protected ModelAndView parseModelAndView(HttpServletRequest request, Exception exception, ExceptionBean bean) {
+    private ModelAndView parseModelAndView(HttpServletRequest request, Exception exception, ExceptionBean bean) {
         Objects.requireNonNull(bean);
         ModelAndView modelAndView = new ModelAndView();
         FastJsonJsonView view = new FastJsonJsonView();
         Map<String, Object> attributes = new HashMap<>(IntegerConsts.EIGHT);
-        attributes.put("code", bean.getCode());
-        attributes.put("msg", Validator.isEmpty(bean.getMsg()) ? exception.getMessage() : bean.getMsg());
-        attributes.put("timestamp", DateUtil.format(new Date(), DATE_FORMAT));
-        String queryString = request.getQueryString();
-        attributes.put("url", request.getRequestURI() + (Validator.isEmpty(queryString) ? "" : "?" + queryString));
-        attributes.put("data", exception.getMessage());
+        wrapAttributes(attributes, request, exception, bean);
         view.setAttributesMap(attributes);
         modelAndView.setView(view);
         modelAndView.setStatus(bean.getStatus());
         return modelAndView;
+    }
+
+    /**
+     * 你可以重写这个方法，自定义返回内容
+     *
+     * @param attr {@link Map}
+     * @param req {@link HttpServletRequest}
+     * @param ex {@link Exception}
+     * @param bean {@link ExceptionBean}
+     *
+     * @since 1.0.4
+     */
+    protected void wrapAttributes(Map<String, Object> attr, HttpServletRequest req, Exception ex, ExceptionBean bean) {
+        attr.put("code", bean.getCode());
+        attr.put("msg", Validator.isEmpty(bean.getMsg()) ? ex.getMessage() : bean.getMsg());
+        attr.put("timestamp", DateUtil.format(new Date(), DATE_FORMAT));
+        String queryString = req.getQueryString();
+        attr.put("url", req.getRequestURI() + (Validator.isEmpty(queryString) ? "" : "?" + queryString));
+        attr.put("data", ex.getMessage());
     }
 
     /**
@@ -80,7 +94,7 @@ public class DefaultExceptionHandler implements HandlerExceptionResolver {
      *
      * @since 1.0.0
      */
-    public Map<String, ExceptionBean> getExceptionMap() {
+    public final Map<String, ExceptionBean> getExceptionMap() {
         return exceptionMap;
     }
 
@@ -91,7 +105,7 @@ public class DefaultExceptionHandler implements HandlerExceptionResolver {
      *
      * @since 1.0.0
      */
-    public void setExceptionMap(Map<String, ExceptionBean> exceptionMap) {
+    public final void setExceptionMap(Map<String, ExceptionBean> exceptionMap) {
         this.exceptionMap = exceptionMap;
     }
 
@@ -127,7 +141,7 @@ public class DefaultExceptionHandler implements HandlerExceptionResolver {
     public ModelAndView resolveException(HttpServletRequest req, HttpServletResponse res, Object o, Exception e) {
         if (BootConfig.isDebug()) {
             e.printStackTrace();
-            logger.error("url -> " + req.getServletPath() + ", ip -> " + req.getRemoteAddr() + ", exception -> " + e.getClass().getName() + ", message -> " + e.getMessage());
+            LOGGER.error("url -> " + req.getServletPath() + ", ip -> " + req.getRemoteAddr() + ", exception -> " + e.getClass().getName() + ", message -> " + e.getMessage());
         }
         ExceptionBean exceptionBean;
         if (e instanceof BootException) {
