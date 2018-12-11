@@ -266,6 +266,38 @@ public class ResponseResult<T extends Serializable> implements Serializable {
         return new ResponseResult<E>(code, msg).setTimestamp(timestamp).setData(newData);
     }
 
+    /**
+     * 从参数对象中复制数据
+     *
+     * @param result 目标 {@link ResponseResult}
+     *
+     * @return {@link ResponseResult}
+     *
+     * @since 1.0.4
+     */
+    @SuppressWarnings("unchecked")
+    public ResponseResult<T> copyFrom(ResponseResult<? extends Serializable> result) {
+        this.setMsg(result.getMsg()).setCode(result.getCode()).setTimestamp(result.getTimestamp());
+        if (result.data.getClass() == this.data.getClass()) {
+            this.setData((T) result.getData());
+        }
+        return this;
+    }
+
+    /**
+     * 复制数据到参数对象中
+     *
+     * @param result 目标 {@link ResponseResult}
+     * @param <E> 数据类型
+     *
+     * @return {@link ResponseResult}
+     *
+     * @since 1.0.4
+     */
+    public <E extends Serializable> ResponseResult<E> copyInto(ResponseResult<E> result) {
+        return result.copyFrom(this);
+    }
+
     @Override
     public String toString() {
         return JSONObject.toJSONString(this);

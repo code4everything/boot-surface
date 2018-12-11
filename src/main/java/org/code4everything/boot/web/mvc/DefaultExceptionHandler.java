@@ -83,7 +83,7 @@ public class DefaultExceptionHandler implements HandlerExceptionResolver {
         attr.put("msg", Validator.isEmpty(bean.getMsg()) ? ex.getMessage() : bean.getMsg());
         attr.put("timestamp", DateUtil.format(new Date(), DATE_FORMAT));
         String queryString = req.getQueryString();
-        attr.put("url", req.getRequestURI() + (Validator.isEmpty(queryString) ? "" : "?" + queryString));
+        attr.put("path", req.getRequestURI() + (Validator.isEmpty(queryString) ? "" : "?" + queryString));
         attr.put("data", ex.getMessage());
     }
 
