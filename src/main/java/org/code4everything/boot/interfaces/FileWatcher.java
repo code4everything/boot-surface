@@ -12,14 +12,14 @@ import java.nio.file.WatchEvent;
 public interface FileWatcher {
 
     /**
-     * 执行一些业务代码
+     * 执行一些业务代码，最后调用
      *
      * @since 1.0.0
      */
     default void doSomething() {}
 
     /**
-     * 文件发生变化
+     * 文件发生变化，最先调用
      *
      * @param event 时间
      * @param currentPath 当前路径

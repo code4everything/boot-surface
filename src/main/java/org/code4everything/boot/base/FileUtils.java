@@ -1,14 +1,19 @@
 package org.code4everything.boot.base;
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.watch.SimpleWatcher;
 import cn.hutool.core.io.watch.WatchMonitor;
 import cn.hutool.core.io.watch.Watcher;
 import cn.hutool.core.io.watch.watchers.DelayWatcher;
+import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSONObject;
 import org.apache.log4j.Logger;
 import org.code4everything.boot.config.BootConfig;
 import org.code4everything.boot.interfaces.FileWatcher;
 
+import java.io.Serializable;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.WatchEvent;
@@ -24,6 +29,79 @@ public class FileUtils {
     private static final Logger LOGGER = Logger.getLogger(FileUtils.class);
 
     private FileUtils() {}
+
+    /**
+     * 监听文件变化，并自动注入Bean类
+     *
+     * @param jsonFile JSON文件
+     * @param config Bean类
+     * @param clazz Bean类的类型
+     * @param <T> 类型
+     *
+     * @since 1.0.4
+     */
+    public static <T extends Serializable> void watchFile(String jsonFile, T config, Class<T> clazz) {
+        watchFile(jsonFile, new FileWatcher() {}, config, clazz, CharsetUtil.UTF_8);
+    }
+
+    /**
+     * 监听文件变化，并自动注入Bean类
+     *
+     * @param jsonFile JSON文件
+     * @param config Bean类
+     * @param clazz Bean类的类型
+     * @param charset 文件编码
+     * @param <T> 类型
+     *
+     * @since 1.0.4
+     */
+    public static <T extends Serializable> void watchFile(String jsonFile, T config, Class<T> clazz, String charset) {
+        watchFile(jsonFile, new FileWatcher() {}, config, clazz, charset);
+    }
+
+    /**
+     * 监听文件变化，并自动注入Bean类
+     *
+     * @param jsonFile JSON文件
+     * @param fileWatcher {@link FileWatcher}
+     * @param config Bean类
+     * @param clazz Bean类的类型
+     * @param <T> 类型
+     *
+     * @since 1.0.4
+     */
+    public static <T extends Serializable> void watchFile(String jsonFile, FileWatcher fileWatcher, T config,
+                                                          Class<T> clazz) {
+        watchFile(jsonFile, fileWatcher, config, clazz, CharsetUtil.UTF_8);
+    }
+
+    /**
+     * 监听文件变化，并自动注入Bean类
+     *
+     * @param jsonFile JSON文件
+     * @param fileWatcher {@link FileWatcher}
+     * @param config Bean类
+     * @param clazz Bean类的类型
+     * @param charset 文件编码
+     * @param <T> 类型
+     *
+     * @since 1.0.4
+     */
+    public static <T extends Serializable> void watchFile(String jsonFile, FileWatcher fileWatcher, T config,
+                                                          Class<T> clazz, String charset) {
+        watchFile(jsonFile, new FileWatcher() {
+            @Override
+            public void doSomething() {
+                BeanUtil.copyProperties(JSONObject.parseObject(FileUtil.readString(jsonFile, charset), clazz), config);
+                fileWatcher.doSomething();
+            }
+
+            @Override
+            public void onModify(WatchEvent<?> event, Path currentPath) {
+                fileWatcher.onModify(event, currentPath);
+            }
+        }, true);
+    }
 
     /**
      * 监听文件
