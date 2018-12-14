@@ -113,6 +113,20 @@ public class BaseController {
     }
 
     /**
+     * 请求成功
+     *
+     * @param okMsg 成功消息
+     * @param <T> 数据类
+     *
+     * @return {@link ResponseResult}
+     *
+     * @since 1.0.4
+     */
+    protected <T extends Serializable> ResponseResult<T> successResult(String okMsg, T data) {
+        return new ResponseResult<>(okMsg, data);
+    }
+
+    /**
      * 请求失败
      *
      * @param errMsg 错误消息
