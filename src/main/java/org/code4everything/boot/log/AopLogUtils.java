@@ -100,6 +100,7 @@ public class AopLogUtils {
      *
      * @param service 日志服务 {@link LogService}
      * @param point 切点  {@link ProceedingJoinPoint}
+     * @param shouldSave 是否保存日志
      * @param <T> 日志表
      *
      * @return 日志信息

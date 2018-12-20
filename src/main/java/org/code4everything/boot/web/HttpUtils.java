@@ -77,6 +77,7 @@ public class HttpUtils {
      *
      * @param fileService 文件服务 {@link FileService}
      * @param request HTTP请求
+     * @param <T> 文件实体类型
      *
      * @return 文件流
      *

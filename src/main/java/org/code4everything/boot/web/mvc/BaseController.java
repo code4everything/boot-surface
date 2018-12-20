@@ -116,6 +116,7 @@ public class BaseController {
      * 请求成功
      *
      * @param okMsg 成功消息
+     * @param data 数据
      * @param <T> 数据类
      *
      * @return {@link ResponseResult}

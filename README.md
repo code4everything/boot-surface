@@ -1,6 +1,6 @@
 ## 项目简介
 
-Boot Surface是一个依赖于Spring的Web开发工具类，旨在简化日志记录、文件上传、异常处理等一些繁琐而又必要的代码编写。
+Boot Surface主要是一个依赖于Spring框架的Web开发工具类，旨在简化日志记录、文件上传、异常处理等一些繁琐而又必要的代码编写。
 这也是从工作项目中剥离出来的一些公共代码，方便以后一些项目的构建。
 
 > 本工具库主要适用于 `Spring Boot Web` 项目的开发
@@ -25,7 +25,7 @@ Boot Surface是一个依赖于Spring的Web开发工具类，旨在简化日志�
 <dependency>
     <groupId>org.code4everything</groupId>
     <artifactId>boot-surface</artifactId>
-    <version>1.0.3</version>
+    <version>1.0.4</version>
 </dependency>
 ```
 
