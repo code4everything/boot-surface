@@ -4,6 +4,7 @@ import cn.hutool.http.HttpStatus;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
 import org.code4everything.boot.config.BootConfig;
+import org.code4everything.boot.constant.MessageConsts;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -35,7 +36,7 @@ public class ResponseResult<T extends Serializable> implements Serializable {
      *
      * @since 1.0.0
      */
-    private String msg = "请求成功";
+    private String msg = MessageConsts.REQUEST_OK_ZH;
 
     /**
      * 数据

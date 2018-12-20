@@ -1,6 +1,7 @@
 package org.code4everything.boot.exception;
 
 import org.code4everything.boot.bean.ExceptionBean;
+import org.code4everything.boot.constant.MessageConsts;
 import org.springframework.http.HttpStatus;
 
 /**
@@ -16,14 +17,14 @@ public class BootException extends Exception {
      *
      * @since 1.0.4
      */
-    private Integer code = 500;
+    private Integer code = cn.hutool.http.HttpStatus.HTTP_INTERNAL_ERROR;
 
     /**
      * 消息
      *
      * @since 1.0.4
      */
-    private String msg = "ops, some error occurred, please try again later.";
+    private String msg = MessageConsts.UNKNOWN_ERROR_ZH;
 
     /**
      * HTTP状态

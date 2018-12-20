@@ -1,5 +1,7 @@
 package org.code4everything.boot.exception.template;
 
+import org.code4everything.boot.constant.MessageConsts;
+
 /**
  * Token 为空异常
  *
@@ -13,7 +15,7 @@ public class TokenBlankException extends UserUnloggedException {
      *
      * @since 1.0.4
      */
-    private static final String MSG = "Token不能为空";
+    private static final String MSG = MessageConsts.TOKEN_BLANK_ERROR_ZH;
 
     /**
      * 无参构造函数

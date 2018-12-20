@@ -3,6 +3,7 @@ package org.code4everything.boot.interfaces;
 import cn.hutool.http.ContentType;
 import cn.hutool.http.HttpStatus;
 import org.code4everything.boot.bean.ResponseResult;
+import org.code4everything.boot.constant.MessageConsts;
 import org.springframework.http.HttpHeaders;
 import org.springframework.lang.Nullable;
 import org.springframework.web.servlet.ModelAndView;
@@ -29,7 +30,7 @@ public interface InterceptHandler {
      * @since 1.0.0
      */
     default void handleBlackList(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        response.getWriter().append(new ResponseResult(HttpStatus.HTTP_FORBIDDEN, "禁止访问").toString());
+        response.getWriter().append(new ResponseResult(HttpStatus.HTTP_FORBIDDEN, MessageConsts.REQUEST_BANNED_ZH).toString());
         response.setHeader(HttpHeaders.CONTENT_TYPE, ContentType.JSON.toString());
         response.setStatus(HttpStatus.HTTP_FORBIDDEN);
     }

@@ -1,6 +1,7 @@
 package org.code4everything.boot.exception.template;
 
 import cn.hutool.http.HttpStatus;
+import org.code4everything.boot.constant.MessageConsts;
 import org.code4everything.boot.exception.BootException;
 
 /**
@@ -16,7 +17,7 @@ public class UserUnloggedException extends BootException {
      *
      * @since 1.0.4
      */
-    private static final String MSG = "用户未登录或登录已超时";
+    private static final String MSG = MessageConsts.USER_UNLOGGED_ERROR_ZH;
 
     /**
      * 无参构造函数

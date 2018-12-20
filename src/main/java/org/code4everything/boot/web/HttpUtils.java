@@ -12,6 +12,7 @@ import org.code4everything.boot.base.AssertUtils;
 import org.code4everything.boot.bean.MultipartFileBean;
 import org.code4everything.boot.bean.ResponseResult;
 import org.code4everything.boot.config.BootConfig;
+import org.code4everything.boot.constant.MessageConsts;
 import org.code4everything.boot.constant.StringConsts;
 import org.code4everything.boot.exception.template.TokenBlankException;
 import org.code4everything.boot.service.FileService;
@@ -40,8 +41,6 @@ import java.util.Objects;
 public class HttpUtils {
 
     private static final Logger LOGGER = Logger.getLogger(HttpUtils.class);
-
-    private static final String NO_FILES_HERE = "没有可上传的文件";
 
     private HttpUtils() {}
 
@@ -215,7 +214,7 @@ public class HttpUtils {
     public static <T extends Serializable> ResponseResult<ArrayList<ResponseResult<T>>> multiUpload(FileService<T> fileService, MultipartHttpServletRequest request, String storagePath, boolean digestBytes, Map<String, Serializable> params, boolean forceWrite) {
         Map<String, MultipartFile> fileMap = request.getFileMap();
         if (CollectionUtil.isEmpty(fileMap)) {
-            return new ResponseResult<>(HttpStatus.HTTP_BAD_REQUEST, NO_FILES_HERE);
+            return new ResponseResult<>(HttpStatus.HTTP_BAD_REQUEST, MessageConsts.FILE_UNAVAILABLE_ZH);
         } else {
             ArrayList<ResponseResult<T>> fileList = new ArrayList<>();
             fileMap.values().forEach(file -> fileList.add(upload(fileService, file, storagePath, digestBytes, params,
