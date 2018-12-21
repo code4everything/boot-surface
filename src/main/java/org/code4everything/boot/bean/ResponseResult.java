@@ -98,6 +98,21 @@ public class ResponseResult<T extends Serializable> implements Serializable {
     }
 
     /**
+     * 设置错误码、消息和数据
+     *
+     * @param code 错误码
+     * @param msg 消息
+     * @param data 数据
+     *
+     * @since 1.0.5
+     */
+    public ResponseResult(int code, String msg, T data) {
+        this.code = code;
+        this.msg = msg;
+        this.data = data;
+    }
+
+    /**
      * 获取错误码
      *
      * @return 错误码
