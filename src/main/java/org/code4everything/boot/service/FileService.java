@@ -2,6 +2,7 @@ package org.code4everything.boot.service;
 
 import org.code4everything.boot.bean.MultipartFileBean;
 
+import javax.annotation.Nullable;
 import java.io.Serializable;
 
 /**
@@ -45,6 +46,18 @@ public interface FileService<T extends Serializable> {
      * @since 1.0.0
      */
     default T save(MultipartFileBean fileBean) {return null;}
+
+    /**
+     * 定义将数据写入数据库中的方法，针对开启了文件强制写入，如果没有开启强制写入那么无需实现此方法
+     *
+     * @param fileBean {@link MultipartFileBean}
+     * @param file 如果文件存在，并且开启了强制写入，将传入一个文件实体，注意进行空指针判断；如果没有开启强制写入，那么无需考虑这个参数
+     *
+     * @return T 实体类
+     *
+     * @since 1.0.5
+     */
+    default T save(MultipartFileBean fileBean, @Nullable T file) {return save(fileBean);}
 
     /**
      * 通过访问链接获取本地路径

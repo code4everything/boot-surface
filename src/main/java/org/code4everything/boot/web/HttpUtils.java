@@ -382,7 +382,7 @@ public class HttpUtils {
                 return result.error(HttpStatus.HTTP_UNAVAILABLE, ofn + " upload failed");
             }
             // 将数据写入数据库
-            t = fileService.save(fileBean);
+            t = fileService.save(fileBean, t);
         }
         return Objects.isNull(t) ? result.setMsg(fileBean.getFilename()) : result.setData(t);
     }
