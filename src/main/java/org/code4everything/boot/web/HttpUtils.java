@@ -2,7 +2,6 @@ package org.code4everything.boot.web;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.lang.Validator;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.digest.DigestUtil;
@@ -364,9 +363,9 @@ public class HttpUtils {
         Boolean exists = fileService.exists(fileBean);
         boolean shouldWrite = false;
         T t = null;
-        if (Validator.isNull(exists)) {
+        if (Objects.isNull(exists)) {
             t = fileService.getBy(fileBean);
-            if (Validator.isNull(t)) {
+            if (Objects.isNull(t)) {
                 // 不存在时则可以写入磁盘
                 shouldWrite = true;
             }
