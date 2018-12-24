@@ -361,10 +361,27 @@ public class ResponseResult<T extends Serializable> implements Serializable {
      */
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof ResponseResult) {
+        if (this == obj) {
+            return true;
+        } else if (obj instanceof ResponseResult) {
             ResponseResult result = (ResponseResult) obj;
-            return this.code == result.code && this.msg.equals(result.msg) && Objects.equals(this.data, result.data);
+            return code == result.code && msg.equals(result.msg) && Objects.equals(data, result.data);
         }
         return false;
+    }
+
+    /**
+     * 重写哈希
+     *
+     * @return 哈希
+     *
+     * @since 1.0.5
+     */
+    @Override
+    public int hashCode() {
+        int hasCode = 7;
+        hasCode = hasCode * 23 + code;
+        hasCode = hasCode * 23 + msg.hashCode();
+        return data == null ? hasCode : hasCode * 23 + data.hashCode();
     }
 }
