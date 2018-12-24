@@ -8,6 +8,9 @@ import org.code4everything.boot.constant.MessageConsts;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * HTTP响应实体
@@ -191,6 +194,34 @@ public class ResponseResult<T extends Serializable> implements Serializable {
     }
 
     /**
+     * 转换数据格式
+     *
+     * @param data 数据
+     *
+     * @return {@link ResponseResult}
+     *
+     * @since 1.0.5
+     */
+    @SuppressWarnings("unchecked")
+    public ResponseResult<T> castData(Collection<? extends Serializable> data) {
+        return setData((T) data);
+    }
+
+    /**
+     * 转换数据格式
+     *
+     * @param data 数据
+     *
+     * @return {@link ResponseResult}
+     *
+     * @since 1.0.5
+     */
+    @SuppressWarnings("unchecked")
+    public ResponseResult<T> castData(Map<? extends Serializable, ? extends Serializable> data) {
+        return setData((T) data);
+    }
+
+    /**
      * 获取当前时间戳
      *
      * @return 时间戳
@@ -317,5 +348,23 @@ public class ResponseResult<T extends Serializable> implements Serializable {
     @Override
     public String toString() {
         return JSONObject.toJSONString(this);
+    }
+
+    /**
+     * 不比较时间戳
+     *
+     * @param obj 对象
+     *
+     * @return 是否相等
+     *
+     * @since 1.0.5
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof ResponseResult) {
+            ResponseResult result = (ResponseResult) obj;
+            return this.code == result.code && this.msg.equals(result.msg) && Objects.equals(this.data, result.data);
+        }
+        return false;
     }
 }

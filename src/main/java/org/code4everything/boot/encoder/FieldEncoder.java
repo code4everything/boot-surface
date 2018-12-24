@@ -65,7 +65,6 @@ public class FieldEncoder {
      *
      * @since 1.0.0
      */
-    @SuppressWarnings("unchecked")
     public boolean encode(Object data) {
         if (Objects.isNull(data) || data instanceof CharSequence || ObjectUtil.isBasicType(data)) {
             return false;
