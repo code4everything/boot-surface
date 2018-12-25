@@ -1,5 +1,6 @@
 package org.code4everything.boot.web.mvc;
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.http.HttpStatus;
 import com.google.common.base.Strings;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
+import java.util.Collection;
 
 /**
  * 控制器基类
@@ -30,8 +32,32 @@ public class BaseController {
 
     private static final String DEFAULT_OK_MSG = MessageConsts.REQUEST_OK_ZH;
 
+    private static int okCode = HttpStatus.HTTP_OK;
+
     @Autowired
     protected HttpServletRequest request;
+
+    /**
+     * 获取正确码
+     *
+     * @return 正确码
+     *
+     * @since 1.0.5
+     */
+    public static int getOkCode() {
+        return okCode;
+    }
+
+    /**
+     * 设置正确码
+     *
+     * @param okCode 正确码
+     *
+     * @since 1.0.5
+     */
+    public static void setOkCode(int okCode) {
+        BaseController.okCode = okCode;
+    }
 
     /**
      * 获取Token
@@ -95,7 +121,7 @@ public class BaseController {
      * @since 1.0.4
      */
     protected <T extends Serializable> ResponseResult<T> successResult() {
-        return new ResponseResult<>();
+        return new ResponseResult<T>().setCode(okCode);
     }
 
     /**
@@ -109,7 +135,7 @@ public class BaseController {
      * @since 1.0.0
      */
     protected <T extends Serializable> ResponseResult<T> successResult(String okMsg) {
-        return new ResponseResult<T>().setMsg(okMsg);
+        return new ResponseResult<T>().setMsg(okMsg).setCode(okCode);
     }
 
     /**
@@ -124,7 +150,7 @@ public class BaseController {
      * @since 1.0.4
      */
     protected <T extends Serializable> ResponseResult<T> successResult(String okMsg, T data) {
-        return new ResponseResult<>(okMsg, data);
+        return new ResponseResult<>(okCode, okMsg, data);
     }
 
     /**
@@ -197,7 +223,7 @@ public class BaseController {
      * @since 1.0.0
      */
     protected ResponseResult<Boolean> parseBoolResult(String okMsg, String errMsg, boolean isOk) {
-        return new ResponseResult<Boolean>().setMsg(isOk ? okMsg : errMsg).setData(isOk);
+        return new ResponseResult<Boolean>().setMsg(isOk ? okMsg : errMsg).setData(isOk).setCode(okCode);
     }
 
     /**
@@ -340,6 +366,158 @@ public class BaseController {
                 BootConfig.getFieldEncoder().encode(data);
             }
         }
-        return isError ? new ResponseResult<>(errCode, errMsg) : new ResponseResult<>(okMsg, data);
+        return isError ? errorResult(errCode, errMsg) : successResult(okMsg, data);
+    }
+
+    /**
+     * 解析结果
+     *
+     * @param errMsg 请求失败的消息
+     * @param data 数据
+     * @param <T> 数据类型
+     *
+     * @return 结果
+     *
+     * @since 1.0.5
+     */
+    protected <T extends Serializable> ResponseResult<T> parseCollectionResult(String errMsg, Collection<?
+            extends Serializable> data) {
+        return parseCollectionResult(DEFAULT_OK_MSG, errMsg, DEFAULT_ERROR_CODE, data, false);
+    }
+
+
+    /**
+     * 解析结果
+     *
+     * @param errMsg 请求失败的消息
+     * @param data 数据
+     * @param sealed 是否对字段进行加密
+     * @param <T> 数据类型
+     *
+     * @return 结果
+     *
+     * @since 1.0.5
+     */
+    protected <T extends Serializable> ResponseResult<T> parseCollectionResult(String errMsg, Collection<?
+            extends Serializable> data, boolean sealed) {
+        return parseCollectionResult(DEFAULT_OK_MSG, errMsg, DEFAULT_ERROR_CODE, data, sealed);
+    }
+
+
+    /**
+     * 解析结果
+     *
+     * @param okMsg 请求成功的消息
+     * @param errMsg 请求失败的消息
+     * @param errCode 错误码
+     * @param data 数据
+     * @param <T> 数据类型
+     *
+     * @return 结果
+     *
+     * @since 1.0.5
+     */
+    protected <T extends Serializable> ResponseResult<T> parseCollectionResult(String okMsg, String errMsg,
+                                                                               int errCode, Collection<?
+            extends Serializable> data) {
+        return parseCollectionResult(okMsg, errMsg, errCode, data, false);
+    }
+
+    /**
+     * 解析结果
+     *
+     * @param okMsg 请求成功的消息
+     * @param errMsg 请求失败的消息
+     * @param data 数据
+     * @param <T> 数据类型
+     *
+     * @return 结果
+     *
+     * @since 1.0.5
+     */
+    protected <T extends Serializable> ResponseResult<T> parseCollectionResult(String okMsg, String errMsg,
+                                                                               Collection<? extends Serializable> data) {
+        return parseCollectionResult(okMsg, errMsg, data, false);
+    }
+
+
+    /**
+     * 解析结果
+     *
+     * @param okMsg 请求成功的消息
+     * @param errMsg 请求失败的消息
+     * @param data 数据
+     * @param sealed 是否对字段进行加密
+     * @param <T> 数据类型
+     *
+     * @return 结果
+     *
+     * @since 1.0.5
+     */
+    protected <T extends Serializable> ResponseResult<T> parseCollectionResult(String okMsg, String errMsg,
+                                                                               Collection<? extends Serializable> data, boolean sealed) {
+        return parseCollectionResult(okMsg, errMsg, DEFAULT_ERROR_CODE, data, sealed);
+    }
+
+    /**
+     * 解析结果
+     *
+     * @param errMsg 请求失败的消息
+     * @param errCode 错误码
+     * @param data 数据
+     * @param <T> 数据类型
+     *
+     * @return 结果
+     *
+     * @since 1.0.5
+     */
+    protected <T extends Serializable> ResponseResult<T> parseCollectionResult(String errMsg, int errCode,
+                                                                               Collection<? extends Serializable> data) {
+        return parseCollectionResult(errMsg, errCode, data, false);
+    }
+
+    /**
+     * 解析结果
+     *
+     * @param errMsg 请求失败的消息
+     * @param errCode 错误码
+     * @param data 数据
+     * @param sealed 是否对字段进行加密
+     * @param <T> 数据类型
+     *
+     * @return 结果
+     *
+     * @since 1.0.5
+     */
+    protected <T extends Serializable> ResponseResult<T> parseCollectionResult(String errMsg, int errCode,
+                                                                               Collection<? extends Serializable> data, boolean sealed) {
+        return parseCollectionResult(DEFAULT_OK_MSG, errMsg, errCode, data, sealed);
+    }
+
+    /**
+     * 解析结果
+     *
+     * @param okMsg 请求成功的消息
+     * @param errMsg 请求失败的消息
+     * @param errCode 错误码
+     * @param data 数据
+     * @param sealed 是否对字段进行加密
+     * @param <T> 数据类型
+     *
+     * @return 结果
+     *
+     * @since 1.0.5
+     */
+    protected <T extends Serializable> ResponseResult<T> parseCollectionResult(String okMsg, String errMsg,
+                                                                               int errCode, Collection<?
+            extends Serializable> data, boolean sealed) {
+        if (CollectionUtil.isEmpty(data)) {
+            return errorResult(errCode, errMsg);
+        } else {
+            if (sealed) {
+                BootConfig.getFieldEncoder().encode(data);
+            }
+            return new ResponseResult<T>(okCode, okMsg).castData(data);
+        }
     }
 }

@@ -5,6 +5,7 @@ import org.code4everything.boot.bean.ConfigBean;
 import org.code4everything.boot.encoder.FieldEncoder;
 import org.code4everything.boot.log.AopLogUtils;
 import org.code4everything.boot.module.redis.RedisTemplateUtils;
+import org.code4everything.boot.web.mvc.BaseController;
 import org.code4everything.boot.web.mvc.DefaultWebInterceptor;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 
@@ -68,6 +69,16 @@ public class BootConfig {
         DefaultWebInterceptor.setConfigBean(configBean);
     }
 
+    /**
+     * 设置正确码
+     *
+     * @param okCode 正确码
+     *
+     * @since 1.0.5
+     */
+    public static void setOkCode(int okCode) {
+        BaseController.setOkCode(okCode);
+    }
 
     /**
      * 初始化 Redis 连接池
