@@ -207,8 +207,8 @@ public class BaseController {
      *
      * @since 1.0.0
      */
-    protected ResponseResult<Boolean> parseBoolResult(String errMsg, boolean isOk) {
-        return parseBoolResult(DEFAULT_OK_MSG, errMsg, isOk);
+    protected ResponseResult<Boolean> parseBoolean(String errMsg, boolean isOk) {
+        return parseBoolean(DEFAULT_OK_MSG, errMsg, isOk);
     }
 
     /**
@@ -222,7 +222,7 @@ public class BaseController {
      *
      * @since 1.0.0
      */
-    protected ResponseResult<Boolean> parseBoolResult(String okMsg, String errMsg, boolean isOk) {
+    protected ResponseResult<Boolean> parseBoolean(String okMsg, String errMsg, boolean isOk) {
         return new ResponseResult<Boolean>().setMsg(isOk ? okMsg : errMsg).setData(isOk).setCode(okCode);
     }
 
@@ -380,9 +380,9 @@ public class BaseController {
      *
      * @since 1.0.5
      */
-    protected <T extends Serializable> ResponseResult<T> parseCollectionResult(String errMsg, Collection<?
+    protected <T extends Serializable> ResponseResult<T> parseCollection(String errMsg, Collection<?
             extends Serializable> data) {
-        return parseCollectionResult(errMsg, data, false);
+        return parseCollection(errMsg, data, false);
     }
 
 
@@ -398,9 +398,9 @@ public class BaseController {
      *
      * @since 1.0.5
      */
-    protected <T extends Serializable> ResponseResult<T> parseCollectionResult(String errMsg, Collection<?
+    protected <T extends Serializable> ResponseResult<T> parseCollection(String errMsg, Collection<?
             extends Serializable> data, boolean sealed) {
-        return parseCollectionResult(DEFAULT_OK_MSG, errMsg, DEFAULT_ERROR_CODE, data, sealed);
+        return parseCollection(DEFAULT_OK_MSG, errMsg, DEFAULT_ERROR_CODE, data, sealed);
     }
 
     /**
@@ -415,82 +415,81 @@ public class BaseController {
      *
      * @since 1.0.5
      */
-    protected <T extends Serializable> ResponseResult<T> parseCollectionResult(String okMsg, String errMsg,
-                                                                               Collection<? extends Serializable> data) {
-        return parseCollectionResult(okMsg, errMsg, data, false);
-    }
-
-
-    /**
-     * 解析结果
-     *
-     * @param okMsg 请求成功的消息
-     * @param errMsg 请求失败的消息
-     * @param data 数据
-     * @param sealed 是否对字段进行加密
-     * @param <T> 数据类型
-     *
-     * @return 结果
-     *
-     * @since 1.0.5
-     */
-    protected <T extends Serializable> ResponseResult<T> parseCollectionResult(String okMsg, String errMsg,
-                                                                               Collection<? extends Serializable> data, boolean sealed) {
-        return parseCollectionResult(okMsg, errMsg, DEFAULT_ERROR_CODE, data, sealed);
-    }
-
-    /**
-     * 解析结果
-     *
-     * @param errMsg 请求失败的消息
-     * @param errCode 错误码
-     * @param data 数据
-     * @param <T> 数据类型
-     *
-     * @return 结果
-     *
-     * @since 1.0.5
-     */
-    protected <T extends Serializable> ResponseResult<T> parseCollectionResult(String errMsg, int errCode,
-                                                                               Collection<? extends Serializable> data) {
-        return parseCollectionResult(errMsg, errCode, data, false);
-    }
-
-    /**
-     * 解析结果
-     *
-     * @param errMsg 请求失败的消息
-     * @param errCode 错误码
-     * @param data 数据
-     * @param sealed 是否对字段进行加密
-     * @param <T> 数据类型
-     *
-     * @return 结果
-     *
-     * @since 1.0.5
-     */
-    protected <T extends Serializable> ResponseResult<T> parseCollectionResult(String errMsg, int errCode,
-                                                                               Collection<? extends Serializable> data, boolean sealed) {
-        return parseCollectionResult(DEFAULT_OK_MSG, errMsg, errCode, data, sealed);
-    }
-
-    /**
-     * 解析结果
-     *
-     * @param okMsg 请求成功的消息
-     * @param errMsg 请求失败的消息
-     * @param errCode 错误码
-     * @param data 数据
-     * @param <T> 数据类型
-     *
-     * @return 结果
-     *
-     * @since 1.0.5
-     */
-    protected <T extends Serializable> ResponseResult<T> parseCollectionResult(String okMsg, String errMsg,
-                                                                               int errCode, Collection<?
+    protected <T extends Serializable> ResponseResult<T> parseCollection(String okMsg, String errMsg, Collection<?
             extends Serializable> data) {
-        return parseCollectionResult(okMsg, errMsg, errCode, data, false);
+        return parseCollection(okMsg, errMsg, data, false);
+    }
+
+
+    /**
+     * 解析结果
+     *
+     * @param okMsg 请求成功的消息
+     * @param errMsg 请求失败的消息
+     * @param data 数据
+     * @param sealed 是否对字段进行加密
+     * @param <T> 数据类型
+     *
+     * @return 结果
+     *
+     * @since 1.0.5
+     */
+    protected <T extends Serializable> ResponseResult<T> parseCollection(String okMsg, String errMsg, Collection<?
+            extends Serializable> data, boolean sealed) {
+        return parseCollection(okMsg, errMsg, DEFAULT_ERROR_CODE, data, sealed);
+    }
+
+    /**
+     * 解析结果
+     *
+     * @param errMsg 请求失败的消息
+     * @param errCode 错误码
+     * @param data 数据
+     * @param <T> 数据类型
+     *
+     * @return 结果
+     *
+     * @since 1.0.5
+     */
+    protected <T extends Serializable> ResponseResult<T> parseCollection(String errMsg, int errCode, Collection<?
+            extends Serializable> data) {
+        return parseCollection(errMsg, errCode, data, false);
+    }
+
+    /**
+     * 解析结果
+     *
+     * @param errMsg 请求失败的消息
+     * @param errCode 错误码
+     * @param data 数据
+     * @param sealed 是否对字段进行加密
+     * @param <T> 数据类型
+     *
+     * @return 结果
+     *
+     * @since 1.0.5
+     */
+    protected <T extends Serializable> ResponseResult<T> parseCollection(String errMsg, int errCode, Collection<?
+            extends Serializable> data, boolean sealed) {
+        return parseCollection(DEFAULT_OK_MSG, errMsg, errCode, data, sealed);
+    }
+
+    /**
+     * 解析结果
+     *
+     * @param okMsg 请求成功的消息
+     * @param errMsg 请求失败的消息
+     * @param errCode 错误码
+     * @param data 数据
+     * @param <T> 数据类型
+     *
+     * @return 结果
+     *
+     * @since 1.0.5
+     */
+    protected <T extends Serializable> ResponseResult<T> parseCollection(String okMsg, String errMsg, int errCode,
+                                                                         Collection<? extends Serializable> data) {
+        return parseCollection(okMsg, errMsg, errCode, data, false);
     }
 
     /**
@@ -507,9 +506,9 @@ public class BaseController {
      *
      * @since 1.0.5
      */
-    protected <T extends Serializable> ResponseResult<T> parseCollectionResult(String okMsg, String errMsg,
-                                                                               int errCode, Collection<?
-            extends Serializable> data, boolean sealed) {
+    protected <T extends Serializable> ResponseResult<T> parseCollection(String okMsg, String errMsg, int errCode,
+                                                                         Collection<? extends Serializable> data,
+                                                                         boolean sealed) {
         if (CollectionUtil.isEmpty(data)) {
             return errorResult(errCode, errMsg);
         } else {
