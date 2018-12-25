@@ -382,7 +382,7 @@ public class BaseController {
      */
     protected <T extends Serializable> ResponseResult<T> parseCollectionResult(String errMsg, Collection<?
             extends Serializable> data) {
-        return parseCollectionResult(DEFAULT_OK_MSG, errMsg, DEFAULT_ERROR_CODE, data, false);
+        return parseCollectionResult(errMsg, data, false);
     }
 
 
@@ -401,26 +401,6 @@ public class BaseController {
     protected <T extends Serializable> ResponseResult<T> parseCollectionResult(String errMsg, Collection<?
             extends Serializable> data, boolean sealed) {
         return parseCollectionResult(DEFAULT_OK_MSG, errMsg, DEFAULT_ERROR_CODE, data, sealed);
-    }
-
-
-    /**
-     * 解析结果
-     *
-     * @param okMsg 请求成功的消息
-     * @param errMsg 请求失败的消息
-     * @param errCode 错误码
-     * @param data 数据
-     * @param <T> 数据类型
-     *
-     * @return 结果
-     *
-     * @since 1.0.5
-     */
-    protected <T extends Serializable> ResponseResult<T> parseCollectionResult(String okMsg, String errMsg,
-                                                                               int errCode, Collection<?
-            extends Serializable> data) {
-        return parseCollectionResult(okMsg, errMsg, errCode, data, false);
     }
 
     /**
@@ -492,6 +472,25 @@ public class BaseController {
     protected <T extends Serializable> ResponseResult<T> parseCollectionResult(String errMsg, int errCode,
                                                                                Collection<? extends Serializable> data, boolean sealed) {
         return parseCollectionResult(DEFAULT_OK_MSG, errMsg, errCode, data, sealed);
+    }
+
+    /**
+     * 解析结果
+     *
+     * @param okMsg 请求成功的消息
+     * @param errMsg 请求失败的消息
+     * @param errCode 错误码
+     * @param data 数据
+     * @param <T> 数据类型
+     *
+     * @return 结果
+     *
+     * @since 1.0.5
+     */
+    protected <T extends Serializable> ResponseResult<T> parseCollectionResult(String okMsg, String errMsg,
+                                                                               int errCode, Collection<?
+            extends Serializable> data) {
+        return parseCollectionResult(okMsg, errMsg, errCode, data, false);
     }
 
     /**

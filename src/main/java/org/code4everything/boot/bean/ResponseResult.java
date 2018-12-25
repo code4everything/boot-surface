@@ -1,7 +1,6 @@
 package org.code4everything.boot.bean;
 
 import cn.hutool.http.HttpStatus;
-import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
 import org.code4everything.boot.config.BootConfig;
 import org.code4everything.boot.constant.MessageConsts;
@@ -345,9 +344,16 @@ public class ResponseResult<T extends Serializable> implements Serializable {
         return result.copyFrom(this);
     }
 
+    /**
+     * 转字符串
+     *
+     * @return 字符串
+     *
+     * @since 1.0.5
+     */
     @Override
     public String toString() {
-        return JSONObject.toJSONString(this);
+        return "ResponseResult{" + "sealed=" + sealed + ", code=" + code + ", msg='" + msg + '\'' + ", data=" + data + ", timestamp=" + timestamp + '}';
     }
 
     /**
