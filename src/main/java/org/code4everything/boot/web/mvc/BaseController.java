@@ -6,6 +6,7 @@ import cn.hutool.http.HttpStatus;
 import com.google.common.base.Strings;
 import org.code4everything.boot.base.AssertUtils;
 import org.code4everything.boot.base.function.BooleanFunction;
+import org.code4everything.boot.base.function.ResponseResultFunction;
 import org.code4everything.boot.bean.ResponseResult;
 import org.code4everything.boot.config.BootConfig;
 import org.code4everything.boot.constant.MessageConsts;
@@ -90,11 +91,20 @@ public class BaseController {
         return ObjectUtil.isNotNull(resultThreadLocal.get());
     }
 
-    protected <T extends Serializable> ResponseResult<T> get() {
+    /**
+     * 获取结果
+     *
+     * @param <T> 数据类型
+     *
+     * @return 结果
+     *
+     * @since 1.0.5
+     */
+    public <T extends Serializable> ResponseResult<T> getReturn() {
         ResponseResult<?> responseResult = resultThreadLocal.get();
         ResponseResult<T> result;
         if (Objects.isNull(responseResult)) {
-            result = errorResult(MessageConsts.NO_RESULT_ERROR_ZH);
+            result = errorResult(HttpStatus.HTTP_INTERNAL_ERROR, MessageConsts.NO_RESULT_ERROR_ZH);
         } else {
             result = new ResponseResult<T>().copyFrom(responseResult);
         }
@@ -117,9 +127,111 @@ public class BaseController {
         return AssertUtils.throwIf(shouldThrow, throwable);
     }
 
-    protected <T extends Serializable> BaseController ifReturn(boolean shouldReturn, ResponseResult<T> result) {
-        if (!hasResult()) {
+    /**
+     * 如果条件为真时返回
+     *
+     * @param shouldReturn 是否返回结果
+     * @param result 响应结果
+     * @param <T> 数据类型
+     *
+     * @return {@link BaseController}
+     *
+     * @since 1.0.5
+     */
+    public <T extends Serializable> BaseController ifReturn(boolean shouldReturn, ResponseResult<T> result) {
+        if (!hasResult() && shouldReturn) {
             resultThreadLocal.set(result);
+        }
+        return this;
+    }
+
+    /**
+     * 如果条件为真时返回
+     *
+     * @param shouldReturn 是否返回结果
+     * @param function 结果响应函数
+     * @param <T> 数据类型
+     *
+     * @return {@link BaseController}
+     *
+     * @since 1.0.5
+     */
+    public <T extends Serializable> BaseController ifReturn(boolean shouldReturn, ResponseResultFunction<T> function) {
+        if (!hasResult() && shouldReturn) {
+            resultThreadLocal.set(function.get());
+        }
+        return this;
+    }
+
+
+    /**
+     * 如果条件为真时返回
+     *
+     * @param function 布尔函数
+     * @param result 响应结果
+     * @param <T> 数据类型
+     *
+     * @return {@link BaseController}
+     *
+     * @since 1.0.5
+     */
+    public <T extends Serializable> BaseController ifReturn(BooleanFunction function, ResponseResult<T> result) {
+        if (!hasResult() && function.get()) {
+            resultThreadLocal.set(result);
+        }
+        return this;
+    }
+
+    /**
+     * 如果条件为真时返回
+     *
+     * @param booleanFunction 布尔函数
+     * @param responseResultFunction 结果响应函数
+     * @param <T> 数据类型
+     *
+     * @return {@link BaseController}
+     *
+     * @since 1.0.5
+     */
+    public <T extends Serializable> BaseController ifReturn(BooleanFunction booleanFunction,
+                                                            ResponseResultFunction<T> responseResultFunction) {
+        if (!hasResult()) {
+            boolean res = booleanFunction.get();
+            if (res) {
+                resultThreadLocal.set(responseResultFunction.get());
+            }
+        }
+        return this;
+    }
+
+
+    /**
+     * 没有结果时返回
+     *
+     * @param result 响应结果
+     * @param <T> 数据类型
+     *
+     * @return {@link BaseController}
+     *
+     * @since 1.0.5
+     */
+    public <T extends Serializable> BaseController elseReturn(ResponseResult<T> result) {
+        return ifReturn(true, result);
+    }
+
+    /**
+     * 没有结果时返回
+     *
+     * @param function 结果响应函数
+     * @param <T> 数据类型
+     *
+     * @return {@link BaseController}
+     *
+     * @since 1.0.5
+     */
+    public <T extends Serializable> BaseController elseReturn(ResponseResultFunction<T> function) {
+        if (!hasResult()) {
+            resultThreadLocal.set(function.get());
         }
         return this;
     }

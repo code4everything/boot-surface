@@ -1,5 +1,6 @@
 package org.code4everything.boot.bean;
 
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.http.HttpStatus;
 import com.alibaba.fastjson.annotation.JSONField;
 import org.code4everything.boot.config.BootConfig;
@@ -324,7 +325,7 @@ public class ResponseResult<T extends Serializable> implements Serializable {
     @SuppressWarnings("unchecked")
     public ResponseResult<T> copyFrom(ResponseResult<? extends Serializable> result) {
         this.setMsg(result.getMsg()).setCode(result.getCode()).setTimestamp(result.getTimestamp());
-        if (result.data.getClass() == this.data.getClass()) {
+        if (ObjectUtil.isNotNull(result.data)) {
             this.setData((T) result.getData());
         }
         return this;
@@ -353,7 +354,7 @@ public class ResponseResult<T extends Serializable> implements Serializable {
      */
     @Override
     public String toString() {
-        return "ResponseResult{" + "sealed=" + sealed + ", code=" + code + ", msg='" + msg + '\'' + ", data=" + data + ", timestamp=" + timestamp + '}';
+        return "ResponseResult{code=" + code + ", msg='" + msg + '\'' + ", data=" + data + ", timestamp=" + timestamp + '}';
     }
 
     /**
