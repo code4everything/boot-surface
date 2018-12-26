@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Objects;
 
 /**
  * 控制器基类
@@ -38,6 +39,8 @@ public class BaseController {
 
     @Autowired
     protected HttpServletRequest request;
+
+    private ThreadLocal<ResponseResult<? extends Serializable>> resultThreadLocal = new ThreadLocal<>();
 
     /**
      * 获取正确码
@@ -77,6 +80,29 @@ public class BaseController {
     }
 
     /**
+     * 是否有结果
+     *
+     * @return 是否有结果
+     *
+     * @since 1.0.5
+     */
+    private boolean hasResult() {
+        return ObjectUtil.isNotNull(resultThreadLocal.get());
+    }
+
+    protected <T extends Serializable> ResponseResult<T> get() {
+        ResponseResult<?> responseResult = resultThreadLocal.get();
+        ResponseResult<T> result;
+        if (Objects.isNull(responseResult)) {
+            result = errorResult(MessageConsts.NO_RESULT_ERROR_ZH);
+        } else {
+            result = new ResponseResult<T>().copyFrom(responseResult);
+        }
+        resultThreadLocal.remove();
+        return result;
+    }
+
+    /**
      * 抛出异常
      *
      * @param shouldThrow 是否抛出异常
@@ -89,6 +115,13 @@ public class BaseController {
      */
     protected ExceptionThrower throwIf(boolean shouldThrow, Throwable throwable) throws Throwable {
         return AssertUtils.throwIf(shouldThrow, throwable);
+    }
+
+    protected <T extends Serializable> BaseController ifReturn(boolean shouldReturn, ResponseResult<T> result) {
+        if (!hasResult()) {
+            resultThreadLocal.set(result);
+        }
+        return this;
     }
 
     /**

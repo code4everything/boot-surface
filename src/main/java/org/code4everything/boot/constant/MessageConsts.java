@@ -32,5 +32,9 @@ public class MessageConsts {
 
     public static final String FILE_UNAVAILABLE_EN = "no available file here";
 
+    public static final String NO_RESULT_ERROR_ZH = "没有响应结果";
+
+    public static final String NO_RESULT_ERROR_EN = "no response result";
+
     private MessageConsts() {}
 }
