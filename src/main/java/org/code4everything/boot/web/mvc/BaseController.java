@@ -237,6 +237,34 @@ public class BaseController {
     }
 
     /**
+     * 返回结果
+     *
+     * @param result 响应结果
+     * @param <T> 数据类型
+     *
+     * @return {@link BaseController}
+     *
+     * @since 1.0.5
+     */
+    public <T extends Serializable> ResponseResult getReturn(ResponseResult<T> result) {
+        return hasResult() ? getReturn() : result;
+    }
+
+    /**
+     * 返回结果
+     *
+     * @param function 结果响应函数
+     * @param <T> 数据类型
+     *
+     * @return {@link BaseController}
+     *
+     * @since 1.0.5
+     */
+    public <T extends Serializable> ResponseResult<T> getReturn(ResponseResultFunction<T> function) {
+        return hasResult() ? getReturn() : function.get();
+    }
+
+    /**
      * 获取Token
      *
      * @return Token
