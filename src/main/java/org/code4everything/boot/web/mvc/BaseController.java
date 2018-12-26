@@ -39,7 +39,7 @@ public class BaseController {
     private static int okCode = HttpStatus.HTTP_OK;
 
     @Autowired
-    protected HttpServletRequest request;
+    public HttpServletRequest request;
 
     private ThreadLocal<ResponseResult<? extends Serializable>> resultThreadLocal = new ThreadLocal<>();
 
@@ -87,7 +87,7 @@ public class BaseController {
      *
      * @since 1.0.5
      */
-    private boolean hasResult() {
+    public boolean hasResult() {
         return ObjectUtil.isNotNull(resultThreadLocal.get());
     }
 
@@ -102,14 +102,13 @@ public class BaseController {
      */
     public <T extends Serializable> ResponseResult<T> getReturn() {
         ResponseResult<?> responseResult = resultThreadLocal.get();
-        ResponseResult<T> result;
         if (Objects.isNull(responseResult)) {
-            result = errorResult(HttpStatus.HTTP_INTERNAL_ERROR, MessageConsts.NO_RESULT_ERROR_ZH);
+            return null;
         } else {
-            result = new ResponseResult<T>().copyFrom(responseResult);
+            ResponseResult<T> result = new ResponseResult<T>().copyFrom(responseResult);
+            resultThreadLocal.remove();
+            return result;
         }
-        resultThreadLocal.remove();
-        return result;
     }
 
     /**
@@ -123,7 +122,7 @@ public class BaseController {
      * @throws Throwable 异常
      * @since 1.0.5
      */
-    protected ExceptionThrower throwIf(boolean shouldThrow, Throwable throwable) throws Throwable {
+    public ExceptionThrower throwIf(boolean shouldThrow, Throwable throwable) throws Throwable {
         return AssertUtils.throwIf(shouldThrow, throwable);
     }
 
@@ -162,7 +161,6 @@ public class BaseController {
         }
         return this;
     }
-
 
     /**
      * 如果条件为真时返回
@@ -203,7 +201,6 @@ public class BaseController {
         }
         return this;
     }
-
 
     /**
      * 没有结果时返回
@@ -271,7 +268,7 @@ public class BaseController {
      *
      * @since 1.0.0
      */
-    protected String getToken() {
+    public String getToken() {
         return HttpUtils.getToken(request);
     }
 
@@ -285,7 +282,7 @@ public class BaseController {
      *
      * @since 1.0.4
      */
-    protected <T extends Serializable> T getUser(UserService<T> userService) {
+    public <T extends Serializable> T getUser(UserService<T> userService) {
         return userService.getUserByToken(Strings.nullToEmpty(getToken()));
     }
 
@@ -300,7 +297,7 @@ public class BaseController {
      * @throws UserUnloggedException 未登录异常
      * @since 1.0.4
      */
-    protected <T extends Serializable> T requireUser(UserService<T> userService) throws UserUnloggedException {
+    public <T extends Serializable> T requireUser(UserService<T> userService) throws UserUnloggedException {
         return AssertUtils.assertUserLoggedIn(userService.getUserByToken(requireToken()));
     }
 
@@ -312,7 +309,7 @@ public class BaseController {
      * @throws TokenBlankException TOKEN 为空异常
      * @since 1.0.4
      */
-    protected String requireToken() throws TokenBlankException {
+    public String requireToken() throws TokenBlankException {
         return HttpUtils.requireToken(request);
     }
 
@@ -325,7 +322,7 @@ public class BaseController {
      *
      * @since 1.0.4
      */
-    protected <T extends Serializable> ResponseResult<T> successResult() {
+    public <T extends Serializable> ResponseResult<T> successResult() {
         return new ResponseResult<T>().setCode(okCode);
     }
 
@@ -339,7 +336,7 @@ public class BaseController {
      *
      * @since 1.0.0
      */
-    protected <T extends Serializable> ResponseResult<T> successResult(String okMsg) {
+    public <T extends Serializable> ResponseResult<T> successResult(String okMsg) {
         return new ResponseResult<T>().setMsg(okMsg).setCode(okCode);
     }
 
@@ -354,7 +351,7 @@ public class BaseController {
      *
      * @since 1.0.4
      */
-    protected <T extends Serializable> ResponseResult<T> successResult(String okMsg, T data) {
+    public <T extends Serializable> ResponseResult<T> successResult(String okMsg, T data) {
         return new ResponseResult<>(okCode, okMsg, data);
     }
 
@@ -369,7 +366,7 @@ public class BaseController {
      *
      * @since 1.0.5
      */
-    protected <T extends Serializable> ResponseResult<T> successResult(int okCode, String okMsg, T data) {
+    public <T extends Serializable> ResponseResult<T> successResult(int okCode, String okMsg, T data) {
         return new ResponseResult<>(okCode, okMsg, data);
     }
 
@@ -383,7 +380,7 @@ public class BaseController {
      *
      * @since 1.0.0
      */
-    protected <T extends Serializable> ResponseResult<T> errorResult(String errMsg) {
+    public <T extends Serializable> ResponseResult<T> errorResult(String errMsg) {
         return new ResponseResult<T>().error(errMsg);
     }
 
@@ -398,7 +395,7 @@ public class BaseController {
      *
      * @since 1.0.0
      */
-    protected <T extends Serializable> ResponseResult<T> errorResult(int errCode, String errMsg) {
+    public <T extends Serializable> ResponseResult<T> errorResult(int errCode, String errMsg) {
         return new ResponseResult<T>().error(errCode, errMsg);
     }
 
@@ -412,7 +409,7 @@ public class BaseController {
      *
      * @since 1.0.0
      */
-    protected ResponseResult<Boolean> parseBoolean(String errMsg, boolean isOk) {
+    public ResponseResult<Boolean> parseBoolean(String errMsg, boolean isOk) {
         return parseBoolean(DEFAULT_OK_MSG, errMsg, isOk);
     }
 
@@ -427,7 +424,7 @@ public class BaseController {
      *
      * @since 1.0.0
      */
-    protected ResponseResult<Boolean> parseBoolean(String okMsg, String errMsg, boolean isOk) {
+    public ResponseResult<Boolean> parseBoolean(String okMsg, String errMsg, boolean isOk) {
         return new ResponseResult<Boolean>().setMsg(isOk ? okMsg : errMsg).setData(isOk).setCode(okCode);
     }
 
@@ -442,7 +439,7 @@ public class BaseController {
      *
      * @since 1.0.0
      */
-    protected <T extends Serializable> ResponseResult<T> parseResult(String errMsg, T data) {
+    public <T extends Serializable> ResponseResult<T> parseResult(String errMsg, T data) {
         return parseResult(errMsg, data, BootConfig.isSealed());
     }
 
@@ -458,7 +455,7 @@ public class BaseController {
      *
      * @since 1.0.0
      */
-    protected <T extends Serializable> ResponseResult<T> parseResult(String errMsg, T data, boolean sealed) {
+    public <T extends Serializable> ResponseResult<T> parseResult(String errMsg, T data, boolean sealed) {
         return parseResult(DEFAULT_OK_MSG, errMsg, DEFAULT_ERROR_CODE, data, sealed);
     }
 
@@ -474,7 +471,7 @@ public class BaseController {
      *
      * @since 1.0.0
      */
-    protected <T extends Serializable> ResponseResult<T> parseResult(String errMsg, int errCode, T data) {
+    public <T extends Serializable> ResponseResult<T> parseResult(String errMsg, int errCode, T data) {
         return parseResult(errMsg, errCode, data, BootConfig.isSealed());
     }
 
@@ -491,8 +488,7 @@ public class BaseController {
      *
      * @since 1.0.0
      */
-    protected <T extends Serializable> ResponseResult<T> parseResult(String errMsg, int errCode, T data,
-                                                                     boolean sealed) {
+    public <T extends Serializable> ResponseResult<T> parseResult(String errMsg, int errCode, T data, boolean sealed) {
         return parseResult(DEFAULT_OK_MSG, errMsg, errCode, data, sealed);
     }
 
@@ -508,7 +504,7 @@ public class BaseController {
      *
      * @since 1.0.0
      */
-    protected <T extends Serializable> ResponseResult<T> parseResult(String okMsg, String errMsg, T data) {
+    public <T extends Serializable> ResponseResult<T> parseResult(String okMsg, String errMsg, T data) {
         return parseResult(okMsg, errMsg, data, BootConfig.isSealed());
     }
 
@@ -525,8 +521,7 @@ public class BaseController {
      *
      * @since 1.0.0
      */
-    protected <T extends Serializable> ResponseResult<T> parseResult(String okMsg, String errMsg, T data,
-                                                                     boolean sealed) {
+    public <T extends Serializable> ResponseResult<T> parseResult(String okMsg, String errMsg, T data, boolean sealed) {
         return parseResult(okMsg, errMsg, DEFAULT_ERROR_CODE, data, sealed);
     }
 
@@ -543,7 +538,7 @@ public class BaseController {
      *
      * @since 1.0.0
      */
-    protected <T extends Serializable> ResponseResult<T> parseResult(String okMsg, String errMsg, int errCode, T data) {
+    public <T extends Serializable> ResponseResult<T> parseResult(String okMsg, String errMsg, int errCode, T data) {
         return parseResult(okMsg, errMsg, errCode, data, BootConfig.isSealed());
     }
 
@@ -561,8 +556,8 @@ public class BaseController {
      *
      * @since 1.0.0
      */
-    protected <T extends Serializable> ResponseResult<T> parseResult(String okMsg, String errMsg, int errCode, T data
-            , boolean sealed) {
+    public <T extends Serializable> ResponseResult<T> parseResult(String okMsg, String errMsg, int errCode, T data,
+                                                                  boolean sealed) {
         boolean isError = ObjectUtil.isNull(data);
         if (!isError) {
             if (data instanceof Boolean && !(Boolean) data) {
@@ -585,11 +580,10 @@ public class BaseController {
      *
      * @since 1.0.5
      */
-    protected <T extends Serializable> ResponseResult<T> parseCollection(String errMsg, Collection<?
+    public <T extends Serializable> ResponseResult<T> parseCollection(String errMsg, Collection<?
             extends Serializable> data) {
         return parseCollection(errMsg, data, false);
     }
-
 
     /**
      * 解析结果
@@ -603,7 +597,7 @@ public class BaseController {
      *
      * @since 1.0.5
      */
-    protected <T extends Serializable> ResponseResult<T> parseCollection(String errMsg, Collection<?
+    public <T extends Serializable> ResponseResult<T> parseCollection(String errMsg, Collection<?
             extends Serializable> data, boolean sealed) {
         return parseCollection(DEFAULT_OK_MSG, errMsg, DEFAULT_ERROR_CODE, data, sealed);
     }
@@ -620,11 +614,10 @@ public class BaseController {
      *
      * @since 1.0.5
      */
-    protected <T extends Serializable> ResponseResult<T> parseCollection(String okMsg, String errMsg, Collection<?
+    public <T extends Serializable> ResponseResult<T> parseCollection(String okMsg, String errMsg, Collection<?
             extends Serializable> data) {
         return parseCollection(okMsg, errMsg, data, false);
     }
-
 
     /**
      * 解析结果
@@ -639,7 +632,7 @@ public class BaseController {
      *
      * @since 1.0.5
      */
-    protected <T extends Serializable> ResponseResult<T> parseCollection(String okMsg, String errMsg, Collection<?
+    public <T extends Serializable> ResponseResult<T> parseCollection(String okMsg, String errMsg, Collection<?
             extends Serializable> data, boolean sealed) {
         return parseCollection(okMsg, errMsg, DEFAULT_ERROR_CODE, data, sealed);
     }
@@ -656,7 +649,7 @@ public class BaseController {
      *
      * @since 1.0.5
      */
-    protected <T extends Serializable> ResponseResult<T> parseCollection(String errMsg, int errCode, Collection<?
+    public <T extends Serializable> ResponseResult<T> parseCollection(String errMsg, int errCode, Collection<?
             extends Serializable> data) {
         return parseCollection(errMsg, errCode, data, false);
     }
@@ -674,7 +667,7 @@ public class BaseController {
      *
      * @since 1.0.5
      */
-    protected <T extends Serializable> ResponseResult<T> parseCollection(String errMsg, int errCode, Collection<?
+    public <T extends Serializable> ResponseResult<T> parseCollection(String errMsg, int errCode, Collection<?
             extends Serializable> data, boolean sealed) {
         return parseCollection(DEFAULT_OK_MSG, errMsg, errCode, data, sealed);
     }
@@ -692,8 +685,8 @@ public class BaseController {
      *
      * @since 1.0.5
      */
-    protected <T extends Serializable> ResponseResult<T> parseCollection(String okMsg, String errMsg, int errCode,
-                                                                         Collection<? extends Serializable> data) {
+    public <T extends Serializable> ResponseResult<T> parseCollection(String okMsg, String errMsg, int errCode,
+                                                                      Collection<? extends Serializable> data) {
         return parseCollection(okMsg, errMsg, errCode, data, false);
     }
 
@@ -711,9 +704,9 @@ public class BaseController {
      *
      * @since 1.0.5
      */
-    protected <T extends Serializable> ResponseResult<T> parseCollection(String okMsg, String errMsg, int errCode,
-                                                                         Collection<? extends Serializable> data,
-                                                                         boolean sealed) {
+    public <T extends Serializable> ResponseResult<T> parseCollection(String okMsg, String errMsg, int errCode,
+                                                                      Collection<? extends Serializable> data,
+                                                                      boolean sealed) {
         if (CollectionUtil.isEmpty(data)) {
             return errorResult(errCode, errMsg);
         } else {
