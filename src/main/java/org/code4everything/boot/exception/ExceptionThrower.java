@@ -1,5 +1,7 @@
 package org.code4everything.boot.exception;
 
+import org.code4everything.boot.base.function.BooleanFunction;
+
 /**
  * 异常抛出类
  *
@@ -32,6 +34,21 @@ public class ExceptionThrower {
      */
     public static ExceptionThrower getInstance() {
         return THROWER;
+    }
+
+    /**
+     * 抛出异常
+     *
+     * @param function 布尔函数
+     * @param throwable 异常
+     *
+     * @return {@link ExceptionThrower}
+     *
+     * @throws Throwable 异常
+     * @since 1.0.5
+     */
+    public ExceptionThrower throwIf(BooleanFunction function, Throwable throwable) throws Throwable {
+        return throwIf(function.get(), throwable);
     }
 
     /**

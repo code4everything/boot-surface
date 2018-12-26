@@ -1,6 +1,7 @@
 package org.code4everything.boot.base;
 
 import cn.hutool.core.util.StrUtil;
+import org.code4everything.boot.base.function.BooleanFunction;
 import org.code4everything.boot.exception.ExceptionThrower;
 import org.code4everything.boot.exception.template.TokenBlankException;
 import org.code4everything.boot.exception.template.UserUnloggedException;
@@ -66,5 +67,20 @@ public class AssertUtils {
      */
     public static ExceptionThrower throwIf(boolean shouldThrow, Throwable throwable) throws Throwable {
         return ExceptionThrower.getInstance().throwIf(shouldThrow, throwable);
+    }
+
+    /**
+     * 抛出异常
+     *
+     * @param function 布尔函数
+     * @param throwable 异常
+     *
+     * @return {@link ExceptionThrower}
+     *
+     * @throws Throwable 异常
+     * @since 1.0.5
+     */
+    public static ExceptionThrower throwIf(BooleanFunction function, Throwable throwable) throws Throwable {
+        return ExceptionThrower.getInstance().throwIf(function, throwable);
     }
 }

@@ -5,6 +5,7 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.http.HttpStatus;
 import com.google.common.base.Strings;
 import org.code4everything.boot.base.AssertUtils;
+import org.code4everything.boot.base.function.BooleanFunction;
 import org.code4everything.boot.bean.ResponseResult;
 import org.code4everything.boot.config.BootConfig;
 import org.code4everything.boot.constant.MessageConsts;
@@ -58,6 +59,21 @@ public class BaseController {
      */
     public static void setOkCode(int okCode) {
         BaseController.okCode = okCode;
+    }
+
+    /**
+     * 抛出异常
+     *
+     * @param function 布尔函数
+     * @param throwable 异常
+     *
+     * @return {@link ExceptionThrower}
+     *
+     * @throws Throwable 异常
+     * @since 1.0.5
+     */
+    public static ExceptionThrower throwIf(BooleanFunction function, Throwable throwable) throws Throwable {
+        return AssertUtils.throwIf(function, throwable);
     }
 
     /**
