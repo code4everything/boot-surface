@@ -12,6 +12,8 @@ public class IntegerConsts {
 
     public static final int EIGHT = 8;
 
+    public static final int FIVE = 5;
+
     private IntegerConsts() {}
 
     public class FileSize {

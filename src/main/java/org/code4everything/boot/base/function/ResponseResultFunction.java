@@ -5,7 +5,7 @@ import org.code4everything.boot.bean.ResponseResult;
 import java.io.Serializable;
 
 /**
- * 响应结果返回函数
+ * 结果响应函数
  *
  * @author pantao
  * @since 2018-12-26
