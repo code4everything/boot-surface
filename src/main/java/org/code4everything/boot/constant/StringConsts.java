@@ -14,6 +14,12 @@ public class StringConsts {
 
     public static final String CODE = "code";
 
+    public static final String STATUS = "status";
+
+    public static final String SUCCESS = "success";
+
+    public static final String SUCCESS_UPPER = SUCCESS.toUpperCase();
+
     private StringConsts() {}
 
     public class Sign {
