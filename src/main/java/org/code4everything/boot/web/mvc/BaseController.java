@@ -11,8 +11,6 @@ import org.code4everything.boot.bean.ResponseResult;
 import org.code4everything.boot.config.BootConfig;
 import org.code4everything.boot.constant.MessageConsts;
 import org.code4everything.boot.exception.ExceptionThrower;
-import org.code4everything.boot.exception.template.TokenBlankException;
-import org.code4everything.boot.exception.template.UserUnloggedException;
 import org.code4everything.boot.service.UserService;
 import org.code4everything.boot.web.HttpUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,15 +67,13 @@ public class BaseController {
      * 抛出异常
      *
      * @param function 布尔函数
-     * @param throwable 异常
      *
      * @return {@link ExceptionThrower}
      *
-     * @throws Throwable 异常
      * @since 1.0.5
      */
-    public static ExceptionThrower throwIf(BooleanFunction function, Throwable throwable) throws Throwable {
-        return AssertUtils.throwIf(function, throwable);
+    public static ExceptionThrower throwIf(BooleanFunction function, RuntimeException exception) {
+        return AssertUtils.throwIf(function, exception);
     }
 
     /**
@@ -115,15 +111,13 @@ public class BaseController {
      * 抛出异常
      *
      * @param shouldThrow 是否抛出异常
-     * @param throwable 异常
      *
      * @return {@link ExceptionThrower}
      *
-     * @throws Throwable 异常
      * @since 1.0.5
      */
-    public ExceptionThrower throwIf(boolean shouldThrow, Throwable throwable) throws Throwable {
-        return AssertUtils.throwIf(shouldThrow, throwable);
+    public ExceptionThrower throwIf(boolean shouldThrow, RuntimeException exception) {
+        return AssertUtils.throwIf(shouldThrow, exception);
     }
 
     /**
@@ -294,10 +288,9 @@ public class BaseController {
      *
      * @return 用户
      *
-     * @throws UserUnloggedException 未登录异常
      * @since 1.0.4
      */
-    public <T extends Serializable> T requireUser(UserService<T> userService) throws UserUnloggedException {
+    public <T extends Serializable> T requireUser(UserService<T> userService) {
         return AssertUtils.assertUserLoggedIn(userService.getUserByToken(requireToken()));
     }
 
@@ -306,10 +299,9 @@ public class BaseController {
      *
      * @return Token
      *
-     * @throws TokenBlankException TOKEN 为空异常
      * @since 1.0.4
      */
-    public String requireToken() throws TokenBlankException {
+    public String requireToken() {
         return HttpUtils.requireToken(request);
     }
 

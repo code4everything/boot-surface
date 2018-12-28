@@ -13,7 +13,6 @@ import org.code4everything.boot.bean.ResponseResult;
 import org.code4everything.boot.config.BootConfig;
 import org.code4everything.boot.constant.MessageConsts;
 import org.code4everything.boot.constant.StringConsts;
-import org.code4everything.boot.exception.template.TokenBlankException;
 import org.code4everything.boot.service.FileService;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.InputStreamResource;
@@ -64,10 +63,9 @@ public class HttpUtils {
      *
      * @return Token
      *
-     * @throws TokenBlankException TOKEN 为空异常
      * @since 1.0.4
      */
-    public static String requireToken(HttpServletRequest request) throws TokenBlankException {
+    public static String requireToken(HttpServletRequest request) {
         return AssertUtils.assertTokenNotBlank(getToken(request));
     }
 

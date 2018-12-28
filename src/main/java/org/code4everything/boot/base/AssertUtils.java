@@ -26,10 +26,9 @@ public class AssertUtils {
      *
      * @return Token
      *
-     * @throws TokenBlankException Token 为空异常
      * @since 1.0.4
      */
-    public static String assertTokenNotBlank(String token) throws TokenBlankException {
+    public static String assertTokenNotBlank(String token) {
         if (StrUtil.isBlank(token)) {
             throw new TokenBlankException();
         }
@@ -44,10 +43,9 @@ public class AssertUtils {
      *
      * @return 用户
      *
-     * @throws UserUnloggedException 未登录异常
      * @since 1.0.4
      */
-    public static <T extends Serializable> T assertUserLoggedIn(T user) throws UserUnloggedException {
+    public static <T extends Serializable> T assertUserLoggedIn(T user) {
         if (Objects.isNull(user)) {
             throw new UserUnloggedException();
         }
@@ -58,29 +56,25 @@ public class AssertUtils {
      * 抛出异常
      *
      * @param shouldThrow 是否抛出异常
-     * @param throwable 异常
      *
      * @return {@link ExceptionThrower}
      *
-     * @throws Throwable 异常
      * @since 1.0.5
      */
-    public static ExceptionThrower throwIf(boolean shouldThrow, Throwable throwable) throws Throwable {
-        return ExceptionThrower.getInstance().throwIf(shouldThrow, throwable);
+    public static ExceptionThrower throwIf(boolean shouldThrow, RuntimeException exception) {
+        return ExceptionThrower.getInstance().throwIf(shouldThrow, exception);
     }
 
     /**
      * 抛出异常
      *
      * @param function 布尔函数
-     * @param throwable 异常
      *
      * @return {@link ExceptionThrower}
      *
-     * @throws Throwable 异常
      * @since 1.0.5
      */
-    public static ExceptionThrower throwIf(BooleanFunction function, Throwable throwable) throws Throwable {
-        return ExceptionThrower.getInstance().throwIf(function, throwable);
+    public static ExceptionThrower throwIf(BooleanFunction function, RuntimeException exception) {
+        return ExceptionThrower.getInstance().throwIf(function, exception);
     }
 }

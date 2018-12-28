@@ -40,31 +40,28 @@ public class ExceptionThrower {
      * 抛出异常
      *
      * @param function 布尔函数
-     * @param throwable 异常
+     * @param exception 异常
      *
      * @return {@link ExceptionThrower}
      *
-     * @throws Throwable 异常
      * @since 1.0.5
      */
-    public ExceptionThrower throwIf(BooleanFunction function, Throwable throwable) throws Throwable {
-        return throwIf(function.get(), throwable);
+    public ExceptionThrower throwIf(BooleanFunction function, RuntimeException exception) {
+        return throwIf(function.get(), exception);
     }
 
     /**
      * 抛出异常
      *
      * @param shouldThrow 是否抛出异常
-     * @param throwable 异常
      *
      * @return {@link ExceptionThrower}
      *
-     * @throws Throwable 异常
      * @since 1.0.5
      */
-    public ExceptionThrower throwIf(boolean shouldThrow, Throwable throwable) throws Throwable {
+    public ExceptionThrower throwIf(boolean shouldThrow, RuntimeException exception) {
         if (shouldThrow) {
-            throw throwable;
+            throw exception;
         }
         return this;
     }
