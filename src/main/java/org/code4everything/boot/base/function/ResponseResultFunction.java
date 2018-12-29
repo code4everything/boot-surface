@@ -11,7 +11,7 @@ import java.io.Serializable;
  * @since 2018-12-26
  */
 @FunctionalInterface
-public interface ResponseResultFunction<T extends Serializable> {
+public interface ResponseResultFunction {
 
     /**
      * 返回响应结果函数
@@ -20,5 +20,5 @@ public interface ResponseResultFunction<T extends Serializable> {
      *
      * @since 1.0.5
      */
-    ResponseResult<T> get();
+    <T extends Serializable> ResponseResult<T> get();
 }

@@ -7,7 +7,7 @@ package org.code4everything.boot.base.function;
  * @since 2018/12/27
  **/
 @FunctionalInterface
-public interface NothingFunction {
+public interface VoidFunction {
 
     /**
      * 执行一些无返回的操作
