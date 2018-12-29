@@ -143,13 +143,12 @@ public class BaseController {
      *
      * @param shouldReturn 是否返回结果
      * @param function 结果响应函数
-     * @param <T> 数据类型
      *
      * @return {@link BaseController}
      *
      * @since 1.0.5
      */
-    public <T extends Serializable> BaseController ifReturn(boolean shouldReturn, ResponseResultFunction<T> function) {
+    public BaseController ifReturn(boolean shouldReturn, ResponseResultFunction function) {
         if (!hasResult() && shouldReturn) {
             resultThreadLocal.set(function.get());
         }
@@ -161,13 +160,12 @@ public class BaseController {
      *
      * @param function 布尔函数
      * @param result 响应结果
-     * @param <T> 数据类型
      *
      * @return {@link BaseController}
      *
      * @since 1.0.5
      */
-    public <T extends Serializable> BaseController ifReturn(BooleanFunction function, ResponseResult<T> result) {
+    public BaseController ifReturn(BooleanFunction function, ResponseResult result) {
         if (!hasResult() && function.get()) {
             resultThreadLocal.set(result);
         }
@@ -179,14 +177,12 @@ public class BaseController {
      *
      * @param booleanFunction 布尔函数
      * @param responseResultFunction 结果响应函数
-     * @param <T> 数据类型
      *
      * @return {@link BaseController}
      *
      * @since 1.0.5
      */
-    public <T extends Serializable> BaseController ifReturn(BooleanFunction booleanFunction,
-                                                            ResponseResultFunction<T> responseResultFunction) {
+    public BaseController ifReturn(BooleanFunction booleanFunction, ResponseResultFunction responseResultFunction) {
         if (!hasResult()) {
             boolean res = booleanFunction.get();
             if (res) {
@@ -214,13 +210,12 @@ public class BaseController {
      * 没有结果时返回
      *
      * @param function 结果响应函数
-     * @param <T> 数据类型
      *
      * @return {@link BaseController}
      *
      * @since 1.0.5
      */
-    public <T extends Serializable> BaseController elseReturn(ResponseResultFunction<T> function) {
+    public BaseController elseReturn(ResponseResultFunction function) {
         if (!hasResult()) {
             resultThreadLocal.set(function.get());
         }
@@ -237,7 +232,7 @@ public class BaseController {
      *
      * @since 1.0.5
      */
-    public <T extends Serializable> ResponseResult getReturn(ResponseResult<T> result) {
+    public <T extends Serializable> ResponseResult<T> getReturn(ResponseResult<T> result) {
         return hasResult() ? getReturn() : result;
     }
 
@@ -245,13 +240,12 @@ public class BaseController {
      * 返回结果
      *
      * @param function 结果响应函数
-     * @param <T> 数据类型
      *
      * @return {@link BaseController}
      *
      * @since 1.0.5
      */
-    public <T extends Serializable> ResponseResult<T> getReturn(ResponseResultFunction<T> function) {
+    public <T extends Serializable> ResponseResult<T> getReturn(ResponseResultFunction function) {
         return hasResult() ? getReturn() : function.get();
     }
 
