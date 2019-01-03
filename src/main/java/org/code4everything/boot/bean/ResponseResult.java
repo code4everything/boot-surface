@@ -4,6 +4,7 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.http.HttpStatus;
 import com.alibaba.fastjson.annotation.JSONField;
 import org.code4everything.boot.config.BootConfig;
+import org.code4everything.boot.constant.IntegerConsts;
 import org.code4everything.boot.constant.MessageConsts;
 
 import java.io.Serializable;
@@ -32,7 +33,7 @@ public class ResponseResult<T extends Serializable> implements Serializable {
      *
      * @since 1.0.0
      */
-    private int code = HttpStatus.HTTP_OK;
+    private int code = IntegerConsts.ZERO;
 
     /**
      * 消息

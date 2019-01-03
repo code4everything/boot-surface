@@ -2,13 +2,13 @@ package org.code4everything.boot.web.mvc;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.http.HttpStatus;
 import com.google.common.base.Strings;
 import org.code4everything.boot.base.AssertUtils;
 import org.code4everything.boot.base.function.BooleanFunction;
 import org.code4everything.boot.base.function.ResponseResultFunction;
 import org.code4everything.boot.bean.ResponseResult;
 import org.code4everything.boot.config.BootConfig;
+import org.code4everything.boot.constant.IntegerConsts;
 import org.code4everything.boot.constant.MessageConsts;
 import org.code4everything.boot.exception.ExceptionThrower;
 import org.code4everything.boot.service.UserService;
@@ -30,11 +30,11 @@ import java.util.Objects;
 @RestController
 public class BaseController {
 
-    private static final int DEFAULT_ERROR_CODE = HttpStatus.HTTP_BAD_REQUEST;
+    private static final int DEFAULT_ERROR_CODE = -1;
 
     private static final String DEFAULT_OK_MSG = MessageConsts.REQUEST_OK_ZH;
 
-    private static int okCode = HttpStatus.HTTP_OK;
+    private static int okCode = IntegerConsts.ZERO;
 
     @Autowired
     public HttpServletRequest request;
