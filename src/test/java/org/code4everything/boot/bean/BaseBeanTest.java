@@ -17,8 +17,7 @@ public class BaseBeanTest implements BaseBean {
         System.out.println(user);
         UserVO userVO = new UserVO();
         System.out.println(userVO);
-        user.copyTo(userVO);
-        System.out.println(userVO);
+        System.out.println(user.copyInto(userVO));
     }
 }
 

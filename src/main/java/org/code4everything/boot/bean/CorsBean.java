@@ -1,6 +1,5 @@
 package org.code4everything.boot.bean;
 
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 
@@ -10,7 +9,7 @@ import java.util.List;
  * @author pantao
  * @since 2018/10/30
  **/
-public class CorsBean implements Serializable {
+public class CorsBean implements BaseBean {
 
     /**
      * 路径模式
@@ -46,48 +45,6 @@ public class CorsBean implements Serializable {
      * @since 1.0.0
      */
     private Boolean credential;
-
-    /**
-     * 设置请求源
-     *
-     * @param origins 请求源
-     *
-     * @return {@link CorsBean}
-     *
-     * @since 1.0.0
-     */
-    public CorsBean setOrigins(List<String> origins) {
-        this.origins = origins;
-        return this;
-    }
-
-    /**
-     * 设置请求头
-     *
-     * @param headers 请求头
-     *
-     * @return {@link CorsBean}
-     *
-     * @since 1.0.0
-     */
-    public CorsBean setHeaders(List<String> headers) {
-        this.headers = headers;
-        return this;
-    }
-
-    /**
-     * 设置请求方法
-     *
-     * @param methods 方法
-     *
-     * @return {@link CorsBean}
-     *
-     * @since 1.0.0
-     */
-    public CorsBean setMethods(List<String> methods) {
-        this.methods = methods;
-        return this;
-    }
 
     /**
      * 获取路径模式
@@ -134,6 +91,20 @@ public class CorsBean implements Serializable {
      *
      * @since 1.0.0
      */
+    public CorsBean setOrigins(List<String> origins) {
+        this.origins = origins;
+        return this;
+    }
+
+    /**
+     * 设置请求源
+     *
+     * @param origins 请求源
+     *
+     * @return {@link CorsBean}
+     *
+     * @since 1.0.0
+     */
     public CorsBean setOrigins(String... origins) {
         this.origins = Arrays.asList(origins);
         return this;
@@ -159,6 +130,20 @@ public class CorsBean implements Serializable {
      *
      * @since 1.0.0
      */
+    public CorsBean setHeaders(List<String> headers) {
+        this.headers = headers;
+        return this;
+    }
+
+    /**
+     * 设置请求头
+     *
+     * @param headers 请求头
+     *
+     * @return {@link CorsBean}
+     *
+     * @since 1.0.0
+     */
     public CorsBean setHeaders(String... headers) {
         this.headers = Arrays.asList(headers);
         return this;
@@ -173,6 +158,20 @@ public class CorsBean implements Serializable {
      */
     public List<String> getMethods() {
         return methods;
+    }
+
+    /**
+     * 设置请求方法
+     *
+     * @param methods 方法
+     *
+     * @return {@link CorsBean}
+     *
+     * @since 1.0.0
+     */
+    public CorsBean setMethods(List<String> methods) {
+        this.methods = methods;
+        return this;
     }
 
     /**

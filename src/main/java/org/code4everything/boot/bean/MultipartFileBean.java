@@ -9,7 +9,7 @@ import java.util.Map;
  * @author pantao
  * @since 2018/11/2
  **/
-public class MultipartFileBean implements Serializable {
+public class MultipartFileBean implements BaseBean {
 
     /**
      * MD5文件名

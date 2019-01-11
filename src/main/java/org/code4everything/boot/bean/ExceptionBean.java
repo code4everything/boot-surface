@@ -2,15 +2,13 @@ package org.code4everything.boot.bean;
 
 import org.springframework.http.HttpStatus;
 
-import java.io.Serializable;
-
 /**
  * 自定义异常信息
  *
  * @author pantao
  * @since 2018/11/15
  **/
-public class ExceptionBean implements Serializable {
+public class ExceptionBean implements BaseBean {
 
     /**
      * 错误码

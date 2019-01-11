@@ -1,14 +1,12 @@
 package org.code4everything.boot.bean;
 
-import java.io.Serializable;
-
 /**
  * 配置信息
  *
  * @author pantao
  * @since 2018/11/4
  */
-public class ConfigBean implements Serializable {
+public class ConfigBean implements BaseBean {
 
     /**
      * 黑名单前缀

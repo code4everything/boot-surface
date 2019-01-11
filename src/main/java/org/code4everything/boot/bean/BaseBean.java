@@ -13,6 +13,8 @@ import java.io.Serializable;
 public interface BaseBean extends Serializable {
 
     /**
+     * 属性复制
+     *
      * @param target 目标对象
      * @param <T> 对象类型
      *
@@ -20,8 +22,22 @@ public interface BaseBean extends Serializable {
      *
      * @since 1.0.6
      */
-    default <T> T copyTo(T target) {
+    default <T> T copyInto(T target) {
         BeanUtils.copyProperties(this, target);
         return target;
+    }
+
+    /**
+     * 属性复制
+     *
+     * @param source 源对象
+     *
+     * @return {@link BaseBean}
+     *
+     * @since 1.0.6
+     */
+    default BaseBean copyFrom(Object source) {
+        BeanUtils.copyProperties(source, this);
+        return this;
     }
 }

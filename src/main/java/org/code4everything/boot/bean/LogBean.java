@@ -1,14 +1,12 @@
 package org.code4everything.boot.bean;
 
-import java.io.Serializable;
-
 /**
  * 日志信息
  *
  * @author pantao
  * @since 2018/11/3
  */
-public class LogBean implements Serializable {
+public class LogBean implements BaseBean {
 
     /**
      * 类名

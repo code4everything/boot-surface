@@ -8,7 +8,7 @@ package org.code4everything.boot.bean;
  * @author pantao
  * @since 2018/12/03
  */
-public class LogExBean<T> {
+public class LogExBean<T> implements BaseBean {
 
     /**
      * 可能抛出的异常

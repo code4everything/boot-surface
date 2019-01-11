@@ -19,7 +19,7 @@ import java.util.Objects;
  * @author pantao
  * @since 2018/10/30
  */
-public class ResponseResult<T extends Serializable> implements Serializable {
+public class ResponseResult<T extends Serializable> implements BaseBean {
 
     /**
      * 是否对数据进行加密
