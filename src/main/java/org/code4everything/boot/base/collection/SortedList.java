@@ -1,5 +1,7 @@
 package org.code4everything.boot.base.collection;
 
+import cn.hutool.core.comparator.ComparatorException;
+
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -10,7 +12,7 @@ import java.util.Objects;
  * @author pantao
  * @since 2019/1/17
  **/
-public class SortedList<E extends Comparable, T extends List<E>> {
+public class SortedList<E, T extends List<E>> {
 
     /**
      * 数据源
@@ -57,18 +59,11 @@ public class SortedList<E extends Comparable, T extends List<E>> {
      * @since 1.0.6
      */
     public void add(E e) {
-        if (Objects.isNull(e)) {
-            return;
-        }
+        Objects.requireNonNull(e);
+        throwComparatorException();
         int idx = 0;
         for (int i = list.size() - 1; i >= 0; i--) {
-            int compare;
-            if (comparator == null) {
-                compare = e.compareTo(list.get(i));
-            } else {
-                compare = comparator.compare(list.get(i), e);
-            }
-            if (compare >= 0) {
+            if (comparator.compare(list.get(i), e) >= 0) {
                 idx = i + 1;
                 break;
             }
@@ -94,14 +89,14 @@ public class SortedList<E extends Comparable, T extends List<E>> {
      *
      * @since 1.0.6
      */
-    @SuppressWarnings("unchecked")
     public void setList(T list) {
         if (list == null) {
             throw new NullPointerException();
         }
         if (list.size() > 1) {
             // 与比较器相反
-            list.sort(comparator == null ? Comparator.naturalOrder() : comparator.reversed());
+            throwComparatorException();
+            list.sort(comparator.reversed());
         }
         this.list = list;
     }
@@ -117,5 +112,16 @@ public class SortedList<E extends Comparable, T extends List<E>> {
     public void setList(T list, Comparator<E> comparator) {
         this.comparator = comparator;
         setList(list);
+    }
+
+    /**
+     * 抛出比较器异常
+     *
+     * @since 1.0.6
+     */
+    private void throwComparatorException() {
+        if (comparator == null) {
+            throw new ComparatorException("must set a comparator");
+        }
     }
 }
