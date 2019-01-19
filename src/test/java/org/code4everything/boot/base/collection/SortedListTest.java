@@ -6,22 +6,31 @@ import org.junit.Test;
 
 import java.util.*;
 
-public class SortedCollectionTest {
+public class SortedListTest {
 
     @Test
-    public void getCollection() {
+    public void testTimeUse() {
+        long time = 0;
+        for (int i = 0; i < 100; i++) {
+            long start = System.currentTimeMillis();
+            testSortedList();
+            time += System.currentTimeMillis() - start;
+        }
+        System.out.println(time);
+    }
+
+    @Test
+    public void testSortedList() {
         // 降序排列
         SortedList<Integer, List<Integer>> sortedList = SortedList.of(new ArrayList<>(), (i1, i2) -> i2 - i1);
         for (int i = 0; i < 1000; i++) {
             sortedList.add(RandomUtil.randomInt(999));
         }
-        System.out.println(sortedList.getList());
         // 升序排列
         sortedList.setList(new ArrayList<>(), Comparator.comparingInt(i -> i));
         for (int i = 0; i < 1000; i++) {
             sortedList.add(RandomUtil.randomInt(999));
         }
-        System.out.println(sortedList.getList());
     }
 
     @Test
