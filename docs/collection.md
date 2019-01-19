@@ -2,7 +2,7 @@
 
 #### 1. 排序列表
 
-在一些项目的开发过程中，我们有时候需要让指定的 `List` 始终保持排序的能力，虽然 `Queue` 实现这个功能，但是只有通过 `poll` 方法弹出的数据才是有序的，并不完全符合我们的需求，所以这里我封装了一个 `SortedList`
+在一些项目的开发过程中，我们有时候需要让指定的 `List` 始终保持排序的能力，虽然 `PriorityQueue` 实现这个功能，但是只有通过 `poll` 方法弹出的数据才是有序的，并不完全符合我们的需求，所以这里我封装了一个 `SortedList`
 
 > 该类实现了通过二分法查找数据的索引位置
 
@@ -19,10 +19,10 @@
     
 - 包装数据容器
 
-    这里示例了一个升序列表，需要传递一个实现了 `Comparator` 接口的比较器（下方代码的第二个参数，使用 `Lambda` 表达式简化了匿名类）
+    这里示例了一个升序（自然顺序）列表，需要传递一个实现了 `Comparator` 接口的比较器（下方代码的第二个参数，使用 `Lambda` 表达式简化了匿名类）
 
     ``` java
-    SortedList<Integer, List<Integer>> sortedList = SortedList.of(list, (i1, i2) -> i2 - i1);
+    SortedList<Integer, List<Integer>> sortedList = SortedList.of(list, Comparator.comparingInt(i -> i));
     ```
     
 - 新增数据

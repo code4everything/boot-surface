@@ -1,10 +1,12 @@
 package org.code4everything.boot.base.collection;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.comparator.ComparatorException;
 import cn.hutool.core.util.ObjectUtil;
 
 import javax.annotation.concurrent.NotThreadSafe;
 import java.util.*;
+import java.util.concurrent.PriorityBlockingQueue;
 
 /**
  * 排序集合
@@ -91,6 +93,35 @@ public class SortedList<E, T extends List<E>> {
         return new ConcurrentSortedList<>(list, comparator);
     }
 
+    /**
+     * 转换成排序列表
+     *
+     * @param queue {@link Queue}
+     * @param list 列表
+     * @param comparator 比较器，如果是 {@link PriorityQueue} 或 {@link PriorityBlockingQueue} 可为空值
+     * @param <E> 数据类型
+     * @param <T> 列表类型
+     *
+     * @return 列表
+     *
+     * @since 1.0.6
+     */
+    public static <E, T extends List<E>> T parseTo(Queue<E> queue, T list, Comparator<E> comparator) {
+        if (queue instanceof PriorityQueue || queue instanceof PriorityBlockingQueue) {
+            while (CollUtil.isNotEmpty(list)) {
+                E e = list.remove(0);
+                queue.offer(e);
+            }
+            int len = queue.size();
+            for (int i = 0; i < len; i++) {
+                list.add(queue.poll());
+            }
+        } else {
+            SortedList<E, T> sortedList = SortedList.of(list, comparator);
+            sortedList.addAll(queue);
+        }
+        return list;
+    }
 
     /**
      * 添加所有数据，忽略空值
@@ -193,7 +224,7 @@ public class SortedList<E, T extends List<E>> {
             int end = list.size() - 1;
             while (start <= end) {
                 int mid = start + ((end - start) >> 1);
-                if (comparator.compare(list.get(mid), e) >= 0) {
+                if (comparator.compare(e, list.get(mid)) >= 0) {
                     start = mid + 1;
                 } else {
                     end = mid - 1;
@@ -226,9 +257,8 @@ public class SortedList<E, T extends List<E>> {
             throw new NullPointerException();
         }
         if (list.size() > 1) {
-            // 与比较器相反
             throwComparatorExceptionIfNull();
-            list.sort(comparator.reversed());
+            list.sort(comparator);
         }
         this.list = list;
     }

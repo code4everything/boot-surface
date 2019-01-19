@@ -4,40 +4,24 @@ import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.RandomUtil;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 public class SortedCollectionTest {
 
     @Test
     public void getCollection() {
-        // 升序排列
+        // 降序排列
         SortedList<Integer, List<Integer>> sortedList = SortedList.of(new ArrayList<>(), (i1, i2) -> i2 - i1);
         for (int i = 0; i < 1000; i++) {
             sortedList.add(RandomUtil.randomInt(999));
         }
         System.out.println(sortedList.getList());
-        // 测试已有数据
-        List<Integer> list = new ArrayList<>();
-        for (int i = 0; i < 1000; i++) {
-            list.add(RandomUtil.randomInt(999));
-        }
-        sortedList.setList(list);
-        System.out.println(list);
-        // 降序排列
+        // 升序排列
         sortedList.setList(new ArrayList<>(), Comparator.comparingInt(i -> i));
         for (int i = 0; i < 1000; i++) {
             sortedList.add(RandomUtil.randomInt(999));
         }
         System.out.println(sortedList.getList());
-        // 测试已有数据
-        list = new ArrayList<>();
-        for (int i = 0; i < 1000; i++) {
-            list.add(RandomUtil.randomInt(999));
-        }
-        sortedList.setList(list, Comparator.comparingInt(o -> o));
-        System.out.println(list);
     }
 
     @Test
@@ -58,5 +42,28 @@ public class SortedCollectionTest {
             ThreadUtil.sleep(1);
         }
         System.out.println(sortedList.getList());
+    }
+
+    @Test
+    public void parseTo() {
+        long start = System.currentTimeMillis();
+        Queue<Integer> queue = new PriorityQueue<>();
+        List<Integer> list = new ArrayList<>();
+        list.add(3);
+        list.add(7);
+        list.add(2);
+        queue.offer(1);
+        queue.offer(9);
+        queue.offer(6);
+        System.out.println(SortedList.parseTo(queue, list, null));
+        System.out.println(System.currentTimeMillis() - start);
+
+        start = System.currentTimeMillis();
+        SortedList<Integer, List<Integer>> sortedList = SortedList.of(new ArrayList<>(), Integer::compareTo);
+        sortedList.addIgnoreNull(9);
+        sortedList.addIgnoreNull(6);
+        sortedList.addIgnoreNull(1);
+        System.out.println(sortedList.getList());
+        System.out.println(System.currentTimeMillis() - start);
     }
 }
