@@ -1,7 +1,9 @@
 package org.code4everything.boot.base.collection;
 
 import cn.hutool.core.comparator.ComparatorException;
+import cn.hutool.core.util.ObjectUtil;
 
+import javax.annotation.concurrent.NotThreadSafe;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -12,6 +14,7 @@ import java.util.Objects;
  * @author pantao
  * @since 2019/1/17
  **/
+@NotThreadSafe
 public class SortedList<E, T extends List<E>> {
 
     /**
@@ -52,7 +55,7 @@ public class SortedList<E, T extends List<E>> {
     }
 
     /**
-     * 添加元素，忽略空值
+     * 添加元素
      *
      * @param e 数据
      *
@@ -60,15 +63,28 @@ public class SortedList<E, T extends List<E>> {
      */
     public void add(E e) {
         Objects.requireNonNull(e);
-        throwComparatorException();
-        int idx = 0;
-        for (int i = list.size() - 1; i >= 0; i--) {
-            if (comparator.compare(list.get(i), e) >= 0) {
-                idx = i + 1;
-                break;
+        addIgnoreNull(e);
+    }
+
+    /**
+     * 添加元素，忽略空值
+     *
+     * @param e 数据
+     *
+     * @since 1.0.6
+     */
+    public void addIgnoreNull(E e) {
+        if (ObjectUtil.isNotNull(e)) {
+            throwComparatorExceptionIfNull();
+            int idx = 0;
+            for (int i = list.size() - 1; i >= 0; i--) {
+                if (comparator.compare(list.get(i), e) >= 0) {
+                    idx = i + 1;
+                    break;
+                }
             }
+            list.add(idx, e);
         }
-        list.add(idx, e);
     }
 
     /**
@@ -90,12 +106,12 @@ public class SortedList<E, T extends List<E>> {
      * @since 1.0.6
      */
     public void setList(T list) {
-        if (list == null) {
+        if (Objects.isNull(list)) {
             throw new NullPointerException();
         }
         if (list.size() > 1) {
             // 与比较器相反
-            throwComparatorException();
+            throwComparatorExceptionIfNull();
             list.sort(comparator.reversed());
         }
         this.list = list;
@@ -119,8 +135,8 @@ public class SortedList<E, T extends List<E>> {
      *
      * @since 1.0.6
      */
-    private void throwComparatorException() {
-        if (comparator == null) {
+    private void throwComparatorExceptionIfNull() {
+        if (Objects.isNull(comparator)) {
             throw new ComparatorException("must set a comparator");
         }
     }
