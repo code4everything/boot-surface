@@ -4,10 +4,7 @@ import cn.hutool.core.comparator.ComparatorException;
 import cn.hutool.core.util.ObjectUtil;
 
 import javax.annotation.concurrent.NotThreadSafe;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * 排序集合
@@ -33,6 +30,13 @@ public class SortedList<E, T extends List<E>> {
     protected Comparator<E> comparator;
 
     /**
+     * 无参构造函数
+     *
+     * @since 1.0.6
+     */
+    public SortedList() {}
+
+    /**
      * 构造函数
      *
      * @param list 数据源
@@ -54,6 +58,39 @@ public class SortedList<E, T extends List<E>> {
     public SortedList(T list, Comparator<E> comparator) {
         setList(list, comparator);
     }
+
+    /**
+     * 构造排序列表
+     *
+     * @param list 数据源
+     * @param comparator 比较器
+     * @param <E> 数据类型
+     * @param <T> 数据源类型
+     *
+     * @return 排序列表
+     *
+     * @since 1.0.6
+     */
+    public static <E, T extends List<E>> SortedList<E, T> of(T list, Comparator<E> comparator) {
+        return new SortedList<>(list, comparator);
+    }
+
+    /**
+     * 构造线程安全的排序列表
+     *
+     * @param list 数据源
+     * @param comparator 比较器
+     * @param <E> 数据类型
+     * @param <T> 数据源类型
+     *
+     * @return 线程安全的排序列表
+     *
+     * @since 1.0.6
+     */
+    public static <E, T extends List<E>> ConcurrentSortedList<E, T> ofConcurrent(T list, Comparator<E> comparator) {
+        return new ConcurrentSortedList<>(list, comparator);
+    }
+
 
     /**
      * 添加所有数据，忽略空值
@@ -79,6 +116,67 @@ public class SortedList<E, T extends List<E>> {
     public void add(E e) {
         Objects.requireNonNull(e);
         addIgnoreNull(e);
+    }
+
+    /**
+     * 删除指定索引的数据
+     *
+     * @param o 数据
+     *
+     * @return 是否删除成功
+     *
+     * @since 1.0.6
+     */
+    public boolean remove(Object o) {
+        return list.remove(o);
+    }
+
+    /**
+     * 删除集合中存在的所有数据
+     *
+     * @param c 集合
+     *
+     * @return 是否删除成功
+     *
+     * @since 1.0.6
+     */
+    public boolean removeAll(Collection<?> c) {
+        return list.removeAll(c);
+    }
+
+    /**
+     * 删除集合中不存在的所有数据
+     *
+     * @param c 集合
+     *
+     * @return 是否删除成功
+     *
+     * @since 1.0.6
+     */
+    public boolean retainAll(Collection<?> c) {
+        return list.retainAll(c);
+    }
+
+    /**
+     * 清空所有数据
+     *
+     * @since 1.0.6
+     */
+    public void clear() {
+        list.clear();
+    }
+
+    /**
+     * 删除指定索引位置的数据
+     *
+     * @param index 索引
+     *
+     * @return 数据
+     *
+     * @since 1.0.6
+     */
+    public E remove(int index) {
+        return list.remove(index);
     }
 
     /**

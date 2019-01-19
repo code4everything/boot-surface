@@ -1,5 +1,7 @@
 package org.code4everything.boot.base.collection;
 
+import cn.hutool.core.util.ObjectUtil;
+
 import javax.annotation.concurrent.ThreadSafe;
 import java.util.Collection;
 import java.util.Comparator;
@@ -22,25 +24,71 @@ public class ConcurrentSortedList<E, T extends List<E>> extends SortedList<E, T>
      */
     private final ReentrantLock reentrantLock = new ReentrantLock();
 
+    /**
+     * 无参构造函数
+     *
+     * @since 1.0.6
+     */
+    public ConcurrentSortedList() {}
+
+    /**
+     * 构造函数
+     *
+     * @param list 数据源
+     *
+     * @since 1.0.6
+     */
     public ConcurrentSortedList(T list) {
-        super(list);
-    }
-
-    public ConcurrentSortedList(T list, Comparator<E> comparator) {
-        super(list, comparator);
-    }
-
-    @Override
-    public void setList(T list) {
-        reentrantLock.lock();
         super.setList(list);
-        reentrantLock.unlock();
+    }
+
+    /**
+     * 构造函数
+     *
+     * @param list 数据源
+     * @param comparator 比较器
+     *
+     * @since 1.0.6
+     */
+    public ConcurrentSortedList(T list, Comparator<E> comparator) {
+        super.setList(list, comparator);
+    }
+
+    /**
+     * 构造线程安全的排序列表
+     *
+     * @param list 数据源
+     * @param comparator 比较器
+     * @param <E> 数据类型
+     * @param <T> 数据源类型
+     *
+     * @return 线程安全的排序列表
+     *
+     * @since 1.0.6
+     */
+    public static <E, T extends List<E>> ConcurrentSortedList<E, T> of(T list, Comparator<E> comparator) {
+        return new ConcurrentSortedList<>(list, comparator);
     }
 
     @Override
     public void setList(T list, Comparator<E> comparator) {
         reentrantLock.lock();
         super.setList(list, comparator);
+        reentrantLock.unlock();
+    }
+
+    @Override
+    public T getList() {
+        reentrantLock.lock();
+        T t = ObjectUtil.clone(list);
+        reentrantLock.unlock();
+        return t;
+    }
+
+    @Override
+    public void setList(T list) {
+        reentrantLock.lock();
+        super.setList(list);
         reentrantLock.unlock();
     }
 
@@ -58,6 +106,7 @@ public class ConcurrentSortedList<E, T extends List<E>> extends SortedList<E, T>
         reentrantLock.unlock();
     }
 
+    @Override
     public boolean remove(Object o) {
         reentrantLock.lock();
         boolean res = list.remove(o);
@@ -65,6 +114,7 @@ public class ConcurrentSortedList<E, T extends List<E>> extends SortedList<E, T>
         return res;
     }
 
+    @Override
     public boolean removeAll(Collection<?> c) {
         reentrantLock.lock();
         boolean res = list.removeAll(c);
@@ -72,6 +122,7 @@ public class ConcurrentSortedList<E, T extends List<E>> extends SortedList<E, T>
         return res;
     }
 
+    @Override
     public boolean retainAll(Collection<?> c) {
         reentrantLock.lock();
         boolean res = list.retainAll(c);
@@ -79,12 +130,14 @@ public class ConcurrentSortedList<E, T extends List<E>> extends SortedList<E, T>
         return res;
     }
 
+    @Override
     public void clear() {
         reentrantLock.lock();
         list.clear();
         reentrantLock.unlock();
     }
 
+    @Override
     public E remove(int index) {
         reentrantLock.lock();
         E e = list.remove(index);
