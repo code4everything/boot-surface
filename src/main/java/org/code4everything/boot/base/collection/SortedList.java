@@ -106,7 +106,7 @@ public class SortedList<E, T extends List<E>> {
      *
      * @since 1.0.6
      */
-    public static <E, T extends List<E>> T parseTo(Queue<E> queue, T list, Comparator<E> comparator) {
+    public static <E, T extends List<E>> T sortTo(Queue<E> queue, T list, Comparator<E> comparator) {
         if (queue instanceof PriorityQueue || queue instanceof PriorityBlockingQueue) {
             while (CollUtil.isNotEmpty(list)) {
                 E e = list.remove(0);

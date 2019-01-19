@@ -27,7 +27,7 @@
     
 - 新增数据
 
-    这里请注意：使用SortedList包装后，直接使用 List#add 方法是无效的（无法保持排序的能力），必须使用 SortedList#add 才能让列表保持排序
+    这里请注意：使用SortedList包装后，直接使用 `List#add` 方法是无效的（无法保持排序的能力），必须使用 `SortedList#add` 才能让列表保持排序
 
     ``` java
     sortedList.add(10);
@@ -44,6 +44,20 @@
     sortedList.addIgnoreNull(7);
     System.out.println(sortedList.getList());
     // output --> [1, 2, 3, 5, 7, 10]
+    ```
+    
+- 直接将 `PriorityQueue` 转换为有序列表
+
+    对于一次性的排序，我们可以使用 `SortedList#sortTo` 将 `PriorityQueue` 转换成一个有序的列表，转换后 `PriorityQueue` 将变为空（因为会调用 `Queue#poll` 方法）
+
+    ``` java
+    Queue<Integer> queue = new PriorityQueue<>();
+    queue.offer(1);
+    queue.offer(9);
+    queue.offer(6);
+    List<Integer> list = SortedList.sortTo(queue, new ArrayList<>(), null);
+    System.out.println(list);
+    // output --> [1, 6, 9]
     ```
 
 > 特别说明：`SortedList` 是非线程安全的，在多线程的环境下请使用 `ConcurrentSortedList`

@@ -45,7 +45,7 @@ public class SortedCollectionTest {
     }
 
     @Test
-    public void parseTo() {
+    public void sortTo() {
         long start = System.currentTimeMillis();
         Queue<Integer> queue = new PriorityQueue<>();
         List<Integer> list = new ArrayList<>();
@@ -55,7 +55,7 @@ public class SortedCollectionTest {
         queue.offer(1);
         queue.offer(9);
         queue.offer(6);
-        System.out.println(SortedList.parseTo(queue, list, null));
+        System.out.println(SortedList.sortTo(queue, list, null));
         System.out.println(System.currentTimeMillis() - start);
 
         start = System.currentTimeMillis();
