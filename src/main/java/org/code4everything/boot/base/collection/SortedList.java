@@ -91,14 +91,17 @@ public class SortedList<E, T extends List<E>> {
     public void addIgnoreNull(E e) {
         if (ObjectUtil.isNotNull(e)) {
             throwComparatorExceptionIfNull();
-            int idx = 0;
-            for (int i = list.size() - 1; i >= 0; i--) {
-                if (comparator.compare(list.get(i), e) >= 0) {
-                    idx = i + 1;
-                    break;
+            int start = 0;
+            int end = list.size() - 1;
+            while (start <= end) {
+                int mid = start + ((end - start) >> 1);
+                if (comparator.compare(list.get(mid), e) >= 0) {
+                    start = mid + 1;
+                } else {
+                    end = mid - 1;
                 }
             }
-            list.add(idx, e);
+            list.add(start, e);
         }
     }
 
