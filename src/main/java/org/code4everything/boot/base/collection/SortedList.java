@@ -5,6 +5,7 @@ import cn.hutool.core.util.ObjectUtil;
 
 import javax.annotation.concurrent.NotThreadSafe;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
@@ -22,14 +23,14 @@ public class SortedList<E, T extends List<E>> {
      *
      * @since 1.0.6
      */
-    private T list;
+    protected T list;
 
     /**
      * 比较器
      *
      * @since 1.0.6
      */
-    private Comparator<E> comparator;
+    protected Comparator<E> comparator;
 
     /**
      * 构造函数
@@ -52,6 +53,20 @@ public class SortedList<E, T extends List<E>> {
      */
     public SortedList(T list, Comparator<E> comparator) {
         setList(list, comparator);
+    }
+
+    /**
+     * 添加所有数据，忽略空值
+     *
+     * @param iterable {@link Iterable}
+     *
+     * @since 1.0.6
+     */
+    public void addAll(Iterable<E> iterable) {
+        Iterator<E> iterator = iterable.iterator();
+        while (iterator.hasNext()) {
+            addIgnoreNull(iterator.next());
+        }
     }
 
     /**
