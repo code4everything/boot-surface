@@ -42,7 +42,7 @@ public class DemoVO implements Serializable {
 #### 控制器示例代码
 
 ``` java
-import org.code4everything.boot.bean.ResponseResult;
+import org.code4everything.boot.bean.Response;
 import org.code4everything.boot.web.mvc.BaseController;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

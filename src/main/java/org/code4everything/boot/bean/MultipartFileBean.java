@@ -1,6 +1,5 @@
 package org.code4everything.boot.bean;
 
-import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -44,7 +43,7 @@ public class MultipartFileBean implements BaseBean {
      *
      * @since 1.0.0
      */
-    private Map<String, Serializable> params;
+    private Map<String, Object> params;
 
     /**
      * 获取自定义参数
@@ -53,7 +52,7 @@ public class MultipartFileBean implements BaseBean {
      *
      * @since 1.0.0
      */
-    public Map<String, Serializable> getParams() {
+    public Map<String, Object> getParams() {
         return params;
     }
 
@@ -66,7 +65,7 @@ public class MultipartFileBean implements BaseBean {
      *
      * @since 1.0.0
      */
-    public MultipartFileBean setParams(Map<String, Serializable> params) {
+    public MultipartFileBean setParams(Map<String, Object> params) {
         this.params = params;
         return this;
     }

@@ -100,7 +100,7 @@ public class DemoFileServiceImpl implements DemoFileService {
 #### 新建文件控制器，实现上传下载
 
 ``` java
-import org.code4everything.boot.bean.ResponseResult;
+import org.code4everything.boot.bean.Response;
 import org.code4everything.boot.web.HttpUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamSource;

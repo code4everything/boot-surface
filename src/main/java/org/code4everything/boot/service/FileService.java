@@ -3,7 +3,6 @@ package org.code4everything.boot.service;
 import org.code4everything.boot.bean.MultipartFileBean;
 
 import javax.annotation.Nullable;
-import java.io.Serializable;
 
 /**
  * 文件服务，如果没有对应数据表，可以不实现接口中的方法
@@ -11,7 +10,7 @@ import java.io.Serializable;
  * @author pantao
  * @since 2018/11/2
  **/
-public interface FileService<T extends Serializable> {
+public interface FileService<T> {
 
     /**
      * 检测当前 {@link MultipartFileBean}是否存在，如果文件不存在则写入磁盘，否则不写入，返回NULL时会尝试调用 {@link #getBy(MultipartFileBean)}。

@@ -17,8 +17,8 @@ public class CommonTest {
 
     @Test
     public void testCopyProperties() {
-        ResponseResult result1 = new ResponseResult().setCode(200);
-        ResponseResult result2 = new ResponseResult().setCode(400);
+        Response result1 = new Response().setCode(200);
+        Response result2 = new Response().setCode(400);
         BeanUtil.copyProperties(result1, result2);
         System.out.println(result1);
         System.out.println(result2);

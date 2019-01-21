@@ -13,7 +13,6 @@ import org.apache.log4j.Logger;
 import org.code4everything.boot.config.BootConfig;
 import org.code4everything.boot.interfaces.FileWatcher;
 
-import java.io.Serializable;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.WatchEvent;
@@ -40,7 +39,7 @@ public class FileUtils {
      *
      * @since 1.0.4
      */
-    public static <T extends Serializable> void watchFile(String jsonFile, T config, Class<T> clazz) {
+    public static <T> void watchFile(String jsonFile, T config, Class<T> clazz) {
         watchFile(jsonFile, new FileWatcher() {}, config, clazz, CharsetUtil.UTF_8);
     }
 
@@ -55,7 +54,7 @@ public class FileUtils {
      *
      * @since 1.0.4
      */
-    public static <T extends Serializable> void watchFile(String jsonFile, T config, Class<T> clazz, String charset) {
+    public static <T> void watchFile(String jsonFile, T config, Class<T> clazz, String charset) {
         watchFile(jsonFile, new FileWatcher() {}, config, clazz, charset);
     }
 
@@ -70,8 +69,7 @@ public class FileUtils {
      *
      * @since 1.0.4
      */
-    public static <T extends Serializable> void watchFile(String jsonFile, FileWatcher fileWatcher, T config,
-                                                          Class<T> clazz) {
+    public static <T> void watchFile(String jsonFile, FileWatcher fileWatcher, T config, Class<T> clazz) {
         watchFile(jsonFile, fileWatcher, config, clazz, CharsetUtil.UTF_8);
     }
 
@@ -87,8 +85,8 @@ public class FileUtils {
      *
      * @since 1.0.4
      */
-    public static <T extends Serializable> void watchFile(String jsonFile, FileWatcher fileWatcher, T config,
-                                                          Class<T> clazz, String charset) {
+    public static <T> void watchFile(String jsonFile, FileWatcher fileWatcher, T config, Class<T> clazz,
+                                     String charset) {
         watchFile(jsonFile, new FileWatcher() {
             @Override
             public void doSomething() {

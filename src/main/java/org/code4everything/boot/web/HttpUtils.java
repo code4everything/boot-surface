@@ -9,7 +9,7 @@ import cn.hutool.http.HttpStatus;
 import org.apache.log4j.Logger;
 import org.code4everything.boot.base.AssertUtils;
 import org.code4everything.boot.bean.MultipartFileBean;
-import org.code4everything.boot.bean.ResponseResult;
+import org.code4everything.boot.bean.Response;
 import org.code4everything.boot.config.BootConfig;
 import org.code4everything.boot.constant.MessageConsts;
 import org.code4everything.boot.constant.StringConsts;
@@ -25,7 +25,6 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Objects;
@@ -81,8 +80,8 @@ public class HttpUtils {
      * @throws IOException 可能发生的异常
      * @since 1.0.2
      */
-    public static <T extends Serializable> ResponseEntity<InputStreamSource> responseFile(FileService<T> fileService,
-                                                                                          HttpServletRequest request) throws IOException {
+    public static <T> ResponseEntity<InputStreamSource> responseFile(FileService<T> fileService,
+                                                                     HttpServletRequest request) throws IOException {
         return responseFile(fileService.getLocalPathByAccessUrl(request.getServletPath()));
     }
 
@@ -119,7 +118,8 @@ public class HttpUtils {
      *
      * @since 1.0.0
      */
-    public static <T extends Serializable> ResponseResult<ArrayList<ResponseResult<T>>> multiUpload(MultipartHttpServletRequest request, String storagePath, boolean digestBytes) {
+    public static <T> Response<ArrayList<Response<T>>> multiUpload(MultipartHttpServletRequest request,
+                                                                   String storagePath, boolean digestBytes) {
         return multiUpload(new FileService<T>() {}, request, storagePath, digestBytes, null, false);
     }
 
@@ -136,7 +136,9 @@ public class HttpUtils {
      *
      * @since 1.0.4
      */
-    public static <T extends Serializable> ResponseResult<ArrayList<ResponseResult<T>>> multiUpload(MultipartHttpServletRequest request, String storagePath, boolean digestBytes, boolean forceWrite) {
+    public static <T> Response<ArrayList<Response<T>>> multiUpload(MultipartHttpServletRequest request,
+                                                                   String storagePath, boolean digestBytes,
+                                                                   boolean forceWrite) {
         return multiUpload(new FileService<T>() {}, request, storagePath, digestBytes, null, forceWrite);
     }
 
@@ -153,7 +155,9 @@ public class HttpUtils {
      *
      * @since 1.0.0
      */
-    public static <T extends Serializable> ResponseResult<ArrayList<ResponseResult<T>>> multiUpload(FileService<T> fileService, MultipartHttpServletRequest request, String storagePath, boolean digestBytes) {
+    public static <T> Response<ArrayList<Response<T>>> multiUpload(FileService<T> fileService,
+                                                                   MultipartHttpServletRequest request,
+                                                                   String storagePath, boolean digestBytes) {
         return multiUpload(fileService, request, storagePath, digestBytes, null, false);
     }
 
@@ -171,7 +175,10 @@ public class HttpUtils {
      *
      * @since 1.0.4
      */
-    public static <T extends Serializable> ResponseResult<ArrayList<ResponseResult<T>>> multiUpload(FileService<T> fileService, MultipartHttpServletRequest request, String storagePath, boolean digestBytes, boolean forceWrite) {
+    public static <T> Response<ArrayList<Response<T>>> multiUpload(FileService<T> fileService,
+                                                                   MultipartHttpServletRequest request,
+                                                                   String storagePath, boolean digestBytes,
+                                                                   boolean forceWrite) {
         return multiUpload(fileService, request, storagePath, digestBytes, null, forceWrite);
     }
 
@@ -189,7 +196,10 @@ public class HttpUtils {
      *
      * @since 1.0.0
      */
-    public static <T extends Serializable> ResponseResult<ArrayList<ResponseResult<T>>> multiUpload(FileService<T> fileService, MultipartHttpServletRequest request, String storagePath, boolean digestBytes, Map<String, Serializable> params) {
+    public static <T> Response<ArrayList<Response<T>>> multiUpload(FileService<T> fileService,
+                                                                   MultipartHttpServletRequest request,
+                                                                   String storagePath, boolean digestBytes,
+                                                                   Map<String, Object> params) {
         return multiUpload(fileService, request, storagePath, digestBytes, params, false);
     }
 
@@ -209,15 +219,19 @@ public class HttpUtils {
      *
      * @since 1.0.4
      */
-    public static <T extends Serializable> ResponseResult<ArrayList<ResponseResult<T>>> multiUpload(FileService<T> fileService, MultipartHttpServletRequest request, String storagePath, boolean digestBytes, Map<String, Serializable> params, boolean forceWrite) {
+    public static <T> Response<ArrayList<Response<T>>> multiUpload(FileService<T> fileService,
+                                                                   MultipartHttpServletRequest request,
+                                                                   String storagePath, boolean digestBytes,
+                                                                   Map<String, Object> params,
+                                                                   boolean forceWrite) {
         Map<String, MultipartFile> fileMap = request.getFileMap();
         if (CollectionUtil.isEmpty(fileMap)) {
-            return new ResponseResult<>(HttpStatus.HTTP_BAD_REQUEST, MessageConsts.FILE_UNAVAILABLE_ZH);
+            return new Response<>(HttpStatus.HTTP_BAD_REQUEST, MessageConsts.FILE_UNAVAILABLE_ZH);
         } else {
-            ArrayList<ResponseResult<T>> fileList = new ArrayList<>();
+            ArrayList<Response<T>> fileList = new ArrayList<>();
             fileMap.values().forEach(file -> fileList.add(upload(fileService, file, storagePath, digestBytes, params,
                     forceWrite)));
-            return new ResponseResult<>(fileList);
+            return new Response<>(fileList);
         }
     }
 
@@ -229,12 +243,11 @@ public class HttpUtils {
      * @param digestBytes 是否计算文件的MD5码（大文件不建议计算，防止堆内存泄漏）
      * @param <T> 数据表类型
      *
-     * @return 响应结果 {@link ResponseResult}。如果上传成功，{@link ResponseResult#getMsg()}返回文件的MD5文件名
+     * @return 响应结果 {@link Response}。如果上传成功，{@link Response#getMsg()}返回文件的MD5文件名
      *
      * @since 1.0.0
      */
-    public static <T extends Serializable> ResponseResult<T> upload(MultipartFile file, String storagePath,
-                                                                    boolean digestBytes) {
+    public static <T> Response<T> upload(MultipartFile file, String storagePath, boolean digestBytes) {
         return upload(new FileService<T>() {}, file, storagePath, digestBytes, null, false);
     }
 
@@ -247,12 +260,12 @@ public class HttpUtils {
      * @param <T> 数据表类型
      * @param forceWrite 是否强制写入文件
      *
-     * @return 响应结果 {@link ResponseResult}。如果上传成功，{@link ResponseResult#getMsg()}返回文件的MD5文件名
+     * @return 响应结果 {@link Response}。如果上传成功，{@link Response#getMsg()}返回文件的MD5文件名
      *
      * @since 1.0.4
      */
-    public static <T extends Serializable> ResponseResult<T> upload(MultipartFile file, String storagePath,
-                                                                    boolean digestBytes, boolean forceWrite) {
+    public static <T> Response<T> upload(MultipartFile file, String storagePath, boolean digestBytes,
+                                         boolean forceWrite) {
         return upload(new FileService<T>() {}, file, storagePath, digestBytes, null, forceWrite);
     }
 
@@ -265,13 +278,13 @@ public class HttpUtils {
      * @param digestBytes 是否计算文件的MD5码（大文件不建议计算，防止堆内存泄漏）
      * @param <T> 数据表类型
      *
-     * @return 响应结果 {@link ResponseResult}。如果文件上传成功且最后得到的 {@link ResponseResult#getData()}为NULL，则{@link
-     *         ResponseResult#getMsg()}将返回文件的MD5文件名
+     * @return 响应结果 {@link Response}。如果文件上传成功且最后得到的 {@link Response#getData()}为NULL，则{@link
+     *         Response#getMsg()}将返回文件的MD5文件名
      *
      * @since 1.0.0
      */
-    public static <T extends Serializable> ResponseResult<T> upload(FileService<T> fileService, MultipartFile file,
-                                                                    String storagePath, boolean digestBytes) {
+    public static <T> Response<T> upload(FileService<T> fileService, MultipartFile file, String storagePath,
+                                         boolean digestBytes) {
         return upload(fileService, file, storagePath, digestBytes, null, false);
     }
 
@@ -285,14 +298,13 @@ public class HttpUtils {
      * @param <T> 数据表类型
      * @param forceWrite 是否强制写入文件
      *
-     * @return 响应结果 {@link ResponseResult}。如果文件上传成功且最后得到的 {@link ResponseResult#getData()}为NULL，则{@link
-     *         ResponseResult#getMsg()}将返回文件的MD5文件名
+     * @return 响应结果 {@link Response}。如果文件上传成功且最后得到的 {@link Response#getData()}为NULL，则{@link
+     *         Response#getMsg()}将返回文件的MD5文件名
      *
      * @since 1.0.4
      */
-    public static <T extends Serializable> ResponseResult<T> upload(FileService<T> fileService, MultipartFile file,
-                                                                    String storagePath, boolean digestBytes,
-                                                                    boolean forceWrite) {
+    public static <T> Response<T> upload(FileService<T> fileService, MultipartFile file, String storagePath,
+                                         boolean digestBytes, boolean forceWrite) {
         return upload(fileService, file, storagePath, digestBytes, null, forceWrite);
     }
 
@@ -306,14 +318,13 @@ public class HttpUtils {
      * @param params 自定义参数，在自己实现的 {@link FileService}方法中使用
      * @param <T> 数据表类型
      *
-     * @return 响应结果 {@link ResponseResult}。如果文件上传成功且最后得到的 {@link ResponseResult#getData()}为NULL，则{@link
-     *         ResponseResult#getMsg()}将返回文件的MD5文件名
+     * @return 响应结果 {@link Response}。如果文件上传成功且最后得到的 {@link Response#getData()}为NULL，则{@link
+     *         Response#getMsg()}将返回文件的MD5文件名
      *
      * @since 1.0.0
      */
-    public static <T extends Serializable> ResponseResult<T> upload(FileService<T> fileService, MultipartFile file,
-                                                                    String storagePath, boolean digestBytes,
-                                                                    Map<String, Serializable> params) {
+    public static <T> Response<T> upload(FileService<T> fileService, MultipartFile file, String storagePath,
+                                         boolean digestBytes, Map<String, Object> params) {
         return upload(fileService, file, storagePath, digestBytes, params, false);
     }
 
@@ -328,16 +339,14 @@ public class HttpUtils {
      * @param <T> 数据表类型
      * @param forceWrite 是否强制写入文件
      *
-     * @return 响应结果 {@link ResponseResult}。如果文件上传成功且最后得到的 {@link ResponseResult#getData()}为NULL，则{@link
-     *         ResponseResult#getMsg()}将返回文件的MD5文件名
+     * @return 响应结果 {@link Response}。如果文件上传成功且最后得到的 {@link Response#getData()}为NULL，则{@link
+     *         Response#getMsg()}将返回文件的MD5文件名
      *
      * @since 1.0.0
      */
-    public static <T extends Serializable> ResponseResult<T> upload(FileService<T> fileService, MultipartFile file,
-                                                                    String storagePath, boolean digestBytes,
-                                                                    Map<String, Serializable> params,
-                                                                    boolean forceWrite) {
-        ResponseResult<T> result = new ResponseResult<>();
+    public static <T> Response<T> upload(FileService<T> fileService, MultipartFile file, String storagePath,
+                                         boolean digestBytes, Map<String, Object> params, boolean forceWrite) {
+        Response<T> result = new Response<>();
         if (file.getSize() > BootConfig.getMaxUploadFileSize()) {
             return result.error("file size must less than " + BootConfig.getMaxUploadFileSize());
         }

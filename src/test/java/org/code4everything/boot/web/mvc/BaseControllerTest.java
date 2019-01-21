@@ -1,11 +1,10 @@
 package org.code4everything.boot.web.mvc;
 
-import org.code4everything.boot.base.function.ResponseResultFunction;
-import org.code4everything.boot.bean.ResponseResult;
+import org.code4everything.boot.base.function.ResponseFunction;
 import org.junit.Test;
 
-import java.io.Serializable;
 import java.util.Arrays;
+import java.util.List;
 
 public class BaseControllerTest extends BaseController {
 
@@ -14,12 +13,7 @@ public class BaseControllerTest extends BaseController {
         ifReturn(false, errorResult("one"));
         ifReturn(false, errorResult("two"));
         ifReturn(false, errorResult("three"));
-        elseReturn(new ResponseResultFunction() {
-            @Override
-            public <T extends Serializable> ResponseResult<T> get() {
-                return parseCollection("error", Arrays.asList("a", "b"));
-            }
-        });
+        elseReturn((ResponseFunction<List<String>>) () -> parseCollection("error", Arrays.asList("a", "b")));
         System.out.println(getReturn());
     }
 }

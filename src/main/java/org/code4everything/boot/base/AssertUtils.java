@@ -6,7 +6,6 @@ import org.code4everything.boot.exception.ExceptionThrower;
 import org.code4everything.boot.exception.template.TokenBlankException;
 import org.code4everything.boot.exception.template.UserUnloggedException;
 
-import java.io.Serializable;
 import java.util.Objects;
 
 /**
@@ -45,7 +44,7 @@ public class AssertUtils {
      *
      * @since 1.0.4
      */
-    public static <T extends Serializable> T assertUserLoggedIn(T user) {
+    public static <T> T assertUserLoggedIn(T user) {
         if (Objects.isNull(user)) {
             throw new UserUnloggedException();
         }

@@ -1,8 +1,6 @@
 package org.code4everything.boot.base.function;
 
-import org.code4everything.boot.bean.ResponseResult;
-
-import java.io.Serializable;
+import org.code4everything.boot.bean.Response;
 
 /**
  * 结果响应函数
@@ -11,7 +9,7 @@ import java.io.Serializable;
  * @since 2018-12-26
  */
 @FunctionalInterface
-public interface ResponseResultFunction {
+public interface ResponseFunction<T> {
 
     /**
      * 返回响应结果函数
@@ -20,5 +18,5 @@ public interface ResponseResultFunction {
      *
      * @since 1.0.5
      */
-    <T extends Serializable> ResponseResult<T> get();
+    Response<T> get();
 }

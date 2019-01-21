@@ -2,15 +2,13 @@ package org.code4everything.boot.bean;
 
 import org.springframework.beans.BeanUtils;
 
-import java.io.Serializable;
-
 /**
  * 基类
  *
  * @author pantao
  * @since 2019/1/11
  **/
-public interface BaseBean extends Serializable {
+public interface BaseBean {
 
     /**
      * 属性复制

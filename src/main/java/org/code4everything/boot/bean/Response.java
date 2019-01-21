@@ -7,10 +7,7 @@ import org.code4everything.boot.config.BootConfig;
 import org.code4everything.boot.constant.IntegerConsts;
 import org.code4everything.boot.constant.MessageConsts;
 
-import java.io.Serializable;
 import java.sql.Timestamp;
-import java.util.Collection;
-import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -19,7 +16,7 @@ import java.util.Objects;
  * @author pantao
  * @since 2018/10/30
  */
-public class ResponseResult<T extends Serializable> implements BaseBean {
+public class Response<T> {
 
     /**
      * 是否对数据进行加密
@@ -62,7 +59,7 @@ public class ResponseResult<T extends Serializable> implements BaseBean {
      *
      * @since 1.0.0
      */
-    public ResponseResult() {}
+    public Response() {}
 
     /**
      * 设置数据
@@ -71,7 +68,7 @@ public class ResponseResult<T extends Serializable> implements BaseBean {
      *
      * @since 1.0.0
      */
-    public ResponseResult(T data) {
+    public Response(T data) {
         this.data = data;
     }
 
@@ -83,7 +80,7 @@ public class ResponseResult<T extends Serializable> implements BaseBean {
      *
      * @since 1.0.0
      */
-    public ResponseResult(String msg, T data) {
+    public Response(String msg, T data) {
         this.msg = msg;
         this.data = data;
     }
@@ -96,7 +93,7 @@ public class ResponseResult<T extends Serializable> implements BaseBean {
      *
      * @since 1.0.0
      */
-    public ResponseResult(int code, String msg) {
+    public Response(int code, String msg) {
         this.code = code;
         this.msg = msg;
     }
@@ -110,7 +107,7 @@ public class ResponseResult<T extends Serializable> implements BaseBean {
      *
      * @since 1.0.5
      */
-    public ResponseResult(int code, String msg, T data) {
+    public Response(int code, String msg, T data) {
         this.code = code;
         this.msg = msg;
         this.data = data;
@@ -136,7 +133,7 @@ public class ResponseResult<T extends Serializable> implements BaseBean {
      *
      * @since 1.0.0
      */
-    public ResponseResult<T> setCode(int code) {
+    public Response<T> setCode(int code) {
         this.code = code;
         return this;
     }
@@ -161,7 +158,7 @@ public class ResponseResult<T extends Serializable> implements BaseBean {
      *
      * @since 1.0.0
      */
-    public ResponseResult<T> setMsg(String msg) {
+    public Response<T> setMsg(String msg) {
         this.msg = msg;
         return this;
     }
@@ -186,40 +183,12 @@ public class ResponseResult<T extends Serializable> implements BaseBean {
      *
      * @since 1.0.0
      */
-    public ResponseResult<T> setData(T data) {
+    public Response<T> setData(T data) {
         if (sealed) {
             BootConfig.getFieldEncoder().encode(data);
         }
         this.data = data;
         return this;
-    }
-
-    /**
-     * 转换数据格式
-     *
-     * @param data 数据
-     *
-     * @return {@link ResponseResult}
-     *
-     * @since 1.0.5
-     */
-    @SuppressWarnings("unchecked")
-    public ResponseResult<T> castData(Collection<? extends Serializable> data) {
-        return setData((T) data);
-    }
-
-    /**
-     * 转换数据格式
-     *
-     * @param data 数据
-     *
-     * @return {@link ResponseResult}
-     *
-     * @since 1.0.5
-     */
-    @SuppressWarnings("unchecked")
-    public ResponseResult<T> castData(Map<? extends Serializable, ? extends Serializable> data) {
-        return setData((T) data);
     }
 
     /**
@@ -238,11 +207,11 @@ public class ResponseResult<T extends Serializable> implements BaseBean {
      *
      * @param timestamp 时间戳
      *
-     * @return {@link ResponseResult}
+     * @return {@link Response}
      *
      * @since 1.0.0
      */
-    public ResponseResult<T> setTimestamp(Timestamp timestamp) {
+    public Response<T> setTimestamp(Timestamp timestamp) {
         this.timestamp = timestamp;
         return this;
     }
@@ -252,11 +221,11 @@ public class ResponseResult<T extends Serializable> implements BaseBean {
      *
      * @param errMsg 错误消息
      *
-     * @return {@link ResponseResult}
+     * @return {@link Response}
      *
      * @since 1.0.0
      */
-    public ResponseResult<T> error(String errMsg) {
+    public Response<T> error(String errMsg) {
         return this.error(HttpStatus.HTTP_BAD_REQUEST, errMsg);
     }
 
@@ -266,22 +235,22 @@ public class ResponseResult<T extends Serializable> implements BaseBean {
      * @param errCode 错误码
      * @param errMsg 错误消息
      *
-     * @return {@link ResponseResult}
+     * @return {@link Response}
      *
      * @since 1.0.0
      */
-    public ResponseResult<T> error(int errCode, String errMsg) {
+    public Response<T> error(int errCode, String errMsg) {
         return this.setCode(errCode).setMsg(errMsg).setData(null);
     }
 
     /**
      * 对字段进行加密
      *
-     * @return {@link ResponseResult}
+     * @return {@link Response}
      *
      * @since 1.0.0
      */
-    public ResponseResult<T> encode() {
+    public Response<T> encode() {
         BootConfig.getFieldEncoder().encode(this.getData());
         sealed = true;
         return this;
@@ -296,8 +265,8 @@ public class ResponseResult<T extends Serializable> implements BaseBean {
      *
      * @since 1.0.0
      */
-    public <E extends Serializable> ResponseResult<E> copy() {
-        return new ResponseResult<E>(code, msg).setTimestamp(timestamp);
+    public <E> Response<E> copy() {
+        return new Response<E>(code, msg).setTimestamp(timestamp);
     }
 
     /**
@@ -310,21 +279,21 @@ public class ResponseResult<T extends Serializable> implements BaseBean {
      *
      * @since 1.0.0
      */
-    public <E extends Serializable> ResponseResult<E> copy(E newData) {
-        return new ResponseResult<E>(code, msg).setTimestamp(timestamp).setData(newData);
+    public <E> Response<E> copy(E newData) {
+        return new Response<E>(code, msg).setTimestamp(timestamp).setData(newData);
     }
 
     /**
      * 从参数对象中复制数据
      *
-     * @param result 目标 {@link ResponseResult}
+     * @param result 目标 {@link Response}
      *
-     * @return {@link ResponseResult}
+     * @return {@link Response}
      *
      * @since 1.0.4
      */
     @SuppressWarnings("unchecked")
-    public ResponseResult<T> copyFrom(ResponseResult<? extends Serializable> result) {
+    public Response<T> copyFrom(Response<?> result) {
         this.setMsg(result.getMsg()).setCode(result.getCode()).setTimestamp(result.getTimestamp());
         if (ObjectUtil.isNotNull(result.data)) {
             this.setData((T) result.getData());
@@ -335,14 +304,14 @@ public class ResponseResult<T extends Serializable> implements BaseBean {
     /**
      * 复制数据到参数对象中
      *
-     * @param result 目标 {@link ResponseResult}
+     * @param result 目标 {@link Response}
      * @param <E> 数据类型
      *
-     * @return {@link ResponseResult}
+     * @return {@link Response}
      *
      * @since 1.0.4
      */
-    public <E extends Serializable> ResponseResult<E> copyInto(ResponseResult<E> result) {
+    public <E> Response<E> copyInto(Response<E> result) {
         return result.copyFrom(this);
     }
 
@@ -355,7 +324,7 @@ public class ResponseResult<T extends Serializable> implements BaseBean {
      */
     @Override
     public String toString() {
-        return "ResponseResult{code=" + code + ", msg='" + msg + '\'' + ", data=" + data + ", timestamp=" + timestamp + '}';
+        return "Response{code=" + code + ", msg='" + msg + '\'' + ", data=" + data + ", timestamp=" + timestamp + '}';
     }
 
     /**
@@ -371,8 +340,8 @@ public class ResponseResult<T extends Serializable> implements BaseBean {
     public boolean equals(Object obj) {
         if (this == obj) {
             return true;
-        } else if (obj instanceof ResponseResult) {
-            ResponseResult result = (ResponseResult) obj;
+        } else if (obj instanceof Response) {
+            Response result = (Response) obj;
             return code == result.code && msg.equals(result.msg) && Objects.equals(data, result.data);
         }
         return false;
