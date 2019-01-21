@@ -222,8 +222,7 @@ public class HttpUtils {
     public static <T> Response<ArrayList<Response<T>>> multiUpload(FileService<T> fileService,
                                                                    MultipartHttpServletRequest request,
                                                                    String storagePath, boolean digestBytes,
-                                                                   Map<String, Object> params,
-                                                                   boolean forceWrite) {
+                                                                   Map<String, Object> params, boolean forceWrite) {
         Map<String, MultipartFile> fileMap = request.getFileMap();
         if (CollectionUtil.isEmpty(fileMap)) {
             return new Response<>(HttpStatus.HTTP_BAD_REQUEST, MessageConsts.FILE_UNAVAILABLE_ZH);

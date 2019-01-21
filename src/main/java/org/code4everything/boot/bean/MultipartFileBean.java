@@ -1,5 +1,7 @@
 package org.code4everything.boot.bean;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import java.util.Map;
 
 /**
@@ -39,11 +41,43 @@ public class MultipartFileBean implements BaseBean {
     private Long size;
 
     /**
+     * 表单文件
+     *
+     * @since 1.0.6
+     */
+    private MultipartFile file;
+
+    /**
      * 自定义参数
      *
      * @since 1.0.0
      */
     private Map<String, Object> params;
+
+    /**
+     * 获取表单文件
+     *
+     * @return 表单文件
+     *
+     * @since 1.0.6
+     */
+    public MultipartFile getFile() {
+        return file;
+    }
+
+    /**
+     * 设置表单文件
+     *
+     * @param file 表单文件
+     *
+     * @return {@link MultipartFileBean}
+     *
+     * @since 1.0.6
+     */
+    public MultipartFileBean setFile(MultipartFile file) {
+        this.file = file;
+        return this;
+    }
 
     /**
      * 获取自定义参数
@@ -166,5 +200,10 @@ public class MultipartFileBean implements BaseBean {
     public MultipartFileBean setSize(Long size) {
         this.size = size;
         return this;
+    }
+
+    @Override
+    public String toString() {
+        return "MultipartFileBean{" + "filename='" + filename + '\'' + ", originalFilename='" + originalFilename + '\'' + ", md5='" + md5 + '\'' + ", size=" + size + ", file=" + file + ", params=" + params + '}';
     }
 }

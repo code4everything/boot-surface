@@ -88,20 +88,18 @@ public class FieldEncoder {
             }
             return true;
         } else {
-            boolean res = false;
+            boolean encoded = false;
             // 遍历属性字段
             Field[] fields = data.getClass().getDeclaredFields();
             for (Field field : fields) {
                 Sealed sealed = field.getAnnotation(Sealed.class);
                 if (ObjectUtil.isNotNull(sealed)) {
-                    if (!res) {
-                        res = true;
-                    }
+                    encoded = true;
                     // 对字段属性加密
                     encode(field, data, sealed);
                 }
             }
-            return res;
+            return encoded;
         }
     }
 
@@ -111,12 +109,13 @@ public class FieldEncoder {
             // 对基本类型直接加密
             field.setAccessible(true);
             encodeField(field, object, sealed);
-        }
-        try {
-            // 不是基本类型的继续遍历
-            encode(field.get(object));
-        } catch (IllegalAccessException e) {
-            LOGGER.error(StrUtil.format("encrypt field {} failed, message -> ", field.getName(), e.getMessage()));
+        } else {
+            try {
+                // 不是基本类型的继续遍历
+                encode(field.get(object));
+            } catch (IllegalAccessException e) {
+                LOGGER.error(StrUtil.format("encrypt field {} failed, message -> ", field.getName(), e.getMessage()));
+            }
         }
     }
 }
