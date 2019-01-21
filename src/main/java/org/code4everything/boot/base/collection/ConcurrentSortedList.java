@@ -146,6 +146,13 @@ public class ConcurrentSortedList<E, T extends List<E>> extends SortedList<E, T>
     }
 
     @Override
+    public void addSorted(Iterable<E> iterable) {
+        reentrantLock.lock();
+        super.addSorted(iterable);
+        reentrantLock.unlock();
+    }
+
+    @Override
     public void addIgnoreNull(E e) {
         reentrantLock.lock();
         super.addIgnoreNull(e);

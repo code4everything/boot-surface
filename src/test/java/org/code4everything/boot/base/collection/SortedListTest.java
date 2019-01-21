@@ -2,6 +2,7 @@ package org.code4everything.boot.base.collection;
 
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.RandomUtil;
+import com.google.common.collect.Lists;
 import org.junit.Test;
 
 import java.util.*;
@@ -74,5 +75,14 @@ public class SortedListTest {
         sortedList.addIgnoreNull(1);
         System.out.println(sortedList.getList());
         System.out.println(System.currentTimeMillis() - start);
+    }
+
+    @Test
+    public void addSorted() {
+        ArrayList<Integer> list = Lists.newArrayList(7, 8, 9, 87, 88, 89);
+        SortedList<Integer, List<Integer>> sortedList = SortedList.of(new ArrayList<>(), Integer::compareTo);
+        sortedList.addAll(Lists.newArrayList(1, 3, 2, 10, 12, 11, 16));
+        sortedList.addSorted(list);
+        System.out.println(sortedList.getList());
     }
 }

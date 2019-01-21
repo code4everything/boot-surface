@@ -220,17 +220,46 @@ public class SortedList<E, T extends List<E>> {
     public void addIgnoreNull(E e) {
         if (ObjectUtil.isNotNull(e)) {
             throwComparatorExceptionIfNull();
-            int start = 0;
-            int end = list.size() - 1;
-            while (start <= end) {
-                int mid = start + ((end - start) >> 1);
-                if (comparator.compare(e, list.get(mid)) >= 0) {
-                    start = mid + 1;
-                } else {
-                    end = mid - 1;
-                }
+            add(e, 0);
+        }
+    }
+
+    /**
+     * 新增元素
+     *
+     * @param e 数据
+     * @param start 开始搜索的索引位置
+     *
+     * @return 添加后的数索引位置
+     *
+     * @since 1.0.6
+     */
+    private int add(E e, int start) {
+        int end = list.size() - 1;
+        while (start <= end) {
+            int mid = start + ((end - start) >> 1);
+            if (comparator.compare(e, list.get(mid)) >= 0) {
+                start = mid + 1;
+            } else {
+                end = mid - 1;
             }
-            list.add(start, e);
+        }
+        list.add(start, e);
+        return start;
+    }
+
+    /**
+     * 添加一个已排序的列表
+     *
+     * @param iterable 迭代器
+     *
+     * @since 1.0.6
+     */
+    public void addSorted(Iterable<E> iterable) {
+        Iterator<E> iterator = iterable.iterator();
+        int start = 0;
+        while (iterator.hasNext()) {
+            start = add(iterator.next(), start) + 1;
         }
     }
 
