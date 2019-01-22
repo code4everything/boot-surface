@@ -1,6 +1,7 @@
 package org.code4everything.boot.web.mvc;
 
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import org.apache.log4j.Logger;
 import org.code4everything.boot.bean.ConfigBean;
@@ -82,6 +83,9 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         Preconditions.checkNotNull(DefaultWebInterceptor.configBean);
         String url = request.getServletPath();
+        if (BootConfig.isDebug()) {
+            LOGGER.info("request url >>> " + url + ", params >>> " + JSONObject.toJSONString(request.getParameterMap()));
+        }
         // 黑名单
         if (StrUtil.startWithAny(url, DefaultWebInterceptor.configBean.getBlackPrefixes())) {
             if (BootConfig.isDebug()) {
