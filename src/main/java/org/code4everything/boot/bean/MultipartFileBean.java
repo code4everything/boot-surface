@@ -41,18 +41,47 @@ public class MultipartFileBean implements BaseBean {
     private Long size;
 
     /**
-     * 表单文件
-     *
-     * @since 1.0.6
-     */
-    private MultipartFile file;
-
-    /**
      * 自定义参数
      *
      * @since 1.0.0
      */
     private Map<String, Object> params;
+
+    /**
+     * 表单文件
+     *
+     * @since 1.0.6
+     */
+    private MultipartFile multipartFile;
+
+    /**
+     * 文件保存路径
+     *
+     * @since 1.0.6
+     */
+    private String storagePath;
+
+    /**
+     * 获取文件保存路径
+     *
+     * @return 文件保存路径
+     *
+     * @since 1.0.6
+     */
+    public String getStoragePath() {
+        return storagePath;
+    }
+
+    /**
+     * 设置文件保存路径
+     *
+     * @param storagePath 文件保存路径
+     *
+     * @since 1.0.6
+     */
+    public void setStoragePath(String storagePath) {
+        this.storagePath = storagePath;
+    }
 
     /**
      * 获取表单文件
@@ -61,21 +90,21 @@ public class MultipartFileBean implements BaseBean {
      *
      * @since 1.0.6
      */
-    public MultipartFile getFile() {
-        return file;
+    public MultipartFile getMultipartFile() {
+        return multipartFile;
     }
 
     /**
      * 设置表单文件
      *
-     * @param file 表单文件
+     * @param multipartFile 表单文件
      *
      * @return {@link MultipartFileBean}
      *
      * @since 1.0.6
      */
-    public MultipartFileBean setFile(MultipartFile file) {
-        this.file = file;
+    public MultipartFileBean setMultipartFile(MultipartFile multipartFile) {
+        this.multipartFile = multipartFile;
         return this;
     }
 
@@ -204,6 +233,6 @@ public class MultipartFileBean implements BaseBean {
 
     @Override
     public String toString() {
-        return "MultipartFileBean{" + "filename='" + filename + '\'' + ", originalFilename='" + originalFilename + '\'' + ", md5='" + md5 + '\'' + ", size=" + size + ", file=" + file + ", params=" + params + '}';
+        return "MultipartFileBean{" + "filename='" + filename + '\'' + ", originalFilename='" + originalFilename + '\'' + ", md5='" + md5 + '\'' + ", size=" + size + ", params=" + params + ", multipartFile=" + multipartFile + ", storagePath='" + storagePath + '\'' + '}';
     }
 }

@@ -350,6 +350,7 @@ public class HttpUtils {
             return result.error("file size must less than " + BootConfig.getMaxUploadFileSize());
         }
         MultipartFileBean fileBean = new MultipartFileBean();
+        fileBean.setStoragePath(storagePath + (storagePath.endsWith(File.separator) ? "" : File.separator));
         // 设置文件信息
         String ofn = file.getOriginalFilename();
         if (digestBytes) {
@@ -382,7 +383,7 @@ public class HttpUtils {
         if (shouldWrite || forceWrite) {
             try {
                 // 写入磁盘
-                file.transferTo(new File(storagePath + fileBean.getFilename()));
+                file.transferTo(new File(fileBean.getStoragePath() + fileBean.getFilename()));
             } catch (Exception e) {
                 LOGGER.error("upload file failed, message -> " + e.getMessage());
                 return result.error(HttpStatus.HTTP_UNAVAILABLE, ofn + " upload failed");
