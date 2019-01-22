@@ -84,7 +84,7 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
         Preconditions.checkNotNull(DefaultWebInterceptor.configBean);
         String url = request.getServletPath();
         if (BootConfig.isDebug()) {
-            LOGGER.info("request url >>> " + url + ", params >>> " + JSONObject.toJSONString(request.getParameterMap()));
+            LOGGER.info(request.getMethod() + " [" + url + "] with params >>> " + JSONObject.toJSONString(request.getParameterMap()));
         }
         // 黑名单
         if (StrUtil.startWithAny(url, DefaultWebInterceptor.configBean.getBlackPrefixes())) {
