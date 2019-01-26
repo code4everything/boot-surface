@@ -11,6 +11,7 @@ import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.log4j.Logger;
 import org.code4everything.boot.config.BootConfig;
+import org.code4everything.boot.constant.StringConsts;
 import org.code4everything.boot.interfaces.FileWatcher;
 
 import java.nio.file.Path;
@@ -90,7 +91,11 @@ public class FileUtils {
         watchFile(jsonFile, new FileWatcher() {
             @Override
             public void doSomething() {
-                BeanUtil.copyProperties(JSONObject.parseObject(FileUtil.readString(jsonFile, charset), clazz), config);
+                JSONObject root = JSONObject.parseObject(FileUtil.readString(jsonFile, charset));
+                BeanUtil.copyProperties(root.toJavaObject(clazz), config);
+                if (root.containsKey(StringConsts.BOOT)) {
+                    BootConfig.parseJson(root.getJSONObject("boot"));
+                }
                 fileWatcher.doSomething();
             }
 

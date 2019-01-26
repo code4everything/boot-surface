@@ -1,6 +1,6 @@
 package org.code4everything.boot.bean;
 
-import org.springframework.beans.BeanUtils;
+import cn.hutool.core.bean.BeanUtil;
 
 /**
  * 基类
@@ -21,7 +21,7 @@ public interface BaseBean {
      * @since 1.0.6
      */
     default <T> T copyInto(T target) {
-        BeanUtils.copyProperties(this, target);
+        BeanUtil.copyProperties(this, target);
         return target;
     }
 
@@ -35,7 +35,7 @@ public interface BaseBean {
      * @since 1.0.6
      */
     default BaseBean copyFrom(Object source) {
-        BeanUtils.copyProperties(source, this);
+        BeanUtil.copyProperties(source, this);
         return this;
     }
 }

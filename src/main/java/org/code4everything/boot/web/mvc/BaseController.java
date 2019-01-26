@@ -565,7 +565,7 @@ public class BaseController {
      * @since 1.0.5
      */
     public <T extends Collection> Response<T> parseCollection(String errMsg, T data) {
-        return parseCollection(errMsg, data, false);
+        return parseCollection(errMsg, data, BootConfig.isSealed());
     }
 
     /**
@@ -597,7 +597,7 @@ public class BaseController {
      * @since 1.0.5
      */
     public <T extends Collection> Response<T> parseCollection(String okMsg, String errMsg, T data) {
-        return parseCollection(okMsg, errMsg, data, false);
+        return parseCollection(okMsg, errMsg, data, BootConfig.isSealed());
     }
 
     /**
@@ -630,7 +630,7 @@ public class BaseController {
      * @since 1.0.5
      */
     public <T extends Collection> Response<T> parseCollection(String errMsg, int errCode, T data) {
-        return parseCollection(errMsg, errCode, data, false);
+        return parseCollection(errMsg, errCode, data, BootConfig.isSealed());
     }
 
     /**
@@ -664,7 +664,7 @@ public class BaseController {
      * @since 1.0.5
      */
     public <T extends Collection> Response<T> parseCollection(String okMsg, String errMsg, int errCode, T data) {
-        return parseCollection(okMsg, errMsg, errCode, data, false);
+        return parseCollection(okMsg, errMsg, errCode, data, BootConfig.isSealed());
     }
 
     /**
