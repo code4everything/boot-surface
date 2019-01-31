@@ -78,7 +78,11 @@ public class BootConfig {
         FileUtils.watchFile(bootConfigPath, new FileWatcher() {
             @Override
             public void doSomething() {
-                parseJson(JSONObject.parseObject(FileUtil.readString(bootConfigPath, CharsetUtil.UTF_8)));
+                if (FileUtil.exist(bootConfigPath)) {
+                    parseJson(JSONObject.parseObject(FileUtil.readString(bootConfigPath, CharsetUtil.UTF_8)));
+                } else {
+                    LOGGER.warn("boot config file [" + bootConfigPath + "] is not found");
+                }
             }
         }, true);
     }

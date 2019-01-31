@@ -36,5 +36,13 @@ public class MessageConsts {
 
     public static final String NO_RESULT_ERROR_EN = "no response result";
 
+    public static final String UNKNOWN_ACCOUNT_ZH = "账号不存在";
+
+    public static final String UNKNOWN_ACCOUNT_EN = "unknown account";
+
+    public static final String PASSWORD_ERROR_ZH = "密码不正确";
+
+    public static final String PASSWORD_ERROR_EN = "password error";
+
     private MessageConsts() {}
 }

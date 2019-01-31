@@ -1,7 +1,5 @@
 package org.code4everything.boot.base.collection;
 
-import cn.hutool.core.util.ObjectUtil;
-
 import javax.annotation.concurrent.ThreadSafe;
 import java.util.Collection;
 import java.util.Comparator;
@@ -80,7 +78,7 @@ public class ConcurrentSortedList<E, T extends List<E>> extends SortedList<E, T>
     @Override
     public T getList() {
         reentrantLock.lock();
-        T t = ObjectUtil.clone(list);
+        T t = super.getList();
         reentrantLock.unlock();
         return t;
     }

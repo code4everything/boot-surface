@@ -264,14 +264,15 @@ public class SortedList<E, T extends List<E>> {
     }
 
     /**
-     * 获取数据源
+     * 获取数据源（不可变集合）
      *
      * @return {@link T}
      *
      * @since 1.0.6
      */
+    @SuppressWarnings("unchecked")
     public T getList() {
-        return list;
+        return (T) Collections.unmodifiableList(list);
     }
 
     /**

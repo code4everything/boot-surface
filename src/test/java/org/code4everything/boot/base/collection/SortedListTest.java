@@ -74,6 +74,8 @@ public class SortedListTest {
         sortedList.addIgnoreNull(6);
         sortedList.addIgnoreNull(1);
         System.out.println(sortedList.getList());
+        sortedList.addIgnoreNull(8);
+        System.out.println(sortedList.getList());
         System.out.println(System.currentTimeMillis() - start);
     }
 
