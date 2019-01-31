@@ -66,6 +66,7 @@ public class BaseController {
      * 抛出异常
      *
      * @param function 布尔函数
+     * @param exception 想要抛出的异常
      *
      * @return {@link ExceptionThrower}
      *
@@ -110,6 +111,7 @@ public class BaseController {
      * 抛出异常
      *
      * @param shouldThrow 是否抛出异常
+     * @param exception 想要抛出的异常
      *
      * @return {@link ExceptionThrower}
      *
@@ -239,6 +241,7 @@ public class BaseController {
      * 返回结果
      *
      * @param function 结果响应函数
+     * @param <T> 数据类型
      *
      * @return {@link BaseController}
      *
@@ -343,6 +346,7 @@ public class BaseController {
     /**
      * 请求成功
      *
+     * @param okCode 成功码
      * @param okMsg 成功消息
      * @param data 数据
      * @param <T> 数据类

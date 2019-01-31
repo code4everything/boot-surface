@@ -55,6 +55,7 @@ public class AssertUtils {
      * 抛出异常
      *
      * @param shouldThrow 是否抛出异常
+     * @param exception 想要抛出的异常
      *
      * @return {@link ExceptionThrower}
      *
@@ -68,6 +69,7 @@ public class AssertUtils {
      * 抛出异常
      *
      * @param function 布尔函数
+     * @param exception 想要抛出的异常
      *
      * @return {@link ExceptionThrower}
      *

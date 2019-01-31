@@ -54,6 +54,7 @@ public class ExceptionThrower {
      * 抛出异常
      *
      * @param shouldThrow 是否抛出异常
+     * @param exception 想要抛出的异常
      *
      * @return {@link ExceptionThrower}
      *
