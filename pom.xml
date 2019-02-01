@@ -32,6 +32,7 @@
         <aspectj.version>1.9.2</aspectj.version>
         <spring.redis.version>2.1.2.RELEASE</spring.redis.version>
         <redis.version>2.9.0</redis.version>
+        <mybatis.version>3.5.0</mybatis.version>
     </properties>
 
     <dependencies>
@@ -128,12 +129,39 @@
             <artifactId>spring-data-redis</artifactId>
             <version>${spring.redis.version}</version>
             <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <artifactId>spring-aop</artifactId>
+                    <groupId>org.springframework</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>spring-beans</artifactId>
+                    <groupId>org.springframework</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>spring-context</artifactId>
+                    <groupId>org.springframework</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>spring-core</artifactId>
+                    <groupId>org.springframework</groupId>
+                </exclusion>
+            </exclusions>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>redis.clients</groupId>
             <artifactId>jedis</artifactId>
             <version>${redis.version}</version>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
+
+        <!--MyBatis-->
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis</artifactId>
+            <version>${mybatis.version}</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
