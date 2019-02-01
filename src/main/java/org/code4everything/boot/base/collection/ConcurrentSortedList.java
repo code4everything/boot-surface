@@ -156,4 +156,17 @@ public class ConcurrentSortedList<E, T extends List<E>> extends SortedList<E, T>
         super.addIgnoreNull(e);
         reentrantLock.unlock();
     }
+
+    /**
+     * 在多线程环境下，请不要调用此方法（极可能出错）
+     *
+     * @return {@link T}
+     *
+     * @since 1.0.7
+     */
+    @Override
+    @Deprecated
+    public T getOriginalList() {
+        return null;
+    }
 }

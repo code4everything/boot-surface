@@ -264,6 +264,17 @@ public class SortedList<E, T extends List<E>> {
     }
 
     /**
+     * 获取数据源，你最好只进行读操作，写操作极可能导致脏数据
+     *
+     * @return {@link T}
+     *
+     * @since 1.0.7
+     */
+    public T getOriginalList() {
+        return list;
+    }
+
+    /**
      * 获取数据源（不可变集合）
      *
      * @return {@link T}
