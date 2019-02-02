@@ -32,6 +32,8 @@ public class IntegerConsts {
 
     public static final int TEN = 10;
 
+    public static final int ONE_DAY_MILLIS = 24 * 60 * 60 * 1000;
+
     private IntegerConsts() {}
 
     public class FileSize {
