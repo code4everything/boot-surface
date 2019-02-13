@@ -1,6 +1,5 @@
 package org.code4everything.boot.base.collection;
 
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.comparator.ComparatorException;
 import cn.hutool.core.util.ObjectUtil;
 
@@ -108,12 +107,12 @@ public class SortedList<E, T extends List<E>> {
      */
     public static <E, T extends List<E>> T sortTo(Queue<E> queue, T list, Comparator<E> comparator) {
         if (queue instanceof PriorityQueue || queue instanceof PriorityBlockingQueue) {
-            while (CollUtil.isNotEmpty(list)) {
-                E e = list.remove(0);
-                queue.offer(e);
+            int size = list.size();
+            while (size > 0) {
+                queue.offer(list.remove(--size));
             }
             int len = queue.size();
-            for (int i = 0; i < len; i++) {
+            while (len-- > 0) {
                 list.add(queue.poll());
             }
         } else {
