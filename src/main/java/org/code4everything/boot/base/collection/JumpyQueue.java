@@ -1,8 +1,9 @@
 package org.code4everything.boot.base.collection;
 
+import org.code4everything.boot.constant.IntegerConsts;
+
 import java.io.Serializable;
-import java.util.AbstractQueue;
-import java.util.Iterator;
+import java.util.*;
 
 /**
  * @author pantao
@@ -10,28 +11,133 @@ import java.util.Iterator;
  **/
 public class JumpyQueue<E> extends AbstractQueue<E> implements Serializable {
 
+    private transient JumpyNode head;
+
+    private transient JumpyNode tail;
+
+    private int size = 0;
+
+    public JumpyQueue() {}
+
+    @SuppressWarnings("unchecked")
+    public JumpyQueue(Collection<? extends E> c) {
+        E[] es = (E[]) c.toArray();
+        for (int i = 0; i < es.length; i++) {
+            offer(es[i]);
+        }
+    }
+
     @Override
     public Iterator<E> iterator() {
-        return null;
+        return new JumpyQueueIterator();
     }
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
     public boolean offer(E e) {
-        return false;
+        JumpyNode node = new JumpyNode(e);
+        if (size++ == 0) {
+            head = tail = node;
+        } else {
+            tail.next = tail = node;
+        }
+        return true;
     }
 
     @Override
     public E poll() {
-        return null;
+        if (head == null) {
+            return null;
+        }
+        E e = head.node;
+        head = head.next;
+        return e;
     }
 
     @Override
     public E peek() {
-        return null;
+        return head == null ? null : head.node;
+    }
+
+    @Override
+    public String toString() {
+        if (head == null) {
+            return "[]";
+        }
+        String nodeStr = head.node.toString();
+        StringBuilder sb = new StringBuilder((nodeStr.length() + 2) * size);
+        sb.append("[").append(nodeStr);
+        JumpyNode current = head.next;
+        while (current != null) {
+            sb.append(", ").append(current.node.toString());
+            current = current.next;
+        }
+        return sb.append("]").toString();
+    }
+
+    private class JumpyNode {
+
+        private E node;
+
+        private JumpyNode next;
+
+        JumpyNode(E node) {
+            this.node = node;
+        }
+    }
+
+    private final class JumpyQueueIterator implements Iterator<E> {
+
+        private int idx = 0;
+
+        private int exceptionModCount = size;
+
+        private JumpyNode hardHead = head;
+
+        private JumpyNode previous;
+
+        @Override
+        public boolean hasNext() {
+            return idx < size;
+        }
+
+        @Override
+        public E next() {
+            if (exceptionModCount != size) {
+                throw new ConcurrentModificationException();
+            }
+            if (!hasNext()) {
+                throw new NoSuchElementException();
+            }
+            idx++;
+            if (idx == 1) {
+                return head.node;
+            } else if (idx == IntegerConsts.TWO) {
+                previous = hardHead;
+                return previous.next.node;
+            } else {
+                previous = previous.next;
+                return previous.next.node;
+            }
+        }
+
+        @Override
+        public void remove() {
+            if (exceptionModCount != size) {
+                throw new ConcurrentModificationException();
+            }
+            if (head == null) {
+                throw new IllegalStateException();
+            }
+            if (previous == null) {
+                head = head.next;
+            } else {
+                previous.next = previous.next.next;
+            }
+        }
     }
 }
