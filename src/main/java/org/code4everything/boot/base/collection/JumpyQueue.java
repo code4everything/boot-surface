@@ -17,6 +17,8 @@ public class JumpyQueue<E> extends AbstractQueue<E> implements Serializable {
 
     private int size = 0;
 
+    private int modCount = 0;
+
     public JumpyQueue() {}
 
     @SuppressWarnings("unchecked")
@@ -39,6 +41,7 @@ public class JumpyQueue<E> extends AbstractQueue<E> implements Serializable {
 
     @Override
     public boolean offer(E e) {
+        modCount++;
         JumpyNode node = new JumpyNode(e);
         if (size++ == 0) {
             head = tail = node;
@@ -53,8 +56,10 @@ public class JumpyQueue<E> extends AbstractQueue<E> implements Serializable {
         if (head == null) {
             return null;
         }
+        modCount++;
         E e = head.node;
         head = head.next;
+        size--;
         return e;
     }
 
@@ -92,9 +97,11 @@ public class JumpyQueue<E> extends AbstractQueue<E> implements Serializable {
 
     private final class JumpyQueueIterator implements Iterator<E> {
 
-        private int idx = 0;
+        private int index = 0;
 
-        private int exceptionModCount = size;
+        private int hardSize = size;
+
+        private int exceptionModCount = modCount;
 
         private JumpyNode hardHead = head;
 
@@ -102,21 +109,21 @@ public class JumpyQueue<E> extends AbstractQueue<E> implements Serializable {
 
         @Override
         public boolean hasNext() {
-            return idx < size;
+            return index < hardSize;
         }
 
         @Override
         public E next() {
-            if (exceptionModCount != size) {
+            if (exceptionModCount != modCount) {
                 throw new ConcurrentModificationException();
             }
             if (!hasNext()) {
                 throw new NoSuchElementException();
             }
-            idx++;
-            if (idx == 1) {
+            index++;
+            if (index == 1) {
                 return head.node;
-            } else if (idx == IntegerConsts.TWO) {
+            } else if (index == IntegerConsts.TWO) {
                 previous = hardHead;
                 return previous.next.node;
             } else {
@@ -127,7 +134,7 @@ public class JumpyQueue<E> extends AbstractQueue<E> implements Serializable {
 
         @Override
         public void remove() {
-            if (exceptionModCount != size) {
+            if (exceptionModCount != modCount) {
                 throw new ConcurrentModificationException();
             }
             if (head == null) {
@@ -138,6 +145,7 @@ public class JumpyQueue<E> extends AbstractQueue<E> implements Serializable {
             } else {
                 previous.next = previous.next.next;
             }
+            size--;
         }
     }
 }
