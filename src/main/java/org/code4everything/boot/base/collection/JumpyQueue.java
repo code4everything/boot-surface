@@ -1,9 +1,9 @@
 package org.code4everything.boot.base.collection;
 
-import org.code4everything.boot.constant.IntegerConsts;
-
 import java.io.Serializable;
 import java.util.*;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 /**
  * @author pantao
@@ -11,141 +11,111 @@ import java.util.*;
  **/
 public class JumpyQueue<E> extends AbstractQueue<E> implements Serializable {
 
-    private transient JumpyNode head;
+    private LinkedList<E> nodes;
 
-    private transient JumpyNode tail;
+    public JumpyQueue() {
+        nodes = new LinkedList<>();
+    }
 
-    private int size = 0;
-
-    private int modCount = 0;
-
-    public JumpyQueue() {}
-
-    @SuppressWarnings("unchecked")
     public JumpyQueue(Collection<? extends E> c) {
-        E[] es = (E[]) c.toArray();
-        for (int i = 0; i < es.length; i++) {
-            offer(es[i]);
-        }
+        nodes = new LinkedList<>();
+        nodes.addAll(c);
+    }
+
+    public JumpyQueue(boolean synchronize) {
+        nodes = (LinkedList<E>) Collections.synchronizedList(new LinkedList<>());
+    }
+
+    public JumpyQueue(Collection<? extends E> c, boolean synchronize) {
+        nodes = (LinkedList<E>) Collections.synchronizedList(new LinkedList<>());
+        nodes.addAll(c);
     }
 
     @Override
     public Iterator<E> iterator() {
-        return new JumpyQueueIterator();
+        return nodes.iterator();
+    }
+
+    @Override
+    public boolean removeIf(Predicate<? super E> filter) {
+        return nodes.removeIf(filter);
+    }
+
+    @Override
+    public Spliterator<E> spliterator() {
+        return nodes.spliterator();
+    }
+
+    @Override
+    public Stream<E> stream() {
+        return nodes.stream();
+    }
+
+    @Override
+    public Stream<E> parallelStream() {
+        return nodes.parallelStream();
     }
 
     @Override
     public int size() {
-        return size;
+        return nodes.size();
+    }
+
+    public void jumpFirst(E e) {
+        if (nodes.remove(e)) {
+            nodes.addFirst(e);
+        }
+    }
+
+    public void jumpFirst(int index) {
+        nodes.addFirst(nodes.remove(index));
+    }
+
+    public void jumpLast(E e) {
+        if (nodes.remove(e)) {
+            nodes.addLast(e);
+        }
+    }
+
+    public void jumpLast(int index) {
+        nodes.addLast(nodes.remove(index));
+    }
+
+    public void jump(E source, int targetIndex) {
+        if (nodes.remove(source)) {
+            nodes.add(targetIndex, source);
+        }
+    }
+
+    public void jump(E source, E target) {
+        jump(source, nodes.indexOf(target));
+    }
+
+    public void jump(int sourceIndex, E target) {
+        nodes.add(nodes.indexOf(target), nodes.remove(sourceIndex));
+    }
+
+    public void jump(int sourceIndex, int targetIndex) {
+        nodes.add(targetIndex, nodes.remove(sourceIndex));
     }
 
     @Override
     public boolean offer(E e) {
-        modCount++;
-        JumpyNode node = new JumpyNode(e);
-        if (size++ == 0) {
-            head = tail = node;
-        } else {
-            tail.next = tail = node;
-        }
-        return true;
+        return nodes.offerLast(e);
     }
 
     @Override
     public E poll() {
-        if (head == null) {
-            return null;
-        }
-        modCount++;
-        E e = head.node;
-        head = head.next;
-        size--;
-        return e;
+        return nodes.pollFirst();
     }
 
     @Override
     public E peek() {
-        return head == null ? null : head.node;
+        return nodes.peekFirst();
     }
 
     @Override
     public String toString() {
-        if (head == null) {
-            return "[]";
-        }
-        String nodeStr = head.node.toString();
-        StringBuilder sb = new StringBuilder((nodeStr.length() + 2) * size);
-        sb.append("[").append(nodeStr);
-        JumpyNode current = head.next;
-        while (current != null) {
-            sb.append(", ").append(current.node.toString());
-            current = current.next;
-        }
-        return sb.append("]").toString();
-    }
-
-    private class JumpyNode {
-
-        private E node;
-
-        private JumpyNode next;
-
-        JumpyNode(E node) {
-            this.node = node;
-        }
-    }
-
-    private final class JumpyQueueIterator implements Iterator<E> {
-
-        private int index = 0;
-
-        private int hardSize = size;
-
-        private int exceptionModCount = modCount;
-
-        private JumpyNode hardHead = head;
-
-        private JumpyNode previous;
-
-        @Override
-        public boolean hasNext() {
-            return index < hardSize;
-        }
-
-        @Override
-        public E next() {
-            if (exceptionModCount != modCount) {
-                throw new ConcurrentModificationException();
-            }
-            if (!hasNext()) {
-                throw new NoSuchElementException();
-            }
-            index++;
-            if (index == 1) {
-                return head.node;
-            } else if (index == IntegerConsts.TWO) {
-                previous = hardHead;
-                return previous.next.node;
-            } else {
-                previous = previous.next;
-                return previous.next.node;
-            }
-        }
-
-        @Override
-        public void remove() {
-            if (exceptionModCount != modCount) {
-                throw new ConcurrentModificationException();
-            }
-            if (head == null) {
-                throw new IllegalStateException();
-            }
-            if (previous == null) {
-                head = head.next;
-            } else {
-                previous.next = previous.next.next;
-            }
-            size--;
-        }
+        return nodes.toString();
     }
 }
