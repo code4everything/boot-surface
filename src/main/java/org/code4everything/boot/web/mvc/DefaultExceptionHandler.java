@@ -1,6 +1,7 @@
 package org.code4everything.boot.web.mvc;
 
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.Validator;
 import com.alibaba.fastjson.support.spring.FastJsonJsonView;
 import org.apache.log4j.Logger;
@@ -14,6 +15,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -140,8 +143,12 @@ public class DefaultExceptionHandler implements HandlerExceptionResolver {
     @Override
     public ModelAndView resolveException(HttpServletRequest req, HttpServletResponse res, Object o, Exception e) {
         if (BootConfig.isDebug()) {
-            e.printStackTrace();
             LOGGER.error("url -> " + req.getServletPath() + ", ip -> " + req.getRemoteAddr() + ", exception -> " + e.getClass().getName() + ", message -> " + e.getMessage());
+            StringWriter stringWriter = new StringWriter();
+            e.printStackTrace(new PrintWriter(stringWriter));
+            String exception = stringWriter.toString();
+            Console.log(exception);
+            LOGGER.error(exception);
         }
         ExceptionBean exceptionBean;
         if (e instanceof BootException) {
