@@ -317,6 +317,19 @@ public class BaseController {
     /**
      * 请求成功
      *
+     * @param <T> 数据类
+     *
+     * @return {@link Response}
+     *
+     * @since 1.0.8
+     */
+    public <T> Response<T> successResult(T data) {
+        return new Response<>(data).setCode(okCode);
+    }
+
+    /**
+     * 请求成功
+     *
      * @param okMsg 成功消息
      * @param <T> 数据类
      *
