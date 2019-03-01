@@ -20,9 +20,9 @@ public class MessageConsts {
 
     public static final String TOKEN_BLANK_ERROR_EN = "token must not be blank";
 
-    public static final String USER_UNLOGGED_ERROR_ZH = "用户未登录或登录已过期";
+    public static final String USER_NOT_LOGGED_IN_ERROR_ZH = "用户未登录或登录已过期";
 
-    public static final String USER_UNLOGGED_ERROR_EN = "user not logged in or session expired";
+    public static final String USER_NOT_LOGGED_IN_ERROR_EN = "user not logged in or session expired";
 
     public static final String REQUEST_BANNED_ZH = "请求已被拒绝";
 

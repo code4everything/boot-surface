@@ -4,7 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import org.code4everything.boot.base.function.BooleanFunction;
 import org.code4everything.boot.exception.ExceptionThrower;
 import org.code4everything.boot.exception.template.TokenBlankException;
-import org.code4everything.boot.exception.template.UserUnloggedException;
+import org.code4everything.boot.exception.template.UserNotLoggedInException;
 
 import java.util.Objects;
 
@@ -46,7 +46,7 @@ public class AssertUtils {
      */
     public static <T> T assertUserLoggedIn(T user) {
         if (Objects.isNull(user)) {
-            throw new UserUnloggedException();
+            throw new UserNotLoggedInException();
         }
         return user;
     }

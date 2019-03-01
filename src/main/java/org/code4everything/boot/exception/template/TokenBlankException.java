@@ -8,14 +8,7 @@ import org.code4everything.boot.constant.MessageConsts;
  * @author pantao
  * @since 2018-12-01
  */
-public class TokenBlankException extends UserUnloggedException {
-
-    /**
-     * 错误消息
-     *
-     * @since 1.0.4
-     */
-    private static final String MSG = MessageConsts.TOKEN_BLANK_ERROR_ZH;
+public class TokenBlankException extends UserNotLoggedInException {
 
     /**
      * 无参构造函数
@@ -24,6 +17,6 @@ public class TokenBlankException extends UserUnloggedException {
      */
     public TokenBlankException() {
         super();
-        super.setMsg(MSG);
+        super.setMsg(MessageConsts.TOKEN_BLANK_ERROR_ZH);
     }
 }
