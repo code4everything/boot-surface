@@ -156,6 +156,42 @@ public class BootException extends RuntimeException {
     }
 
     /**
+     * 设置错误码，消息
+     *
+     * @param code 错误码
+     * @param msg 消息
+     * @param responseOk 适应响应成功
+     *
+     * @since 1.0.8
+     */
+    public BootException(int code, String msg, boolean responseOk) {
+        this.code = code;
+        this.msg = msg;
+        if (responseOk) {
+            this.status = HttpStatus.OK;
+        }
+    }
+
+    /**
+     * 设置错误码，消息和异常
+     *
+     * @param code 错误码
+     * @param msg 消息
+     * @param responseOk 适应响应成功
+     * @param throwable 异常
+     *
+     * @since 1.0.8
+     */
+    public BootException(int code, String msg, boolean responseOk, Throwable throwable) {
+        super(msg, throwable);
+        this.code = code;
+        this.msg = msg;
+        if (responseOk) {
+            this.status = HttpStatus.OK;
+        }
+    }
+
+    /**
      * 获取错误码
      *
      * @return 错误码
