@@ -20,7 +20,19 @@ import java.util.concurrent.TimeUnit;
  **/
 public class EmailUtils {
 
-    static final Cache<String, String> CACHE = CacheBuilder.newBuilder().expireAfterWrite(30, TimeUnit.MINUTES).build();
+    /**
+     * 验证码缓存
+     *
+     * @since 1.0.9
+     */
+    private static Cache<String, String> codeCache;
+
+    /**
+     * 发送频率检测
+     *
+     * @since 1.0.9
+     */
+    private static Cache<String, String> frequentlyCache;
 
     /**
      * 邮件发送器
@@ -35,6 +47,11 @@ public class EmailUtils {
      * @since 1.0.9
      */
     private static String outbox;
+
+    static {
+        codeCache = CacheBuilder.newBuilder().expireAfterWrite(30, TimeUnit.MINUTES).build();
+        frequentlyCache = CacheBuilder.newBuilder().expireAfterWrite(60, TimeUnit.SECONDS).build();
+    }
 
     private EmailUtils() {}
 
@@ -52,6 +69,19 @@ public class EmailUtils {
     }
 
     /**
+     * 检测是否频繁发送（一分钟）
+     *
+     * @param email 邮箱
+     *
+     * @return 是否频繁发送
+     *
+     * @since 1.0.9
+     */
+    public static boolean isFrequently(String email) {
+        return frequentlyCache.asMap().containsKey(email);
+    }
+
+    /**
      * 移除用户的验证码
      *
      * @param email 邮箱
@@ -59,7 +89,8 @@ public class EmailUtils {
      * @since 1.0.9
      */
     public static void removeVerifyCode(String email) {
-        CACHE.asMap().remove(email);
+        codeCache.asMap().remove(email);
+        frequentlyCache.asMap().remove(email);
     }
 
     /**
@@ -73,7 +104,7 @@ public class EmailUtils {
      * @since 1.0.9
      */
     public static boolean verifyCode(String email, String code) {
-        return StrUtil.isNotEmpty(code) && code.equals(CACHE.getIfPresent(email));
+        return StrUtil.isNotEmpty(code) && code.equals(codeCache.getIfPresent(email));
     }
 
     /**
@@ -124,7 +155,8 @@ public class EmailUtils {
     public static String sendVerifyCodeByEmail(String email, String subject, String textTemplate, int codeLen) throws MessagingException {
         String code = RandomUtil.randomNumbers(codeLen);
         sendTextEmail(email, subject, StrUtil.format(String.format(textTemplate, code), code));
-        CACHE.put(email, code);
+        codeCache.put(email, code);
+        frequentlyCache.put(email, code);
         return code;
     }
 
