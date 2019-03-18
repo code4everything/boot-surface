@@ -6,6 +6,7 @@ import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.cache.Cache;
 import org.apache.log4j.Logger;
+import org.code4everything.boot.base.EmailUtils;
 import org.code4everything.boot.base.FileUtils;
 import org.code4everything.boot.bean.ConfigBean;
 import org.code4everything.boot.encoder.FieldEncoder;
@@ -15,6 +16,7 @@ import org.code4everything.boot.module.redis.RedisTemplateUtils;
 import org.code4everything.boot.web.mvc.BaseController;
 import org.code4everything.boot.web.mvc.DefaultWebInterceptor;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.mail.javamail.JavaMailSender;
 
 import java.io.File;
 
@@ -59,6 +61,18 @@ public class BootConfig {
     private BootConfig() {}
 
     /**
+     * 设置邮件发送器
+     *
+     * @param outbox 发件箱
+     * @param mailSender {@link JavaMailSender}
+     *
+     * @since 1.0.9
+     */
+    public static void setMailSender(String outbox, JavaMailSender mailSender) {
+        EmailUtils.setMailSender(outbox, mailSender);
+    }
+
+    /**
      * 监听工作路径下的 boot-config.json 配置文件
      *
      * @since 1.0.6
@@ -76,6 +90,7 @@ public class BootConfig {
      */
     public static void watchBootConfig(String bootConfigPath) {
         FileUtils.watchFile(bootConfigPath, new FileWatcher() {
+
             @Override
             public void doSomething() {
                 if (FileUtil.exist(bootConfigPath)) {

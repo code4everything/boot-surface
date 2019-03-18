@@ -12,7 +12,7 @@
 
     <groupId>org.code4everything</groupId>
     <artifactId>boot-surface</artifactId>
-    <version>1.0.8</version>
+    <version>1.0.9</version>
     <packaging>jar</packaging>
 
     <name>boot-surface</name>
@@ -164,6 +164,20 @@
             <version>${mybatis.version}</version>
             <scope>provided</scope>
             <optional>true</optional>
+        </dependency>
+
+        <!--Spring Email-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>1.5.0-b01</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 
