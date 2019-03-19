@@ -1,16 +1,11 @@
 package org.code4everything.boot.base;
 
-import cn.hutool.core.util.RandomUtil;
-import cn.hutool.core.util.StrUtil;
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
 /**
  * 邮件发送
@@ -19,20 +14,6 @@ import java.util.concurrent.TimeUnit;
  * @since 2019/3/18
  **/
 public class EmailUtils {
-
-    /**
-     * 验证码缓存
-     *
-     * @since 1.0.9
-     */
-    private static Cache<String, String> codeCache;
-
-    /**
-     * 发送频率检测
-     *
-     * @since 1.0.9
-     */
-    private static Cache<String, String> frequentlyCache;
 
     /**
      * 邮件发送器
@@ -48,11 +29,6 @@ public class EmailUtils {
      */
     private static String outbox;
 
-    static {
-        codeCache = CacheBuilder.newBuilder().expireAfterWrite(30, TimeUnit.MINUTES).build();
-        frequentlyCache = CacheBuilder.newBuilder().expireAfterWrite(60, TimeUnit.SECONDS).build();
-    }
-
     private EmailUtils() {}
 
     /**
@@ -66,98 +42,6 @@ public class EmailUtils {
     public static void setMailSender(String outbox, JavaMailSender mailSender) {
         EmailUtils.mailSender = mailSender;
         EmailUtils.outbox = outbox;
-    }
-
-    /**
-     * 检测是否频繁发送（一分钟）
-     *
-     * @param email 邮箱
-     *
-     * @return 是否频繁发送
-     *
-     * @since 1.0.9
-     */
-    public static boolean isFrequently(String email) {
-        return frequentlyCache.asMap().containsKey(email);
-    }
-
-    /**
-     * 移除用户的验证码
-     *
-     * @param email 邮箱
-     *
-     * @since 1.0.9
-     */
-    public static void removeVerifyCode(String email) {
-        codeCache.asMap().remove(email);
-        frequentlyCache.asMap().remove(email);
-    }
-
-    /**
-     * 校验验证码
-     *
-     * @param email 邮箱
-     * @param code 验证码
-     *
-     * @return 验证码是否正确
-     *
-     * @since 1.0.9
-     */
-    public static boolean verifyCode(String email, String code) {
-        return StrUtil.isNotEmpty(code) && code.equals(codeCache.getIfPresent(email));
-    }
-
-    /**
-     * 校验验证码并删除
-     *
-     * @param email 邮箱
-     * @param code 验证码
-     *
-     * @return 验证码是否正确
-     *
-     * @since 1.0.9
-     */
-    public static boolean verifyCodeAndRemove(String email, String code) {
-        boolean result = verifyCode(email, code);
-        removeVerifyCode(email);
-        return result;
-    }
-
-    /**
-     * 发送验证码
-     *
-     * @param email 邮箱
-     * @param subject 主题
-     * @param textTemplate 内容模板
-     *
-     * @return 验证码
-     *
-     * @throws MessagingException 异常
-     * @since 1.0.9
-     */
-    public static String sendVerifyCodeByEmail(String email, String subject, String textTemplate) throws MessagingException {
-        return sendVerifyCodeByEmail(email, subject, textTemplate, 6);
-    }
-
-    /**
-     * 发送验证码
-     *
-     * @param email 邮箱
-     * @param subject 主题
-     * @param textTemplate 内容模板
-     * @param codeLen 验证码长度
-     *
-     * @return 验证码
-     *
-     * @throws MessagingException 异常
-     * @since 1.0.9
-     */
-    public static String sendVerifyCodeByEmail(String email, String subject, String textTemplate, int codeLen) throws MessagingException {
-        String code = RandomUtil.randomNumbers(codeLen);
-        sendTextEmail(email, subject, StrUtil.format(String.format(textTemplate, code), code));
-        codeCache.put(email, code);
-        frequentlyCache.put(email, code);
-        return code;
     }
 
     /**
