@@ -2,13 +2,15 @@ package org.code4everything.boot.bean;
 
 import org.springframework.http.HttpStatus;
 
+import java.io.Serializable;
+
 /**
  * 自定义异常信息
  *
  * @author pantao
  * @since 2018/11/15
  **/
-public class ExceptionBean implements BaseBean {
+public class ExceptionBean implements BaseBean, Serializable {
 
     /**
      * 错误码
@@ -104,5 +106,10 @@ public class ExceptionBean implements BaseBean {
     public ExceptionBean setStatus(HttpStatus status) {
         this.status = status;
         return this;
+    }
+
+    @Override
+    public String toString() {
+        return "ExceptionBean{" + "code=" + code + ", msg='" + msg + '\'' + ", status=" + status + '}';
     }
 }

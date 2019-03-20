@@ -1,5 +1,7 @@
 package org.code4everything.boot.bean;
 
+import java.io.Serializable;
+
 /**
  * 日志信息临时存储类
  *
@@ -8,7 +10,7 @@ package org.code4everything.boot.bean;
  * @author pantao
  * @since 2018/12/03
  */
-public class LogExBean<T> implements BaseBean {
+public class LogExBean<T> implements BaseBean, Serializable {
 
     /**
      * 可能抛出的异常
@@ -77,5 +79,10 @@ public class LogExBean<T> implements BaseBean {
      */
     public Object getResult() {
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "LogExBean{" + "throwable=" + throwable + ", log=" + log + ", result=" + result + '}';
     }
 }

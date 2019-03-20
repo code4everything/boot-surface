@@ -1,5 +1,6 @@
 package org.code4everything.boot.bean;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 
@@ -9,7 +10,7 @@ import java.util.List;
  * @author pantao
  * @since 2018/10/30
  **/
-public class CorsBean implements BaseBean {
+public class CorsBean implements BaseBean, Serializable {
 
     /**
      * 路径模式
@@ -211,5 +212,10 @@ public class CorsBean implements BaseBean {
     public CorsBean setCredential(Boolean credential) {
         this.credential = credential;
         return this;
+    }
+
+    @Override
+    public String toString() {
+        return "CorsBean{" + "path='" + path + '\'' + ", origins=" + origins + ", headers=" + headers + ", methods=" + methods + ", credential=" + credential + '}';
     }
 }

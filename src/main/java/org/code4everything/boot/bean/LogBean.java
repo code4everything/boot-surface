@@ -1,12 +1,14 @@
 package org.code4everything.boot.bean;
 
+import java.io.Serializable;
+
 /**
  * 日志信息
  *
  * @author pantao
  * @since 2018/11/3
  */
-public class LogBean implements BaseBean {
+public class LogBean implements BaseBean, Serializable {
 
     /**
      * 类名
@@ -166,5 +168,10 @@ public class LogBean implements BaseBean {
     public LogBean setDescription(String description) {
         this.description = description;
         return this;
+    }
+
+    @Override
+    public String toString() {
+        return "LogBean{" + "className='" + className + '\'' + ", methodName='" + methodName + '\'' + ", args='" + args + '\'' + ", description='" + description + '\'' + ", executedTime=" + executedTime + '}';
     }
 }

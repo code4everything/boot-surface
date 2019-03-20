@@ -1,12 +1,15 @@
 package org.code4everything.boot.bean;
 
+import java.io.Serializable;
+import java.util.Arrays;
+
 /**
  * 配置信息
  *
  * @author pantao
  * @since 2018/11/4
  */
-public class ConfigBean implements BaseBean {
+public class ConfigBean implements BaseBean, Serializable {
 
     /**
      * 黑名单前缀
@@ -100,5 +103,10 @@ public class ConfigBean implements BaseBean {
     public ConfigBean setInterceptPrefixes(String[] interceptPrefixes) {
         this.interceptPrefixes = interceptPrefixes;
         return this;
+    }
+
+    @Override
+    public String toString() {
+        return "ConfigBean{" + "blackPrefixes=" + Arrays.toString(blackPrefixes) + ", whitePrefixes=" + Arrays.toString(whitePrefixes) + ", interceptPrefixes=" + Arrays.toString(interceptPrefixes) + '}';
     }
 }

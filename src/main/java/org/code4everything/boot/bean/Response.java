@@ -7,6 +7,10 @@ import org.code4everything.boot.config.BootConfig;
 import org.code4everything.boot.constant.IntegerConsts;
 import org.code4everything.boot.constant.MessageConsts;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Objects;
 
@@ -16,7 +20,7 @@ import java.util.Objects;
  * @author pantao
  * @since 2018/10/30
  */
-public class Response<T> {
+public class Response<T> implements Serializable {
 
     /**
      * 是否对数据进行加密
@@ -44,7 +48,7 @@ public class Response<T> {
      *
      * @since 1.0.0
      */
-    private T data = null;
+    private transient T data = null;
 
     /**
      * 时间戳
@@ -217,6 +221,18 @@ public class Response<T> {
     }
 
     /**
+     * 设置为当前时间戳
+     *
+     * @return {@link Response}
+     *
+     * @since 1.0.9
+     */
+    public Response<T> setTimestamp() {
+        return setTimestamp(new Timestamp(System.currentTimeMillis()));
+    }
+
+
+    /**
      * 请求失败
      *
      * @param errMsg 错误消息
@@ -360,5 +376,24 @@ public class Response<T> {
         hasCode = hasCode * 23 + code;
         hasCode = hasCode * 23 + msg.hashCode();
         return data == null ? hasCode : hasCode * 23 + data.hashCode();
+    }
+
+    private void writeObject(ObjectOutputStream outputStream) throws IOException {
+        outputStream.defaultWriteObject();
+        outputStream.writeInt(code);
+        outputStream.writeBoolean(sealed);
+        outputStream.writeObject(msg);
+        outputStream.writeObject(timestamp);
+        outputStream.writeObject(data);
+    }
+
+    @SuppressWarnings("unchecked")
+    private void readObject(ObjectInputStream inputStream) throws IOException, ClassNotFoundException {
+        inputStream.defaultReadObject();
+        inputStream.readInt();
+        inputStream.readBoolean();
+        msg = (String) inputStream.readObject();
+        timestamp = (Timestamp) inputStream.readObject();
+        data = (T) inputStream.readObject();
     }
 }
