@@ -1,9 +1,10 @@
-package org.code4everything.boot.base;
+package org.code4everything.boot.message;
 
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import org.code4everything.boot.message.EmailUtils;
 
 import javax.mail.MessagingException;
 import java.util.concurrent.TimeUnit;

@@ -1,7 +1,5 @@
 package org.code4everything.boot.bean;
 
-import java.io.Serializable;
-
 /**
  * 日志信息临时存储类
  *
@@ -10,7 +8,7 @@ import java.io.Serializable;
  * @author pantao
  * @since 2018/12/03
  */
-public class LogExBean<T> implements BaseBean, Serializable {
+public class LogExBean<T> implements BaseBean {
 
     /**
      * 可能抛出的异常

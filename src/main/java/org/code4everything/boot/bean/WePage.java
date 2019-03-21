@@ -42,9 +42,7 @@ public class WePage<T> implements BaseBean, Serializable {
      * @since 1.0.9
      */
     public WePage(Integer currPage, Integer pageSize) {
-        this.currPage = currPage;
-        this.pageSize = pageSize;
-        content = new ArrayList<>();
+        this(currPage, pageSize, new ArrayList<>());
     }
 
     /**
@@ -57,10 +55,8 @@ public class WePage<T> implements BaseBean, Serializable {
      * @since 1.0.9
      */
     public WePage(Integer currPage, Integer pageSize, Integer totalPages) {
-        this.currPage = currPage;
-        this.pageSize = pageSize;
+        this(currPage, pageSize, new ArrayList<>());
         this.totalPages = totalPages;
-        content = new ArrayList<>();
     }
 
     /**
@@ -73,11 +69,21 @@ public class WePage<T> implements BaseBean, Serializable {
      * @since 1.0.9
      */
     public WePage(Integer currPage, Integer pageSize, Long totalElements) {
-        this.currPage = currPage;
-        this.pageSize = pageSize;
-        this.totalElements = totalElements;
-        computeTotalPage();
-        content = new ArrayList<>();
+        this(currPage, pageSize, totalElements, new ArrayList<>());
+    }
+
+    /**
+     * 构造方法
+     *
+     * @param currPage 当前页
+     * @param pageSize 页大小
+     * @param totalElements 总元素数量
+     * @param content 元素列表
+     *
+     * @since 1.0.9
+     */
+    public WePage(Integer currPage, Integer pageSize, Integer totalElements, Collection<T> content) {
+        this(currPage, pageSize, Long.valueOf(totalElements), content);
     }
 
     /**
@@ -112,25 +118,6 @@ public class WePage<T> implements BaseBean, Serializable {
         computeTotalPage();
         this.content = content;
     }
-
-    /**
-     * 构造方法
-     *
-     * @param currPage 当前页
-     * @param pageSize 页大小
-     * @param totalElements 总元素数量
-     * @param content 元素列表
-     *
-     * @since 1.0.9
-     */
-    public WePage(Integer currPage, Integer pageSize, Integer totalElements, Collection<T> content) {
-        this.currPage = currPage;
-        this.pageSize = pageSize;
-        this.totalElements = Long.valueOf(totalElements);
-        computeTotalPage();
-        this.content = content;
-    }
-
 
     /**
      * 获取当前页元素数量

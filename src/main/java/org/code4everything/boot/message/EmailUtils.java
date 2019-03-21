@@ -1,4 +1,4 @@
-package org.code4everything.boot.base;
+package org.code4everything.boot.message;
 
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;

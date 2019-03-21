@@ -6,7 +6,7 @@ import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.cache.Cache;
 import org.apache.log4j.Logger;
-import org.code4everything.boot.base.EmailUtils;
+import org.code4everything.boot.message.EmailUtils;
 import org.code4everything.boot.base.FileUtils;
 import org.code4everything.boot.bean.ConfigBean;
 import org.code4everything.boot.encoder.FieldEncoder;
