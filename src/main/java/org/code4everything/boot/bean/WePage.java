@@ -1,5 +1,7 @@
 package org.code4everything.boot.bean;
 
+import cn.hutool.core.util.ObjectUtil;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -156,20 +158,25 @@ public class WePage<T> implements BaseBean, Serializable {
         return this;
     }
 
+    @Override
+    public String toString() {
+        return "WePage{" + "currPage=" + currPage + ", pageSize=" + pageSize + ", totalPage=" + totalPage + ", " +
+                "content=" + content + '}';
+    }
+
     private void writeObject(ObjectOutputStream outputStream) throws IOException {
         outputStream.defaultWriteObject();
         outputStream.writeInt(currPage);
         outputStream.writeInt(pageSize);
         outputStream.writeInt(totalPage);
-        outputStream.writeObject(content);
+        outputStream.writeObject(ObjectUtil.serialize(content));
     }
 
-    @SuppressWarnings("unchecked")
     private void readObject(ObjectInputStream inputStream) throws IOException, ClassNotFoundException {
         inputStream.defaultReadObject();
         currPage = inputStream.readInt();
         pageSize = inputStream.readInt();
         totalPage = inputStream.readInt();
-        content = (Collection<T>) inputStream.readObject();
+        content = ObjectUtil.unserialize((byte[]) inputStream.readObject());
     }
 }
