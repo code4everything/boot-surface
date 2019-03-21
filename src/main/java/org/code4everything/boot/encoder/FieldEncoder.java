@@ -20,7 +20,7 @@ import java.util.Objects;
  **/
 public class FieldEncoder {
 
-    protected static final Logger LOGGER = Logger.getLogger(FieldEncoder.class);
+    private static final Logger LOGGER = Logger.getLogger(FieldEncoder.class);
 
     /**
      * 加密字段

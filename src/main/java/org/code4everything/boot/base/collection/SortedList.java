@@ -21,14 +21,14 @@ public class SortedList<E, T extends List<E>> {
      *
      * @since 1.0.6
      */
-    protected T list;
+    private T list;
 
     /**
      * 比较器
      *
      * @since 1.0.6
      */
-    protected Comparator<E> comparator;
+    private Comparator<E> comparator;
 
     /**
      * 无参构造函数

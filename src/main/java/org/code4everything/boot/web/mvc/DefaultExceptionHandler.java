@@ -30,7 +30,7 @@ import java.util.Objects;
  */
 public class DefaultExceptionHandler implements HandlerExceptionResolver {
 
-    protected static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";
+    private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";
 
     private static final Logger LOGGER = Logger.getLogger(DefaultExceptionHandler.class);
 
