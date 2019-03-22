@@ -4,8 +4,8 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.http.HttpStatus;
 import com.alibaba.fastjson.annotation.JSONField;
 import org.code4everything.boot.config.BootConfig;
-import org.code4everything.boot.constant.IntegerConsts;
 import org.code4everything.boot.constant.MessageConsts;
+import org.code4everything.boot.web.mvc.BaseController;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -34,7 +34,7 @@ public class Response<T> implements Serializable {
      *
      * @since 1.0.0
      */
-    private int code = IntegerConsts.ZERO;
+    private int code = BaseController.getOkCode();
 
     /**
      * 消息

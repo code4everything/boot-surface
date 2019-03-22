@@ -27,11 +27,11 @@ Boot Surface主要是一个依赖于Spring框架的Web开发工具类，旨在�
 <dependency>
     <groupId>org.code4everything</groupId>
     <artifactId>boot-surface</artifactId>
-    <version>1.0.6</version>
+    <version>1.0.9</version>
 </dependency>
 ```
 
-> 为什么要发布到Maven中央仓库？当然是方便项目打包啦:stuck_out_tongue_winking_eye:
+> 为了方便打包，项目已发布到了`Maven`中央仓库:stuck_out_tongue_winking_eye:
 
 ## 使用手册
 
@@ -52,6 +52,8 @@ Boot Surface主要是一个依赖于Spring框架的Web开发工具类，旨在�
 - [缓存工具类](docs/redis.md)
 
 - [集合的封装](docs/collection.md)
+
+- [消息类](docs/message.md)
 
 ## 示例项目
 

@@ -21,7 +21,7 @@ public class SortedList<E, T extends List<E>> {
      *
      * @since 1.0.6
      */
-    private T list;
+    protected T list;
 
     /**
      * 比较器

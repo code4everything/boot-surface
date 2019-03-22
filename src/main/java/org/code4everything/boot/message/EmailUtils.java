@@ -1,10 +1,12 @@
 package org.code4everything.boot.message;
 
+import cn.hutool.core.thread.ThreadUtil;
+import cn.hutool.core.util.ObjectUtil;
+import org.code4everything.boot.interfaces.EmailCallable;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 
 import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
 import java.util.Objects;
 
 /**
@@ -49,20 +51,93 @@ public class EmailUtils {
      *
      * @param email 邮箱
      * @param subject 主题
-     * @param text 文本内容
+     * @param html 邮件内容
+     *
+     * @since 1.0.9
+     */
+    public static void sendEmailAsync(String email, String subject, String html) {
+        sendEmailAsync(email, subject, html, buildDefaultMessageHelper(), null);
+    }
+
+
+    /**
+     * 发送文本邮件
+     *
+     * @param email 邮箱
+     * @param subject 主题
+     * @param html 邮件内容
+     * @param callable 回调函数
+     *
+     * @since 1.0.9
+     */
+    public static void sendEmailAsync(String email, String subject, String html, EmailCallable callable) {
+        sendEmailAsync(email, subject, html, buildDefaultMessageHelper(), callable);
+    }
+
+    /**
+     * 发送文本邮件
+     *
+     * @param email 邮箱
+     * @param subject 主题
+     * @param html 邮件内容
+     * @param helper {@link MimeMessageHelper}
+     * @param callable 回调函数
+     *
+     * @since 1.0.9
+     */
+    public static void sendEmailAsync(String email, String subject, String html, MimeMessageHelper helper,
+                                      EmailCallable callable) {
+        ThreadUtil.execute(() -> {
+            try {
+                sendEmail(email, subject, html, helper);
+                if (ObjectUtil.isNotNull(callable)) {
+                    callable.handleSuccess(email, subject, html);
+                }
+            } catch (MessagingException e) {
+                if (ObjectUtil.isNotNull(callable)) {
+                    callable.handleFailed(email, subject, html, e);
+                }
+            }
+        });
+    }
+
+    /**
+     * 发送文本邮件
+     *
+     * @param email 邮箱
+     * @param subject 主题
+     * @param html 邮件内容
      *
      * @throws MessagingException 异常
      * @since 1.0.9
      */
-    public static void sendTextEmail(String email, String subject, String text) throws MessagingException {
+    public static void sendEmail(String email, String subject, String html) throws MessagingException {
+        sendEmail(email, subject, html, buildDefaultMessageHelper());
+    }
+
+    /**
+     * 发送文本邮件
+     *
+     * @param email 邮箱
+     * @param subject 主题
+     * @param html 邮件内容
+     * @param helper {@link MimeMessageHelper}
+     *
+     * @throws MessagingException 异常
+     * @since 1.0.9
+     */
+    public static void sendEmail(String email, String subject, String html, MimeMessageHelper helper) throws MessagingException {
         Objects.requireNonNull(mailSender, "please set a java mail sender");
         Objects.requireNonNull(outbox, "please set a outbox");
-        MimeMessage mimeMessage = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage);
+        Objects.requireNonNull(helper);
         helper.setFrom(outbox);
         helper.setTo(email);
         helper.setSubject(subject);
-        helper.setText(text);
-        mailSender.send(mimeMessage);
+        helper.setText(html, true);
+        mailSender.send(helper.getMimeMessage());
+    }
+
+    public static MimeMessageHelper buildDefaultMessageHelper() {
+        return new MimeMessageHelper(mailSender.createMimeMessage());
     }
 }

@@ -1,10 +1,12 @@
 package org.code4everything.boot.message;
 
+import cn.hutool.core.thread.ThreadUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import org.code4everything.boot.message.EmailUtils;
+import org.code4everything.boot.interfaces.EmailCallable;
 
 import javax.mail.MessagingException;
 import java.util.concurrent.TimeUnit;
@@ -53,7 +55,7 @@ public class VerifyCodeUtils {
     }
 
     /**
-     * 移除用户的验证码
+     * 从缓存中移除用户的验证码
      *
      * @param key 邮箱或手机号
      *
@@ -79,7 +81,7 @@ public class VerifyCodeUtils {
     }
 
     /**
-     * 校验验证码并删除
+     * 校验验证码，当验证码正确时从缓存中删除
      *
      * @param key 邮箱或手机号
      * @param code 验证码
@@ -90,7 +92,9 @@ public class VerifyCodeUtils {
      */
     public static boolean validateVerifyCodeAndRemove(String key, String code) {
         boolean result = validateVerifyCode(key, code);
-        removeVerifyCode(key);
+        if (result) {
+            removeVerifyCode(key);
+        }
         return result;
     }
 
@@ -99,15 +103,14 @@ public class VerifyCodeUtils {
      *
      * @param email 邮箱
      * @param subject 主题
-     * @param textTemplate 内容模板
+     * @param template 内容模板
      *
      * @return 验证码
      *
-     * @throws MessagingException 异常
      * @since 1.0.9
      */
-    public static String sendVerifyCodeByEmail(String email, String subject, String textTemplate) throws MessagingException {
-        return sendVerifyCodeByEmail(email, subject, textTemplate, 6);
+    public static String sendVerifyCodeByEmailAsync(String email, String subject, String template) {
+        return sendVerifyCodeByEmailAsync(email, subject, template, null);
     }
 
     /**
@@ -115,7 +118,74 @@ public class VerifyCodeUtils {
      *
      * @param email 邮箱
      * @param subject 主题
-     * @param textTemplate 内容模板
+     * @param template 内容模板
+     * @param callable 回调函数
+     *
+     * @return 验证码
+     *
+     * @since 1.0.9
+     */
+    public static String sendVerifyCodeByEmailAsync(String email, String subject, String template,
+                                                    EmailCallable callable) {
+        return sendVerifyCodeByEmailAsync(email, subject, template, 6, callable);
+    }
+
+    /**
+     * 发送验证码
+     *
+     * @param email 邮箱
+     * @param subject 主题
+     * @param template 内容模板
+     * @param codeLen 验证码长度
+     * @param callable 回调函数
+     *
+     * @return 验证码
+     *
+     * @since 1.0.9
+     */
+    public static String sendVerifyCodeByEmailAsync(String email, String subject, String template, int codeLen,
+                                                    EmailCallable callable) {
+        String code = RandomUtil.randomNumbers(codeLen);
+        ThreadUtil.execute(() -> {
+            String html = StrUtil.format(String.format(template, code), code);
+            try {
+                EmailUtils.sendEmail(email, subject, html);
+                codeCache.put(email, code);
+                frequentlyCache.put(email, code);
+                if (ObjectUtil.isNotNull(callable)) {
+                    callable.handleSuccess(email, subject, html);
+                }
+            } catch (MessagingException e) {
+                if (ObjectUtil.isNotNull(callable)) {
+                    callable.handleFailed(email, subject, html, e);
+                }
+            }
+        });
+        return code;
+    }
+
+    /**
+     * 发送验证码
+     *
+     * @param email 邮箱
+     * @param subject 主题
+     * @param template 内容模板
+     *
+     * @return 验证码
+     *
+     * @throws MessagingException 异常
+     * @since 1.0.9
+     */
+    public static String sendVerifyCodeByEmail(String email, String subject, String template) throws MessagingException {
+        return sendVerifyCodeByEmail(email, subject, template, 6);
+    }
+
+    /**
+     * 发送验证码
+     *
+     * @param email 邮箱
+     * @param subject 主题
+     * @param template 内容模板
      * @param codeLen 验证码长度
      *
      * @return 验证码
@@ -123,9 +193,9 @@ public class VerifyCodeUtils {
      * @throws MessagingException 异常
      * @since 1.0.9
      */
-    public static String sendVerifyCodeByEmail(String email, String subject, String textTemplate, int codeLen) throws MessagingException {
+    public static String sendVerifyCodeByEmail(String email, String subject, String template, int codeLen) throws MessagingException {
         String code = RandomUtil.randomNumbers(codeLen);
-        EmailUtils.sendTextEmail(email, subject, StrUtil.format(String.format(textTemplate, code), code));
+        EmailUtils.sendEmail(email, subject, StrUtil.format(String.format(template, code), code));
         codeCache.put(email, code);
         frequentlyCache.put(email, code);
         return code;
