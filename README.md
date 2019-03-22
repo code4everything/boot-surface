@@ -31,7 +31,7 @@ Boot Surface主要是一个依赖于Spring框架的Web开发工具类，旨在�
 </dependency>
 ```
 
-> 为了方便打包，项目已发布到了`Maven`中央仓库:stuck_out_tongue_winking_eye:
+> 为了方便打包，项目已发布到了`Maven`中央仓库
 
 ## 使用手册
 

@@ -54,6 +54,7 @@
 - 发送验证码
 
     ``` java
+    // 验证码有效期：30分钟
     VerifyCodeUtils.sendVerifyCodeByEmailAsync("sendto@example.com", "验证码", "你的验证码：{}，请不要告诉其他人哦");
     ```
     
