@@ -15,12 +15,11 @@ import java.util.concurrent.TimeUnit;
 public class EntityNotFoundException extends BootException {
 
     /**
-     * 已创建对象存储，有效期一天
+     * 已创建对象的存储器，有效期一天
      *
      * @since 1.0.9
      */
-    private static final Cache<String, EntityNotFoundException> CACHE = CacheBuilder.newBuilder().expireAfterWrite(24
-            , TimeUnit.HOURS).build();
+    private static Cache<String, EntityNotFoundException> cache = null;
 
     /**
      * 普通构造函数
@@ -64,12 +63,20 @@ public class EntityNotFoundException extends BootException {
      * @since 1.0.9
      */
     public static EntityNotFoundException getInstance(int code, String entityName) {
+        if (Objects.isNull(cache)) {
+            synchronized (EntityNotFoundException.class) {
+                // 双重检测
+                if (Objects.isNull(cache)) {
+                    cache = CacheBuilder.newBuilder().expireAfterWrite(24, TimeUnit.HOURS).build();
+                }
+            }
+        }
         Objects.requireNonNull(entityName, "entity name must not be null");
-        EntityNotFoundException entityNotFoundException = CACHE.getIfPresent(entityName);
+        EntityNotFoundException entityNotFoundException = cache.getIfPresent(entityName);
         if (Objects.isNull(entityNotFoundException)) {
-            // 不需要考虑并发，最坏也就创建多个相同对象，多余的让垃圾回收器收集吧
+            // 此处不考虑并发，最坏也就创建多个相同对象，多余的让垃圾回收器收集吧
             entityNotFoundException = new EntityNotFoundException(code, entityName);
-            CACHE.put(entityName, entityNotFoundException);
+            cache.put(entityName, entityNotFoundException);
         }
         return entityNotFoundException;
     }
