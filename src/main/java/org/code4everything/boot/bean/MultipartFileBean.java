@@ -2,7 +2,6 @@ package org.code4everything.boot.bean;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -11,7 +10,7 @@ import java.util.Map;
  * @author pantao
  * @since 2018/11/2
  **/
-public class MultipartFileBean implements BaseBean, Serializable {
+public class MultipartFileBean implements BaseBean {
 
     /**
      * MD5文件名

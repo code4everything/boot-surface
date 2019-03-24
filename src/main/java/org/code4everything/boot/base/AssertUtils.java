@@ -29,7 +29,7 @@ public class AssertUtils {
      */
     public static String assertTokenNotBlank(String token) {
         if (StrUtil.isBlank(token)) {
-            throw new TokenBlankException();
+            throw TokenBlankException.getInstance();
         }
         return token;
     }
@@ -46,7 +46,7 @@ public class AssertUtils {
      */
     public static <T> T assertUserLoggedIn(T user) {
         if (Objects.isNull(user)) {
-            throw new UserNotLoggedInException();
+            throw UserNotLoggedInException.getInstance();
         }
         return user;
     }
