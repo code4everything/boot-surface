@@ -2,9 +2,8 @@ package org.code4everything.boot.base;
 
 import cn.hutool.core.util.StrUtil;
 import org.code4everything.boot.base.function.BooleanFunction;
+import org.code4everything.boot.exception.ExceptionFactory;
 import org.code4everything.boot.exception.ExceptionThrower;
-import org.code4everything.boot.exception.template.TokenBlankException;
-import org.code4everything.boot.exception.template.UserNotLoggedInException;
 
 import java.util.Objects;
 
@@ -15,6 +14,8 @@ import java.util.Objects;
  * @since 2018-12-01
  */
 public class AssertUtils {
+
+    private static final ExceptionThrower THROWER = ExceptionThrower.getInstance();
 
     private AssertUtils() {}
 
@@ -28,9 +29,7 @@ public class AssertUtils {
      * @since 1.0.4
      */
     public static String assertTokenNotBlank(String token) {
-        if (StrUtil.isBlank(token)) {
-            throw TokenBlankException.getInstance();
-        }
+        THROWER.throwIf(StrUtil.isBlank(token), ExceptionFactory.tokenBlank());
         return token;
     }
 
@@ -45,9 +44,7 @@ public class AssertUtils {
      * @since 1.0.4
      */
     public static <T> T assertUserLoggedIn(T user) {
-        if (Objects.isNull(user)) {
-            throw UserNotLoggedInException.getInstance();
-        }
+        THROWER.throwIf(Objects.isNull(user), ExceptionFactory.userNotLoggedIn());
         return user;
     }
 
@@ -62,7 +59,7 @@ public class AssertUtils {
      * @since 1.0.5
      */
     public static ExceptionThrower throwIf(boolean shouldThrow, RuntimeException exception) {
-        return ExceptionThrower.getInstance().throwIf(shouldThrow, exception);
+        return THROWER.throwIf(shouldThrow, exception);
     }
 
     /**
@@ -76,6 +73,6 @@ public class AssertUtils {
      * @since 1.0.5
      */
     public static ExceptionThrower throwIf(BooleanFunction function, RuntimeException exception) {
-        return ExceptionThrower.getInstance().throwIf(function, exception);
+        return THROWER.throwIf(function, exception);
     }
 }

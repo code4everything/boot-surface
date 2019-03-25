@@ -41,6 +41,13 @@ public class BaseController {
     private ThreadLocal<Response<?>> resultThreadLocal = new ThreadLocal<>();
 
     /**
+     * 只允许继承
+     *
+     * @since 1.0.9
+     */
+    protected BaseController() {}
+
+    /**
      * 获取正确码
      *
      * @return 正确码
