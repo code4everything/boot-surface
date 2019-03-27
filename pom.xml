@@ -22,11 +22,13 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+        <!--强依赖-->
         <junit.version>4.12</junit.version>
         <log4j.version>1.2.17</log4j.version>
-        <fastjson.version>1.2.51</fastjson.version>
-        <hutool.version>4.1.19</hutool.version>
-        <guava.version>27.0-jre</guava.version>
+        <fastjson.version>1.2.56</fastjson.version>
+        <hutool.version>4.5.2</hutool.version>
+        <guava.version>27.1-jre</guava.version>
+        <!--弱依赖-->
         <javax.servlet.version>4.0.1</javax.servlet.version>
         <spring.version>5.0.8.RELEASE</spring.version>
         <aspectj.version>1.9.2</aspectj.version>

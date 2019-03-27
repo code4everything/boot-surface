@@ -2,6 +2,8 @@ package org.code4everything.boot.bean;
 
 import cn.hutool.core.bean.BeanUtil;
 
+import java.util.Objects;
+
 /**
  * 基类
  *
@@ -21,6 +23,7 @@ public interface BaseBean {
      * @since 1.0.6
      */
     default <T> T copyInto(T target) {
+        Objects.requireNonNull(target, "param must not be null");
         BeanUtil.copyProperties(this, target);
         return target;
     }
@@ -35,6 +38,7 @@ public interface BaseBean {
      * @since 1.0.6
      */
     default BaseBean copyFrom(Object source) {
+        Objects.requireNonNull(source, "param must not be null");
         BeanUtil.copyProperties(source, this);
         return this;
     }
