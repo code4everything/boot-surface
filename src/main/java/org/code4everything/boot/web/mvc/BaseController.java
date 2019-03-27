@@ -254,7 +254,7 @@ public class BaseController {
      *
      * @since 1.0.5
      */
-    public <T> Response<T> getReturn(ResponseFunction function) {
+    public <T> Response<T> getReturn(ResponseFunction<T> function) {
         return hasResult() ? getReturn() : function.get();
     }
 
@@ -267,6 +267,19 @@ public class BaseController {
      */
     public String getToken() {
         return HttpUtils.getToken(request);
+    }
+
+    /**
+     * 获取Token
+     *
+     * @param tokenKey 自定义Token Key
+     *
+     * @return Token
+     *
+     * @since 1.0.9
+     */
+    public String getToken(String tokenKey) {
+        return HttpUtils.getToken(tokenKey, request);
     }
 
     /**

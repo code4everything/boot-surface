@@ -51,9 +51,24 @@ public class HttpUtils {
      * @since 1.0.4
      */
     public static String getToken(HttpServletRequest request) {
-        String token = request.getHeader(StringConsts.TOKEN);
-        return StrUtil.isBlank(token) ? request.getParameter(StringConsts.TOKEN) : token;
+        return getToken(StringConsts.TOKEN, request);
     }
+
+    /**
+     * 获取Token
+     *
+     * @param tokenKey 自定义Token Key
+     * @param request HTTP请求
+     *
+     * @return Token
+     *
+     * @since 1.0.9
+     */
+    public static String getToken(String tokenKey, HttpServletRequest request) {
+        String token = request.getHeader(tokenKey);
+        return StrUtil.isBlank(token) ? request.getParameter(tokenKey) : token;
+    }
+
 
     /**
      * 获取Token
@@ -229,7 +244,7 @@ public class HttpUtils {
         } else {
             ArrayList<Response<T>> fileList = new ArrayList<>();
             fileMap.values().forEach(file -> fileList.add(upload(fileService, file, storagePath, digestBytes, params,
-                    forceWrite)));
+                                                                 forceWrite)));
             return new Response<>(fileList);
         }
     }
@@ -278,7 +293,7 @@ public class HttpUtils {
      * @param <T> 数据表类型
      *
      * @return 响应结果 {@link Response}。如果文件上传成功且最后得到的 {@link Response#getData()}为NULL，则{@link
-     *         Response#getMsg()}将返回文件的MD5文件名
+     * Response#getMsg()}将返回文件的MD5文件名
      *
      * @since 1.0.0
      */
@@ -298,7 +313,7 @@ public class HttpUtils {
      * @param forceWrite 是否强制写入文件
      *
      * @return 响应结果 {@link Response}。如果文件上传成功且最后得到的 {@link Response#getData()}为NULL，则{@link
-     *         Response#getMsg()}将返回文件的MD5文件名
+     * Response#getMsg()}将返回文件的MD5文件名
      *
      * @since 1.0.4
      */
@@ -318,7 +333,7 @@ public class HttpUtils {
      * @param <T> 数据表类型
      *
      * @return 响应结果 {@link Response}。如果文件上传成功且最后得到的 {@link Response#getData()}为NULL，则{@link
-     *         Response#getMsg()}将返回文件的MD5文件名
+     * Response#getMsg()}将返回文件的MD5文件名
      *
      * @since 1.0.0
      */
@@ -339,7 +354,7 @@ public class HttpUtils {
      * @param forceWrite 是否强制写入文件
      *
      * @return 响应结果 {@link Response}。如果文件上传成功且最后得到的 {@link Response#getData()}为NULL，则{@link
-     *         Response#getMsg()}将返回文件的MD5文件名
+     * Response#getMsg()}将返回文件的MD5文件名
      *
      * @since 1.0.0
      */

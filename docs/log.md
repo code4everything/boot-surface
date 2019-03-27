@@ -123,13 +123,13 @@ import javax.servlet.http.HttpServletRequest;
 @Component
 public class LogAspect {
 
-    private final LogService<Log> logLogService;
+    private final LogService<Log> logService;
 
     private final HttpServletRequest request;
 
     @Autowired
-    public LogAspect(LogService<Log> logLogService, HttpServletRequest request) {
-        this.logLogService = logLogService;
+    public LogAspect(LogService<Log> logService, HttpServletRequest request) {
+        this.logService = logService;
         this.request = request;
     }
 
@@ -144,7 +144,7 @@ public class LogAspect {
     @AfterThrowing(pointcut = "serviceAspect()", throwing = "throwable")
     public void doAfterThrowing(JoinPoint joinPoint, Throwable throwable) {
         String key = request.getHeader(StringConsts.TOKEN) + Thread.currentThread().getId();
-        AopLogUtils.saveLog(logLogService, key, joinPoint, throwable);
+        AopLogUtils.saveLog(logService, key, joinPoint, throwable);
     }
     
     /**
