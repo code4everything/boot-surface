@@ -3,9 +3,10 @@ package org.code4everything.boot.module.redis;
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.fastjson.support.spring.FastJsonRedisSerializer;
-import org.apache.log4j.Logger;
 import org.code4everything.boot.config.BootConfig;
 import org.code4everything.boot.constant.StringConsts;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
@@ -22,7 +23,7 @@ import java.util.Objects;
  **/
 public class RedisTemplateUtils {
 
-    private static final Logger LOGGER = Logger.getLogger(RedisTemplateUtils.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RedisTemplateUtils.class);
 
     private static RedisConnectionFactory redisConnectionFactory = null;
 
@@ -121,7 +122,8 @@ public class RedisTemplateUtils {
         if (BootConfig.isDebug()) {
             String msg = message.toString();
             if (msg.endsWith(StringConsts.Sign.COMMA)) {
-                LOGGER.info(msg.substring(0, msg.length() - 2));
+                msg = msg.substring(0, msg.length() - 2);
+                LOGGER.info(msg);
             }
         }
     }

@@ -5,16 +5,17 @@ import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.cache.Cache;
-import org.apache.log4j.Logger;
-import org.code4everything.boot.message.EmailUtils;
 import org.code4everything.boot.base.FileUtils;
 import org.code4everything.boot.bean.ConfigBean;
 import org.code4everything.boot.encoder.FieldEncoder;
 import org.code4everything.boot.interfaces.FileWatcher;
 import org.code4everything.boot.log.AopLogUtils;
+import org.code4everything.boot.message.EmailUtils;
 import org.code4everything.boot.module.redis.RedisTemplateUtils;
 import org.code4everything.boot.web.mvc.BaseController;
 import org.code4everything.boot.web.mvc.DefaultWebInterceptor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.mail.javamail.JavaMailSender;
 
@@ -28,7 +29,7 @@ import java.io.File;
  */
 public class BootConfig {
 
-    private static final Logger LOGGER = Logger.getLogger(BootConfig.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BootConfig.class);
 
     /**
      * 调试
@@ -96,7 +97,7 @@ public class BootConfig {
                 if (FileUtil.exist(bootConfigPath)) {
                     parseJson(JSONObject.parseObject(FileUtil.readString(bootConfigPath, CharsetUtil.UTF_8)));
                 } else {
-                    LOGGER.warn("boot config file [" + bootConfigPath + "] is not found");
+                    LOGGER.warn("boot config file [{}] is not found", bootConfigPath);
                 }
             }
         }, true);
@@ -127,7 +128,7 @@ public class BootConfig {
             if (ObjectUtil.isNotNull(okCode)) {
                 setOkCode(okCode);
             }
-            LOGGER.info("boot config is changed >>> " + boot.toJSONString());
+            LOGGER.info("boot config is changed >>> {}", boot);
         }
     }
 

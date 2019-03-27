@@ -6,7 +6,6 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.digest.DigestUtil;
 import cn.hutool.http.HttpStatus;
-import org.apache.log4j.Logger;
 import org.code4everything.boot.base.AssertUtils;
 import org.code4everything.boot.bean.MultipartFileBean;
 import org.code4everything.boot.bean.Response;
@@ -14,6 +13,8 @@ import org.code4everything.boot.config.BootConfig;
 import org.code4everything.boot.constant.MessageConsts;
 import org.code4everything.boot.constant.StringConsts;
 import org.code4everything.boot.service.FileService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.InputStreamSource;
@@ -37,7 +38,7 @@ import java.util.Objects;
  **/
 public class HttpUtils {
 
-    private static final Logger LOGGER = Logger.getLogger(HttpUtils.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(HttpUtils.class);
 
     private HttpUtils() {}
 
@@ -244,7 +245,7 @@ public class HttpUtils {
         } else {
             ArrayList<Response<T>> fileList = new ArrayList<>();
             fileMap.values().forEach(file -> fileList.add(upload(fileService, file, storagePath, digestBytes, params,
-                                                                 forceWrite)));
+                    forceWrite)));
             return new Response<>(fileList);
         }
     }
@@ -293,7 +294,7 @@ public class HttpUtils {
      * @param <T> 数据表类型
      *
      * @return 响应结果 {@link Response}。如果文件上传成功且最后得到的 {@link Response#getData()}为NULL，则{@link
-     * Response#getMsg()}将返回文件的MD5文件名
+     *         Response#getMsg()}将返回文件的MD5文件名
      *
      * @since 1.0.0
      */
@@ -313,7 +314,7 @@ public class HttpUtils {
      * @param forceWrite 是否强制写入文件
      *
      * @return 响应结果 {@link Response}。如果文件上传成功且最后得到的 {@link Response#getData()}为NULL，则{@link
-     * Response#getMsg()}将返回文件的MD5文件名
+     *         Response#getMsg()}将返回文件的MD5文件名
      *
      * @since 1.0.4
      */
@@ -333,7 +334,7 @@ public class HttpUtils {
      * @param <T> 数据表类型
      *
      * @return 响应结果 {@link Response}。如果文件上传成功且最后得到的 {@link Response#getData()}为NULL，则{@link
-     * Response#getMsg()}将返回文件的MD5文件名
+     *         Response#getMsg()}将返回文件的MD5文件名
      *
      * @since 1.0.0
      */
@@ -354,7 +355,7 @@ public class HttpUtils {
      * @param forceWrite 是否强制写入文件
      *
      * @return 响应结果 {@link Response}。如果文件上传成功且最后得到的 {@link Response#getData()}为NULL，则{@link
-     * Response#getMsg()}将返回文件的MD5文件名
+     *         Response#getMsg()}将返回文件的MD5文件名
      *
      * @since 1.0.0
      */
@@ -373,7 +374,7 @@ public class HttpUtils {
                 // 设置MD5
                 fileBean.setMd5(DigestUtil.md5Hex(file.getBytes()));
             } catch (Exception e) {
-                LOGGER.error(StrUtil.format("get md5 of file[{}] failed, message -> {}", ofn, e.getMessage()));
+                LOGGER.error("get md5 of file[{}] failed, message -> {}", ofn, e.getMessage());
                 return result.error(HttpStatus.HTTP_UNAVAILABLE, ofn + " upload failed");
             }
             fileBean.setFilename(fileBean.getMd5() + StrUtil.DOT + FileUtil.extName(ofn));
@@ -400,7 +401,7 @@ public class HttpUtils {
                 // 写入磁盘
                 file.transferTo(new File(fileBean.getStoragePath() + fileBean.getFilename()));
             } catch (Exception e) {
-                LOGGER.error("upload file failed, message -> " + e.getMessage());
+                LOGGER.error("upload file failed, message -> {}", e.getMessage());
                 return result.error(HttpStatus.HTTP_UNAVAILABLE, ofn + " upload failed");
             }
             // 将数据写入数据库

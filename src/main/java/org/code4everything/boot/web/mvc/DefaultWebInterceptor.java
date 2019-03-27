@@ -1,17 +1,17 @@
 package org.code4everything.boot.web.mvc;
 
 import cn.hutool.core.util.StrUtil;
-import com.alibaba.fastjson.JSONObject;
-import com.google.common.base.Preconditions;
-import org.apache.log4j.Logger;
 import org.code4everything.boot.bean.ConfigBean;
 import org.code4everything.boot.config.BootConfig;
 import org.code4everything.boot.interfaces.InterceptHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Objects;
 
 /**
  * 默认拦截器<br>拦截顺序依次为：黑名单 - 白名单 - 拦截名单
@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 public final class DefaultWebInterceptor implements HandlerInterceptor {
 
-    private static final Logger LOGGER = Logger.getLogger(DefaultWebInterceptor.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultWebInterceptor.class);
 
     /**
      * 配置信息
@@ -81,15 +81,15 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
      */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        Preconditions.checkNotNull(DefaultWebInterceptor.configBean);
+        Objects.requireNonNull(DefaultWebInterceptor.configBean);
         String url = request.getServletPath();
         if (BootConfig.isDebug()) {
-            LOGGER.info(request.getMethod() + " [" + url + "] with params >>> " + JSONObject.toJSONString(request.getParameterMap()));
+            LOGGER.info("{} [{}] with params >>> {}", request.getMethod(), url, request.getParameterMap());
         }
         // 黑名单
         if (StrUtil.startWithAny(url, DefaultWebInterceptor.configBean.getBlackPrefixes())) {
             if (BootConfig.isDebug()) {
-                LOGGER.info(StrUtil.format("url -> {}, in black list", url));
+                LOGGER.info("url -> {}, in black list", url);
             }
             interceptHandler.handleBlackList(request, response, handler);
             return false;
@@ -97,7 +97,7 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
         // 白名单
         if (StrUtil.startWithAny(url, DefaultWebInterceptor.configBean.getWhitePrefixes())) {
             if (BootConfig.isDebug()) {
-                LOGGER.info(StrUtil.format("url -> {}, in white list", url));
+                LOGGER.info("url -> {}, in white list", url);
             }
             interceptHandler.handleWhiteList(request, response, handler);
             return true;
@@ -105,7 +105,7 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
         // 拦截名单
         if (StrUtil.startWithAny(url, DefaultWebInterceptor.configBean.getInterceptPrefixes())) {
             if (BootConfig.isDebug()) {
-                LOGGER.info(StrUtil.format("url -> {}, in intercept list", url));
+                LOGGER.info("url -> {}, in intercept list", url);
             }
             return interceptHandler.handleInterceptList(request, response, handler);
         }

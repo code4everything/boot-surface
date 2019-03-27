@@ -4,11 +4,12 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.Validator;
 import com.alibaba.fastjson.support.spring.FastJsonJsonView;
-import org.apache.log4j.Logger;
 import org.code4everything.boot.bean.ExceptionBean;
 import org.code4everything.boot.config.BootConfig;
 import org.code4everything.boot.constant.IntegerConsts;
 import org.code4everything.boot.exception.BootException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
@@ -32,7 +33,7 @@ public class DefaultExceptionHandler implements HandlerExceptionResolver {
 
     private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";
 
-    private static final Logger LOGGER = Logger.getLogger(DefaultExceptionHandler.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultExceptionHandler.class);
 
     /**
      * 默认异常信息
@@ -143,7 +144,8 @@ public class DefaultExceptionHandler implements HandlerExceptionResolver {
     @Override
     public ModelAndView resolveException(HttpServletRequest req, HttpServletResponse res, Object o, Exception e) {
         if (BootConfig.isDebug()) {
-            LOGGER.error("url -> " + req.getServletPath() + ", ip -> " + req.getRemoteAddr() + ", exception -> " + e.getClass().getName() + ", message -> " + e.getMessage());
+            LOGGER.error("url -> {}, ip -> {}, exception -> {}, message -> {}", req.getServletPath(),
+                    req.getRemoteAddr(), e.getClass().getName(), e.getMessage());
             StringWriter stringWriter = new StringWriter();
             e.printStackTrace(new PrintWriter(stringWriter));
             String exception = stringWriter.toString();

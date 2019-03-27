@@ -1,10 +1,10 @@
 package org.code4everything.boot.encoder;
 
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.digest.DigestUtil;
-import org.apache.log4j.Logger;
 import org.code4everything.boot.annotations.Sealed;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.ClassUtils;
 
 import java.lang.reflect.Field;
@@ -20,7 +20,7 @@ import java.util.Objects;
  **/
 public class FieldEncoder {
 
-    private static final Logger LOGGER = Logger.getLogger(FieldEncoder.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(FieldEncoder.class);
 
     /**
      * 加密字段
@@ -52,7 +52,7 @@ public class FieldEncoder {
                     break;
             }
         } catch (IllegalAccessException e) {
-            LOGGER.error(StrUtil.format("encrypt field {} failed, message -> ", field.getName(), e.getMessage()));
+            LOGGER.error("encrypt field {} failed, message -> {}", field.getName(), e.getMessage());
         }
     }
 
@@ -114,7 +114,7 @@ public class FieldEncoder {
                 // 不是基本类型的继续遍历
                 encode(field.get(object));
             } catch (IllegalAccessException e) {
-                LOGGER.error(StrUtil.format("encrypt field {} failed, message -> ", field.getName(), e.getMessage()));
+                LOGGER.error("encrypt field {} failed, message -> {}", field.getName(), e.getMessage());
             }
         }
     }

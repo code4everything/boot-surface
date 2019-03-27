@@ -9,10 +9,11 @@ import cn.hutool.core.io.watch.watchers.DelayWatcher;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
-import org.apache.log4j.Logger;
 import org.code4everything.boot.config.BootConfig;
 import org.code4everything.boot.constant.StringConsts;
 import org.code4everything.boot.interfaces.FileWatcher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -26,7 +27,7 @@ import java.nio.file.WatchEvent;
  **/
 public class FileUtils {
 
-    private static final Logger LOGGER = Logger.getLogger(FileUtils.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(FileUtils.class);
 
     private FileUtils() {}
 
@@ -89,6 +90,7 @@ public class FileUtils {
     public static <T> void watchFile(String jsonFile, FileWatcher fileWatcher, T config, Class<T> clazz,
                                      String charset) {
         watchFile(jsonFile, new FileWatcher() {
+
             @Override
             public void doSomething() {
                 JSONObject root = JSONObject.parseObject(FileUtil.readString(jsonFile, charset));
@@ -131,16 +133,17 @@ public class FileUtils {
         if (shouldFirstExecute) {
             fileWatcher.doSomething();
             if (BootConfig.isDebug()) {
-                LOGGER.info("load file -> " + file);
+                LOGGER.info("load file -> {}", file);
             }
         }
         SimpleWatcher simpleWatcher = new SimpleWatcher() {
+
             @Override
             public void onModify(WatchEvent<?> event, Path currentPath) {
                 fileWatcher.onModify(event, currentPath);
                 fileWatcher.doSomething();
                 if (BootConfig.isDebug()) {
-                    LOGGER.info("load file -> " + file);
+                    LOGGER.info("load file -> {}", file);
                 }
             }
         };
