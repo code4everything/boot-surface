@@ -4,6 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import org.code4everything.boot.bean.ConfigBean;
 import org.code4everything.boot.config.BootConfig;
 import org.code4everything.boot.interfaces.InterceptHandler;
+import org.code4everything.boot.web.HttpUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -84,7 +85,9 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
         Objects.requireNonNull(DefaultWebInterceptor.configBean);
         String url = request.getServletPath();
         if (BootConfig.isDebug()) {
-            LOGGER.info("{} [{}] with params >>> {}", request.getMethod(), url, request.getParameterMap());
+            String queryString = StrUtil.nullToEmpty(request.getQueryString());
+            String requestBody = HttpUtils.parseRequestBody(request);
+            LOGGER.info("{} [{}?{}] with body >>> {}", request.getMethod(), url, queryString, requestBody);
         }
         // 黑名单
         if (StrUtil.startWithAny(url, DefaultWebInterceptor.configBean.getBlackPrefixes())) {

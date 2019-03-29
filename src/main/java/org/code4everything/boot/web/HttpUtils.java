@@ -24,9 +24,11 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
 
@@ -41,6 +43,26 @@ public class HttpUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(HttpUtils.class);
 
     private HttpUtils() {}
+
+    /**
+     * 解析HTTP请求中的Body
+     *
+     * @param request {@link HttpServletRequest}
+     *
+     * @return Body
+     *
+     * @throws IOException 异常
+     * @since 1.1.0
+     */
+    public static String parseRequestBody(HttpServletRequest request) throws IOException {
+        BufferedReader br = request.getReader();
+        StringBuilder builder = new StringBuilder();
+        String line;
+        while ((line = br.readLine()) != null) {
+            builder.append(line.trim());
+        }
+        return builder.toString();
+    }
 
     /**
      * 获取Token
@@ -243,10 +265,10 @@ public class HttpUtils {
         if (CollectionUtil.isEmpty(fileMap)) {
             return new Response<>(HttpStatus.HTTP_BAD_REQUEST, MessageConsts.FILE_UNAVAILABLE_ZH);
         } else {
-            ArrayList<Response<T>> fileList = new ArrayList<>();
-            fileMap.values().forEach(file -> fileList.add(upload(fileService, file, storagePath, digestBytes, params,
-                    forceWrite)));
-            return new Response<>(fileList);
+            ArrayList<Response<T>> list = new ArrayList<>();
+            Collection<MultipartFile> set = fileMap.values();
+            set.forEach(f -> list.add(upload(fileService, f, storagePath, digestBytes, params, forceWrite)));
+            return new Response<>(list);
         }
     }
 
