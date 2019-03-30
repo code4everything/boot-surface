@@ -5,7 +5,8 @@ import org.code4everything.boot.bean.MultipartFileBean;
 import javax.annotation.Nullable;
 
 /**
- * 文件服务，如果没有对应数据表，可以不实现接口中的方法
+ * 文件服务，如果没有对应数据表，可以不实现接口中的方法。如果你不需要MD5校验，那么建议你在{@link #exists(MultipartFileBean)}方法或{@link
+ * #getBy(MultipartFileBean)}方法中调用{@link MultipartFileBean#setFilename(String)}格式化文件名
  *
  * @author pantao
  * @since 2018/11/2

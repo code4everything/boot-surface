@@ -50,13 +50,14 @@ public class DateUtils {
     private static Date checkToday(Date origin, Date copied) {
         long curr = System.currentTimeMillis();
         if (curr > endOfToday.getTime()) {
+            // 如果现当前的时间戳超过了endOfToday的时间戳，说明Today的时间戳已经过期，需重新设置
             startOfToday.setTime(DateUtil.beginOfDay(new Date(curr)).getTime());
             endOfToday.setTime(DateUtil.endOfDay(startOfToday).getTime());
         }
-        if (origin.equals(copied)) {
-            return copied;
+        if (!origin.equals(copied)) {
+            // 如果副本被篡改，那么重置副本
+            copied.setTime(origin.getTime());
         }
-        copied.setTime(origin.getTime());
         return copied;
     }
 }

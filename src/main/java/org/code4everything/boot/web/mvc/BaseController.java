@@ -158,7 +158,7 @@ public class BaseController {
      */
     public BaseController ifReturn(boolean shouldReturn, ResponseFunction function) {
         if (!hasResult() && shouldReturn) {
-            resultThreadLocal.set(function.get());
+            resultThreadLocal.set(function.call());
         }
         return this;
     }
@@ -174,7 +174,7 @@ public class BaseController {
      * @since 1.0.5
      */
     public BaseController ifReturn(BooleanFunction function, Response result) {
-        if (!hasResult() && function.get()) {
+        if (!hasResult() && function.call()) {
             resultThreadLocal.set(result);
         }
         return this;
@@ -192,9 +192,9 @@ public class BaseController {
      */
     public BaseController ifReturn(BooleanFunction booleanFunction, ResponseFunction responseResultFunction) {
         if (!hasResult()) {
-            boolean res = booleanFunction.get();
+            boolean res = booleanFunction.call();
             if (res) {
-                resultThreadLocal.set(responseResultFunction.get());
+                resultThreadLocal.set(responseResultFunction.call());
             }
         }
         return this;
@@ -225,7 +225,7 @@ public class BaseController {
      */
     public BaseController elseReturn(ResponseFunction function) {
         if (!hasResult()) {
-            resultThreadLocal.set(function.get());
+            resultThreadLocal.set(function.call());
         }
         return this;
     }
@@ -255,7 +255,7 @@ public class BaseController {
      * @since 1.0.5
      */
     public <T> Response<T> getReturn(ResponseFunction<T> function) {
-        return hasResult() ? getReturn() : function.get();
+        return hasResult() ? getReturn() : function.call();
     }
 
     /**

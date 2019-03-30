@@ -134,7 +134,9 @@ public class AopLogUtils {
     public static <T> T saveLog(LogService<T> service, String key, JoinPoint point, Throwable throwable) {
         T log;
         if (Objects.isNull(throwable)) {
+            // 从切点获取日志基本信息，并进行保存
             log = service.save(service.getLog(parse(point)));
+            // 当入缓存，当发生异常时，方便更新异常信息
             logCache.put(key, log);
             if (BootConfig.isDebug()) {
                 Console.log(log);
@@ -142,13 +144,16 @@ public class AopLogUtils {
         } else {
             log = (T) logCache.asMap().get(key);
             if (ObjectUtil.isNull(log)) {
+                // 如果缓存中没有，则直接创建一条新的日志
                 log = service.getLog(parse(point));
             }
+            // 增补异常信息
             log = service.saveException(log, throwable);
             if (BootConfig.isDebug()) {
                 Console.error(throwable, log.toString());
             }
-            logCache.asMap().remove(key);
+            // 移除日志缓存
+            logCache.invalidate(key);
         }
         return log;
     }
@@ -168,10 +173,11 @@ public class AopLogUtils {
         // 设置类名和方法名
         logBean.setClassName(targetClass.getName()).setMethodName(joinPoint.getSignature().getName());
         for (Method method : targetClass.getMethods()) {
-            // 找到对应的方法名
+            // 找到对应的方法名（目前只判断了方法名和参数个数是否一致）
             if (method.getName().equals(logBean.getMethodName()) && method.getParameterTypes().length == logBean.getArgs().length()) {
                 AopLog aopLog = method.getAnnotation(AopLog.class);
                 if (ObjectUtil.isNotNull(aopLog)) {
+                    // 设置描述信息
                     return logBean.setDescription(aopLog.value());
                 }
             }
@@ -205,8 +211,8 @@ public class AopLogUtils {
         }
         logBean.setExecutedTime(System.currentTimeMillis() - beginTime);
         T log = service.getLog(logBean);
-        // 保存日志
         if (saveLog) {
+            // 保存日志
             if (Objects.isNull(t)) {
                 service.save(log);
             } else {

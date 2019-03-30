@@ -113,7 +113,7 @@ public class ConcurrentSortedList<E, T extends List<E>> extends SortedList<E, T>
     }
 
     @Override
-    public boolean removeAll(Collection<?> c) {
+    public boolean removeAll(Collection<E> c) {
         reentrantLock.lock();
         boolean res = list.removeAll(c);
         reentrantLock.unlock();
@@ -121,7 +121,7 @@ public class ConcurrentSortedList<E, T extends List<E>> extends SortedList<E, T>
     }
 
     @Override
-    public boolean retainAll(Collection<?> c) {
+    public boolean retainAll(Collection<E> c) {
         reentrantLock.lock();
         boolean res = list.retainAll(c);
         reentrantLock.unlock();

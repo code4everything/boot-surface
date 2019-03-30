@@ -65,6 +65,7 @@ public class DefaultExceptionHandler implements HandlerExceptionResolver {
         ModelAndView modelAndView = new ModelAndView();
         FastJsonJsonView view = new FastJsonJsonView();
         Map<String, Object> attributes = new HashMap<>(IntegerConsts.EIGHT);
+        // 包装数据
         wrapAttributes(attributes, request, exception, bean);
         view.setAttributesMap(attributes);
         modelAndView.setView(view);
@@ -146,18 +147,21 @@ public class DefaultExceptionHandler implements HandlerExceptionResolver {
         if (BootConfig.isDebug()) {
             LOGGER.error("url -> {}, ip -> {}, exception -> {}, message -> {}", req.getServletPath(),
                     req.getRemoteAddr(), e.getClass().getName(), e.getMessage());
+            // 输出异常信息
             StringWriter stringWriter = new StringWriter();
             e.printStackTrace(new PrintWriter(stringWriter));
             String exception = stringWriter.toString();
             Console.log(exception);
             LOGGER.error(exception);
         }
+        // 判断异常是否可以转换成ExceptionBean
         ExceptionBean exceptionBean;
         if (e instanceof BootException) {
             exceptionBean = ((BootException) e).asExceptionBean();
         } else {
             exceptionBean = exceptionMap.get(e.getClass().getName());
         }
+        // 解析并返回
         return parseModelAndView(req, e, Objects.isNull(exceptionBean) ? bean : exceptionBean);
     }
 }

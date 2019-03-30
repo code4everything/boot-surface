@@ -18,5 +18,5 @@ public interface TypeFunction {
      *
      * @since 1.0.5
      */
-    <T> T get();
+    <T> T call();
 }

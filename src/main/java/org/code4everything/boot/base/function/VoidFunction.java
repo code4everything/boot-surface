@@ -14,5 +14,5 @@ public interface VoidFunction {
      *
      * @since 1.0.5
      */
-    void get();
+    void call();
 }

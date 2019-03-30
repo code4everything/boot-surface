@@ -4,7 +4,6 @@ import cn.hutool.core.lang.Validator;
 import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.fastjson.support.spring.FastJsonRedisSerializer;
 import org.code4everything.boot.config.BootConfig;
-import org.code4everything.boot.constant.StringConsts;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -63,7 +62,7 @@ public class RedisTemplateUtils {
      * @since 1.0.0
      */
     public static RedisConnectionFactory getRedisConnectionFactory(String hostName, Integer port, Integer database) {
-        // 连接池在启动项目时就配置好了，故不考虑并发情况
+        // 连接池在启动项目时就该配置好了，故不考虑并发情况
         if (Objects.isNull(redisConnectionFactory)) {
             initRedisConnectionFactory(hostName, port, database);
         }
@@ -104,27 +103,32 @@ public class RedisTemplateUtils {
      * @since 1.0.0
      */
     public static void initRedisConnectionFactory(String hostName, Integer port, Integer database) {
+        // 连接配置
         RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration();
-        StringBuilder message = new StringBuilder("connect to redis server on");
+        // 日志消息
+        StringBuilder message = new StringBuilder();
+        String sep = "";
         if (Validator.isNotEmpty(hostName)) {
+            // 设置主机地址
             configuration.setHostName(hostName);
-            message.append(" host -> ").append(hostName).append(" ,");
+            message.append(sep).append(" host -> ").append(hostName);
+            sep = " ,";
         }
         if (ObjectUtil.isNotNull(port)) {
+            // 设置端口
             configuration.setPort(port);
-            message.append(" port -> ").append(port).append(" ,");
+            message.append(sep).append(" port -> ").append(port);
+            sep = " ,";
         }
         if (ObjectUtil.isNotNull(database)) {
+            // 设置要连接的数据库
             configuration.setDatabase(database);
-            message.append(" database -> ").append(database).append(" ,");
+            message.append(sep).append(" database -> ").append(database);
         }
+        // 生成连接工厂
         redisConnectionFactory = new JedisConnectionFactory(configuration);
-        if (BootConfig.isDebug()) {
-            String msg = message.toString();
-            if (msg.endsWith(StringConsts.Sign.COMMA)) {
-                msg = msg.substring(0, msg.length() - 2);
-                LOGGER.info(msg);
-            }
+        if (BootConfig.isDebug() && message.length() != 0) {
+            LOGGER.info("connect to redis server by {}", message);
         }
     }
 
@@ -155,16 +159,21 @@ public class RedisTemplateUtils {
      * @since 1.0.0
      */
     public static <K, V> RedisTemplate<K, V> newTemplate(Class<K> keyType, Class<V> valueType) {
+        // 生成一个RedisTemplate
         RedisTemplate<K, V> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(getRedisConnectionFactory());
         if (ObjectUtil.isNotNull(keyType)) {
+            // 选择键序列化的方式
             if (keyType == String.class) {
+                // 使用String序列化
                 redisTemplate.setKeySerializer(new StringRedisSerializer());
             } else {
+                // 使用FastJson序列化
                 redisTemplate.setKeySerializer(new FastJsonRedisSerializer<>(keyType));
             }
         }
         if (ObjectUtil.isNotNull(valueType)) {
+            // 对值进行FastJson序列化
             redisTemplate.setValueSerializer(new FastJsonRedisSerializer<>(valueType));
         }
         return redisTemplate;

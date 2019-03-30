@@ -18,5 +18,5 @@ public interface ResponseFunction<T> {
      *
      * @since 1.0.5
      */
-    Response<T> get();
+    Response<T> call();
 }

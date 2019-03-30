@@ -55,10 +55,13 @@ public class HttpUtils {
      * @since 1.1.0
      */
     public static String parseRequestBody(HttpServletRequest request) throws IOException {
+        // 获取输入流
         BufferedReader br = request.getReader();
         StringBuilder builder = new StringBuilder();
         String line;
+        // 一行一行读取数据
         while ((line = br.readLine()) != null) {
+            // 去掉首位多余的空格
             builder.append(line.trim());
         }
         return builder.toString();
@@ -139,6 +142,7 @@ public class HttpUtils {
             file = new FileSystemResource(localPath);
         }
         if (ObjectUtil.isNull(file)) {
+            // 响应404
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok().contentLength(file.contentLength()).contentType(MediaType.APPLICATION_OCTET_STREAM).body(new InputStreamResource(file.getInputStream()));
@@ -263,10 +267,12 @@ public class HttpUtils {
                                                                    Map<String, Object> params, boolean forceWrite) {
         Map<String, MultipartFile> fileMap = request.getFileMap();
         if (CollectionUtil.isEmpty(fileMap)) {
+            // 文件集合为空
             return new Response<>(HttpStatus.HTTP_BAD_REQUEST, MessageConsts.FILE_UNAVAILABLE_ZH);
         } else {
             ArrayList<Response<T>> list = new ArrayList<>();
             Collection<MultipartFile> set = fileMap.values();
+            // 遍历的上传每个文件，并记录结果
             set.forEach(f -> list.add(upload(fileService, f, storagePath, digestBytes, params, forceWrite)));
             return new Response<>(list);
         }
@@ -384,9 +390,11 @@ public class HttpUtils {
     public static <T> Response<T> upload(FileService<T> fileService, MultipartFile file, String storagePath,
                                          boolean digestBytes, Map<String, Object> params, boolean forceWrite) {
         Response<T> result = new Response<>();
+        // 检测文件大小是否超标
         if (file.getSize() > BootConfig.getMaxUploadFileSize()) {
             return result.error("file size must less than " + BootConfig.getMaxUploadFileSize());
         }
+        // 格式化存储路径
         MultipartFileBean fileBean = new MultipartFileBean();
         fileBean.setStoragePath(storagePath + (storagePath.endsWith(File.separator) ? "" : File.separator));
         // 设置文件信息
@@ -409,6 +417,7 @@ public class HttpUtils {
         boolean shouldWrite = false;
         T t = null;
         if (Objects.isNull(exists)) {
+            // 如果进入这里，表示用户没有实现exists方法
             t = fileService.getBy(fileBean);
             if (Objects.isNull(t)) {
                 // 不存在时则可以写入磁盘

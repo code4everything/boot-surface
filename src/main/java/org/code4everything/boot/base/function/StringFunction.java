@@ -16,5 +16,5 @@ public interface StringFunction {
      *
      * @since 1.0.5
      */
-    String get();
+    String call();
 }

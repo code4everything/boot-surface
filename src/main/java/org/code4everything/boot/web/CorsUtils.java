@@ -51,6 +51,7 @@ public class CorsUtils {
     public static CorsFilter newCorsFilter(CorsBean corsBean) {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration corsConfiguration = new CorsConfiguration();
+        // 跨域设置
         corsConfiguration.setAllowedOrigins(corsBean.getOrigins());
         corsConfiguration.setAllowedHeaders(corsBean.getHeaders());
         corsConfiguration.setAllowedMethods(corsBean.getMethods());

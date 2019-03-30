@@ -87,6 +87,7 @@ public class EmailUtils {
      */
     public static void sendEmailAsync(String email, String subject, String html, MimeMessageHelper helper,
                                       EmailCallable callable) {
+        // 异步执行，并进行相应的回调
         ThreadUtil.execute(() -> {
             try {
                 sendEmail(email, subject, html, helper);
@@ -127,16 +128,26 @@ public class EmailUtils {
      * @since 1.0.9
      */
     public static void sendEmail(String email, String subject, String html, MimeMessageHelper helper) throws MessagingException {
+        // 条件校验
         Objects.requireNonNull(mailSender, "please set a java mail sender");
         Objects.requireNonNull(outbox, "please set a outbox");
         Objects.requireNonNull(helper);
+        // 设置邮件信息
         helper.setFrom(outbox);
         helper.setTo(email);
         helper.setSubject(subject);
         helper.setText(html, true);
+        // 发送邮件
         mailSender.send(helper.getMimeMessage());
     }
 
+    /**
+     * 创建一个{@link MimeMessageHelper}
+     *
+     * @return {@link MimeMessageHelper}
+     *
+     * @since 1.0.9
+     */
     public static MimeMessageHelper buildDefaultMessageHelper() {
         return new MimeMessageHelper(mailSender.createMimeMessage());
     }

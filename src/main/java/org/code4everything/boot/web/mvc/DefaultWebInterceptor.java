@@ -85,6 +85,7 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
         Objects.requireNonNull(DefaultWebInterceptor.configBean);
         String url = request.getServletPath();
         if (BootConfig.isDebug()) {
+            // 打印请求的详细信息
             String queryString = StrUtil.nullToEmpty(request.getQueryString());
             String requestBody = HttpUtils.parseRequestBody(request);
             LOGGER.info("{} [{}?{}] with body >>> {}", request.getMethod(), url, queryString, requestBody);

@@ -16,5 +16,5 @@ public interface BooleanFunction {
      *
      * @since 1.0.5
      */
-    boolean get();
+    boolean call();
 }

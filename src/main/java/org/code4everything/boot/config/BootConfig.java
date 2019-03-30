@@ -114,18 +114,22 @@ public class BootConfig {
         if (ObjectUtil.isNotNull(boot)) {
             Long maxUploadFileSize = boot.getLong("maxUploadFileSize");
             if (ObjectUtil.isNotNull(maxUploadFileSize)) {
+                // 最大文件上传大小
                 setMaxUploadFileSize(maxUploadFileSize);
             }
             Boolean debug = boot.getBoolean("debug");
             if (ObjectUtil.isNotNull(debug)) {
+                // 是否开启debug模式
                 setDebug(debug);
             }
             Boolean sealed = boot.getBoolean("sealed");
             if (ObjectUtil.isNotNull(sealed)) {
+                // 是否对响应字段加密
                 setSealed(sealed);
             }
             Integer okCode = boot.getInteger("okCode");
             if (ObjectUtil.isNotNull(okCode)) {
+                // 请求成功的响应码
                 setOkCode(okCode);
             }
             LOGGER.info("boot config is changed >>> {}", boot);

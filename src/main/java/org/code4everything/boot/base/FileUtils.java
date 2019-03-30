@@ -93,9 +93,12 @@ public class FileUtils {
 
             @Override
             public void doSomething() {
+                // 解析JSON文件
                 JSONObject root = JSONObject.parseObject(FileUtil.readString(jsonFile, charset));
+                // 属性复制
                 BeanUtil.copyProperties(root.toJavaObject(clazz), config);
                 if (root.containsKey(StringConsts.BOOT)) {
+                    // 解析BootSurface配置
                     BootConfig.parseJson(root.getJSONObject("boot"));
                 }
                 fileWatcher.doSomething();

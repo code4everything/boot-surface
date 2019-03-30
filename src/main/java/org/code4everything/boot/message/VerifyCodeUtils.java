@@ -145,18 +145,25 @@ public class VerifyCodeUtils {
      */
     public static String sendVerifyCodeByEmailAsync(String email, String subject, String template, int codeLen,
                                                     EmailCallable callable) {
-        String code = RandomUtil.randomNumbers(codeLen);
+        // 生成验证码
+        final String code = RandomUtil.randomNumbers(codeLen);
+        // 异步执行，并进行相应的回调
         ThreadUtil.execute(() -> {
+            // 格式化内容
             String html = StrUtil.format(String.format(template, code), code);
             try {
+                // 发送验证码
                 EmailUtils.sendEmail(email, subject, html);
+                // 放入缓存
                 codeCache.put(email, code);
                 frequentlyCache.put(email, code);
+                // 成功回调
                 if (ObjectUtil.isNotNull(callable)) {
                     callable.handleSuccess(email, subject, html);
                 }
             } catch (MessagingException e) {
                 if (ObjectUtil.isNotNull(callable)) {
+                    // 失败回调
                     callable.handleFailed(email, subject, html, e);
                 }
             }
@@ -194,8 +201,11 @@ public class VerifyCodeUtils {
      * @since 1.0.9
      */
     public static String sendVerifyCodeByEmail(String email, String subject, String template, int codeLen) throws MessagingException {
-        String code = RandomUtil.randomNumbers(codeLen);
+        // 生成验证码
+        final String code = RandomUtil.randomNumbers(codeLen);
+        // 格式化并发送
         EmailUtils.sendEmail(email, subject, StrUtil.format(String.format(template, code), code));
+        // 放入缓存
         codeCache.put(email, code);
         frequentlyCache.put(email, code);
         return code;
