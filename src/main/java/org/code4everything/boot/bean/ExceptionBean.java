@@ -12,6 +12,8 @@ import java.io.Serializable;
  **/
 public class ExceptionBean implements BaseBean, Serializable {
 
+    private static final long serialVersionUID = 1349750625515704986L;
+
     /**
      * 错误码
      *

@@ -10,6 +10,8 @@ import java.io.Serializable;
  */
 public class LogBean implements BaseBean, Serializable {
 
+    private static final long serialVersionUID = -5160585058519076100L;
+
     /**
      * 类名
      *

@@ -18,6 +18,8 @@ import java.util.Collection;
  **/
 public class WePage<T> implements BaseBean, Serializable {
 
+    private static final long serialVersionUID = -7558939772837583007L;
+
     private Integer currPage;
 
     private Integer pageSize;

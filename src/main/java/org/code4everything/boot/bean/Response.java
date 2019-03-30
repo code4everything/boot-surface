@@ -22,6 +22,8 @@ import java.util.Objects;
  */
 public class Response<T> implements Serializable {
 
+    private static final long serialVersionUID = -5763007029340547926L;
+
     /**
      * 是否对数据进行加密
      *

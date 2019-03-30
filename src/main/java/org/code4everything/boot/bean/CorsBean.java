@@ -12,6 +12,8 @@ import java.util.List;
  **/
 public class CorsBean implements BaseBean, Serializable {
 
+    private static final long serialVersionUID = -8878074589278671551L;
+
     /**
      * 路径模式
      *

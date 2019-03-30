@@ -112,13 +112,13 @@ public class RedisTemplateUtils {
             // 设置主机地址
             configuration.setHostName(hostName);
             message.append(sep).append(" host -> ").append(hostName);
-            sep = " ,";
+            sep = ", ";
         }
         if (ObjectUtil.isNotNull(port)) {
             // 设置端口
             configuration.setPort(port);
             message.append(sep).append(" port -> ").append(port);
-            sep = " ,";
+            sep = ", ";
         }
         if (ObjectUtil.isNotNull(database)) {
             // 设置要连接的数据库

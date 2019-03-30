@@ -11,6 +11,8 @@ import java.util.Arrays;
  */
 public class ConfigBean implements BaseBean, Serializable {
 
+    private static final long serialVersionUID = -7136966024637207548L;
+
     /**
      * 黑名单前缀
      *
