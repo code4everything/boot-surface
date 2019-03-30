@@ -8,7 +8,7 @@ package org.code4everything.boot.bean;
  * @author pantao
  * @since 2018/12/03
  */
-public class LogExBean<T> implements BaseBean {
+public class LogTempBean<T> implements BaseBean {
 
     /**
      * 可能抛出的异常
@@ -40,7 +40,7 @@ public class LogExBean<T> implements BaseBean {
      *
      * @since 1.0.4
      */
-    public LogExBean(T log, Throwable throwable, Object result) {
+    public LogTempBean(T log, Throwable throwable, Object result) {
         this.log = log;
         this.throwable = throwable;
         this.result = result;
@@ -81,6 +81,6 @@ public class LogExBean<T> implements BaseBean {
 
     @Override
     public String toString() {
-        return "LogExBean{" + "throwable=" + throwable + ", log=" + log + ", result=" + result + '}';
+        return "LogTempBean{" + "throwable=" + throwable + ", log=" + log + ", result=" + result + '}';
     }
 }
