@@ -47,7 +47,7 @@ public class ExceptionThrower {
      * @since 1.0.5
      */
     public ExceptionThrower throwIf(BooleanFunction function, RuntimeException exception) {
-        return throwIf(function.get(), exception);
+        return throwIf(function.call(), exception);
     }
 
     /**
