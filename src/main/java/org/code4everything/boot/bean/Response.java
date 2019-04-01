@@ -334,6 +334,28 @@ public class Response<T> implements Serializable {
     }
 
     /**
+     * 响应是否成功
+     *
+     * @return 响应是否成功
+     *
+     * @since 1.1.0
+     */
+    public boolean isOk() {
+        return code == BaseController.getOkCode();
+    }
+
+    /**
+     * 响应是否失败
+     *
+     * @return 响应是否失败
+     *
+     * @since 1.1.0
+     */
+    public boolean isError() {
+        return !isOk();
+    }
+
+    /**
      * 转字符串
      *
      * @return 字符串
@@ -374,10 +396,10 @@ public class Response<T> implements Serializable {
      */
     @Override
     public int hashCode() {
-        int hasCode = 7;
-        hasCode = hasCode * 23 + code;
-        hasCode = hasCode * 23 + msg.hashCode();
-        return data == null ? hasCode : hasCode * 23 + data.hashCode();
+        int hasCode = 1;
+        hasCode = hasCode << 8 ^ code;
+        hasCode = hasCode << 8 | msg.hashCode();
+        return data == null ? hasCode : hasCode << 8 & data.hashCode();
     }
 
     private void writeObject(ObjectOutputStream outputStream) throws IOException {
