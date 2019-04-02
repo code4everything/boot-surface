@@ -1,6 +1,7 @@
 package org.code4everything.boot.annotations;
 
 import com.alibaba.fastjson.JSONObject;
+import org.code4everything.boot.encoder.DefaultFieldEncoder;
 import org.code4everything.boot.encoder.FieldEncoder;
 
 import java.lang.annotation.*;
@@ -18,8 +19,8 @@ import java.lang.reflect.Field;
 public @interface Sealed {
 
     /**
-     * 加密方法，目前支持：md5 sha1 sha256，不支持的加密方法将用方法名覆盖字段值。其他加密方法需要继承 {@link FieldEncoder} 后重写 {@link
-     * FieldEncoder#encodeField(Field, Object, Sealed)} 方法
+     * 加密方法，默认仅支持：md5 sha1 sha256，不支持的加密方法将用方法名覆盖字段值。 其他加密方法需要继承 {@link DefaultFieldEncoder} 后重写 {@link
+     * DefaultFieldEncoder#encodeField(Field, Object, Sealed)} 方法或你自己实现 {@link FieldEncoder}接口
      *
      * @return 加密方法
      *

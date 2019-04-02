@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.cache.Cache;
 import org.code4everything.boot.base.FileUtils;
 import org.code4everything.boot.bean.ConfigBean;
+import org.code4everything.boot.encoder.DefaultFieldEncoder;
 import org.code4everything.boot.encoder.FieldEncoder;
 import org.code4everything.boot.interfaces.FileWatcher;
 import org.code4everything.boot.log.AopLogUtils;
@@ -20,6 +21,7 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.mail.javamail.JavaMailSender;
 
 import java.io.File;
+import java.util.Objects;
 
 /**
  * 工具配置类
@@ -57,7 +59,7 @@ public class BootConfig {
      *
      * @since 1.0.0
      */
-    private static FieldEncoder fieldEncoder = new FieldEncoder();
+    private static FieldEncoder fieldEncoder;
 
     private BootConfig() {}
 
@@ -225,6 +227,9 @@ public class BootConfig {
      * @since 1.0.0
      */
     public static FieldEncoder getFieldEncoder() {
+        if (Objects.isNull(fieldEncoder)) {
+            fieldEncoder = new DefaultFieldEncoder();
+        }
         return fieldEncoder;
     }
 
@@ -235,7 +240,7 @@ public class BootConfig {
      *
      * @since 1.0.0
      */
-    public static synchronized void setFieldEncoder(FieldEncoder fieldEncoder) {
+    public static void setFieldEncoder(FieldEncoder fieldEncoder) {
         BootConfig.fieldEncoder = fieldEncoder;
     }
 
@@ -257,7 +262,7 @@ public class BootConfig {
      *
      * @since 1.0.0
      */
-    public static synchronized void setSealed(boolean sealed) {
+    public static void setSealed(boolean sealed) {
         BootConfig.sealed = sealed;
     }
 
@@ -279,7 +284,7 @@ public class BootConfig {
      *
      * @since 1.0.0
      */
-    public static synchronized void setDebug(boolean debug) {
+    public static void setDebug(boolean debug) {
         BootConfig.debug = debug;
     }
 
@@ -301,7 +306,7 @@ public class BootConfig {
      *
      * @since 1.0.0
      */
-    public static synchronized void setMaxUploadFileSize(long maxUploadFileSize) {
+    public static void setMaxUploadFileSize(long maxUploadFileSize) {
         BootConfig.maxUploadFileSize = maxUploadFileSize;
     }
 }
