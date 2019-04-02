@@ -12,7 +12,7 @@ import org.code4everything.boot.annotations.AopLog;
 import org.code4everything.boot.bean.LogBean;
 import org.code4everything.boot.bean.LogTempBean;
 import org.code4everything.boot.config.BootConfig;
-import org.code4everything.boot.service.LogService;
+import org.code4everything.boot.service.BootLogService;
 
 import java.lang.reflect.Method;
 import java.util.Objects;
@@ -51,7 +51,7 @@ public class AopLogUtils {
     /**
      * 保存日志（不抛出异常），适用于 {@link Around} 注解的方法
      *
-     * @param service 日志服务 {@link LogService}
+     * @param service 日志服务 {@link BootLogService}
      * @param point 切点  {@link ProceedingJoinPoint}
      * @param <T> 日志表
      *
@@ -59,14 +59,14 @@ public class AopLogUtils {
      *
      * @since 1.0.4
      */
-    public static <T> LogTempBean<T> saveLog(LogService<T> service, ProceedingJoinPoint point) {
+    public static <T> LogTempBean<T> saveLog(BootLogService<T> service, ProceedingJoinPoint point) {
         return saveLog(service, point, true);
     }
 
     /**
      * 保存日志（不抛出异常），适用于 {@link Around} 注解的方法
      *
-     * @param service 日志服务 {@link LogService}
+     * @param service 日志服务 {@link BootLogService}
      * @param point 切点  {@link ProceedingJoinPoint}
      * @param shouldSave 是否保存日志
      * @param <T> 日志表
@@ -75,14 +75,14 @@ public class AopLogUtils {
      *
      * @since 1.0.4
      */
-    public static <T> LogTempBean<T> saveLog(LogService<T> service, ProceedingJoinPoint point, boolean shouldSave) {
+    public static <T> LogTempBean<T> saveLog(BootLogService<T> service, ProceedingJoinPoint point, boolean shouldSave) {
         return proceedAround(service, point, shouldSave);
     }
 
     /**
      * 保存日志，适用于 {@link Around} 注解的方法
      *
-     * @param service 日志服务 {@link LogService}
+     * @param service 日志服务 {@link BootLogService}
      * @param point 切点  {@link ProceedingJoinPoint}
      * @param <T> 日志表
      *
@@ -91,14 +91,14 @@ public class AopLogUtils {
      * @throws Throwable 可能发生的异常
      * @since 1.0.4
      */
-    public static <T> LogTempBean<T> saveLogWithThrowable(LogService<T> service, ProceedingJoinPoint point) throws Throwable {
+    public static <T> LogTempBean<T> saveLogWithThrowable(BootLogService<T> service, ProceedingJoinPoint point) throws Throwable {
         return saveLogWithThrowable(service, point, true);
     }
 
     /**
      * 保存日志，适用于 {@link Around} 注解的方法
      *
-     * @param service 日志服务 {@link LogService}
+     * @param service 日志服务 {@link BootLogService}
      * @param point 切点  {@link ProceedingJoinPoint}
      * @param shouldSave 是否保存日志
      * @param <T> 日志表
@@ -108,7 +108,7 @@ public class AopLogUtils {
      * @throws Throwable 可能发生的异常
      * @since 1.0.4
      */
-    public static <T> LogTempBean<T> saveLogWithThrowable(LogService<T> service, ProceedingJoinPoint point,
+    public static <T> LogTempBean<T> saveLogWithThrowable(BootLogService<T> service, ProceedingJoinPoint point,
                                                           boolean shouldSave) throws Throwable {
         LogTempBean<T> tempBean = proceedAround(service, point, shouldSave);
         if (Objects.isNull(tempBean.getThrowable())) {
@@ -120,7 +120,7 @@ public class AopLogUtils {
     /**
      * 保存日志信息，适用于非 {@link Around} 注解的方法
      *
-     * @param service 日志服务 {@link LogService}
+     * @param service 日志服务 {@link BootLogService}
      * @param key 缓存键，确保每个请求键是唯一的
      * @param point 切点  {@link JoinPoint}
      * @param throwable 异常抛出 {@link Throwable}
@@ -131,7 +131,7 @@ public class AopLogUtils {
      * @since 1.0.0
      */
     @SuppressWarnings("unchecked")
-    public static <T> T saveLog(LogService<T> service, String key, JoinPoint point, Throwable throwable) {
+    public static <T> T saveLog(BootLogService<T> service, String key, JoinPoint point, Throwable throwable) {
         T log;
         if (Objects.isNull(throwable)) {
             // 从切点获取日志基本信息，并进行保存
@@ -188,7 +188,7 @@ public class AopLogUtils {
     /**
      * 执行方法
      *
-     * @param service 日志服务 {@link LogService}
+     * @param service 日志服务 {@link BootLogService}
      * @param point 切点  {@link ProceedingJoinPoint}
      * @param saveLog 是否保存日志
      * @param <T> 日志表
@@ -197,7 +197,7 @@ public class AopLogUtils {
      *
      * @since 1.0.4
      */
-    private static <T> LogTempBean<T> proceedAround(LogService<T> service, ProceedingJoinPoint point, boolean saveLog) {
+    private static <T> LogTempBean<T> proceedAround(BootLogService<T> service, ProceedingJoinPoint point, boolean saveLog) {
         // 获取日志信息
         LogBean logBean = parse(point);
         Throwable t = null;

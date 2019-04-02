@@ -56,7 +56,7 @@ public interface LogDAO extends MongoRepository<Log, String> {}
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
 import org.code4everything.boot.bean.LogBean;
-import org.code4everything.boot.service.LogService;
+import org.code4everything.boot.service.BootLogService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -113,7 +113,7 @@ import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.code4everything.boot.constant.StringConsts;
 import org.code4everything.boot.log.AopLogUtils;
-import org.code4everything.boot.service.LogService;
+import org.code4everything.boot.service.BootLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

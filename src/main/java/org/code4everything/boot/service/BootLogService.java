@@ -8,7 +8,7 @@ import org.code4everything.boot.bean.LogBean;
  * @author pantao
  * @since 2018/11/10
  */
-public interface LogService<T> {
+public interface BootLogService<T> {
 
     /**
      * 保存日志信息

@@ -11,7 +11,7 @@ import org.code4everything.boot.config.BootConfig;
 import org.code4everything.boot.constant.IntegerConsts;
 import org.code4everything.boot.constant.MessageConsts;
 import org.code4everything.boot.exception.ExceptionThrower;
-import org.code4everything.boot.service.UserService;
+import org.code4everything.boot.service.BootUserService;
 import org.code4everything.boot.web.HttpUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
@@ -285,29 +285,29 @@ public class BaseController {
     /**
      * 获取用户
      *
-     * @param userService 用户服务
+     * @param service 用户服务
      * @param <T> 用户
      *
      * @return 用户
      *
      * @since 1.0.4
      */
-    public <T> T getUser(UserService<T> userService) {
-        return userService.getUserByToken(Strings.nullToEmpty(getToken()));
+    public <T> T getUser(BootUserService<T> service) {
+        return service.getUserByToken(Strings.nullToEmpty(getToken()));
     }
 
     /**
      * 获取用户
      *
-     * @param userService 用户服务
+     * @param service 用户服务
      * @param <T> 用户
      *
      * @return 用户
      *
      * @since 1.0.4
      */
-    public <T> T requireUser(UserService<T> userService) {
-        return AssertUtils.assertUserLoggedIn(userService.getUserByToken(requireToken()));
+    public <T> T requireUser(BootUserService<T> service) {
+        return AssertUtils.assertUserLoggedIn(service.getUserByToken(requireToken()));
     }
 
     /**

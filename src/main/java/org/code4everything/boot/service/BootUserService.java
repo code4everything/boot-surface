@@ -6,7 +6,7 @@ package org.code4everything.boot.service;
  * @author pantao
  * @since 2018-12-01
  */
-public interface UserService<T> {
+public interface BootUserService<T> {
 
     /**
      * 获取用户
