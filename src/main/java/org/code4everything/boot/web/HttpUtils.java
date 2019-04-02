@@ -45,6 +45,87 @@ public class HttpUtils {
     private HttpUtils() {}
 
     /**
+     * 获取布尔值
+     *
+     * @param request {@link HttpServletRequest}
+     * @param key 键
+     *
+     * @return 布尔值
+     *
+     * @since 1.1.0
+     */
+    public static boolean getBooleanValue(HttpServletRequest request, String key) {
+        return getBooleanValue(request, key, false);
+    }
+
+    /**
+     * 获取布尔值
+     *
+     * @param request {@link HttpServletRequest}
+     * @param key 键
+     * @param defaultValue 默认值
+     *
+     * @return 布尔值
+     *
+     * @since 1.1.0
+     */
+    public static boolean getBooleanValue(HttpServletRequest request, String key, boolean defaultValue) {
+        String value = getString(request, key);
+        if (Boolean.TRUE.toString().equalsIgnoreCase(value)) {
+            return true;
+        }
+        if (Boolean.FALSE.toString().equalsIgnoreCase(value)) {
+            return false;
+        }
+        return defaultValue;
+
+    }
+
+    /**
+     * 获取布尔值
+     *
+     * @param request {@link HttpServletRequest}
+     * @param key 键
+     *
+     * @return 布尔值
+     *
+     * @since 1.1.0
+     */
+    public static Boolean getBoolean(HttpServletRequest request, String key) {
+        return getBoolean(request, key, false);
+    }
+
+    /**
+     * 获取布尔值
+     *
+     * @param request {@link HttpServletRequest}
+     * @param key 键
+     * @param defaultValue 默认值
+     *
+     * @return 布尔值
+     *
+     * @since 1.1.0
+     */
+    public static Boolean getBoolean(HttpServletRequest request, String key, boolean defaultValue) {
+        String value = getString(request, key);
+        if (Boolean.TRUE.toString().equalsIgnoreCase(value)) {
+            return Boolean.TRUE;
+        }
+        if (Boolean.FALSE.toString().equalsIgnoreCase(value)) {
+            return Boolean.FALSE;
+        }
+        return defaultValue;
+    }
+
+    public static String getString(HttpServletRequest request, String key) {
+        return request.getParameter(key);
+    }
+
+    public static String getString(HttpServletRequest request, String key, String defaultValue) {
+        return ObjectUtil.defaultIfNull(request.getParameter(key), defaultValue);
+    }
+
+    /**
      * 解析HTTP请求中的Body
      *
      * @param request {@link HttpServletRequest}
