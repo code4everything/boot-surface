@@ -46,7 +46,7 @@ public interface FileDAO extends MongoRepository<FileInfo, String> {
 #### 新建一个文件服务接口
 
 ``` java
-import org.code4everything.boot.service.FileService;
+import org.code4everything.boot.service.BootFileService;
 
 public interface DemoFileService extends FileService<FileInfo> {}
 ```

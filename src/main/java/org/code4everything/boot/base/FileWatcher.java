@@ -1,4 +1,4 @@
-package org.code4everything.boot.interfaces;
+package org.code4everything.boot.base;
 
 import java.nio.file.Path;
 import java.nio.file.WatchEvent;

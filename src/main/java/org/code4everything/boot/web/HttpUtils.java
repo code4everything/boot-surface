@@ -12,7 +12,7 @@ import org.code4everything.boot.bean.Response;
 import org.code4everything.boot.config.BootConfig;
 import org.code4everything.boot.constant.MessageConsts;
 import org.code4everything.boot.constant.StringConsts;
-import org.code4everything.boot.service.FileService;
+import org.code4everything.boot.service.BootFileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.FileSystemResource;
@@ -117,10 +117,31 @@ public class HttpUtils {
         return defaultValue;
     }
 
+    /**
+     * 获取字符串
+     *
+     * @param request {@link HttpServletRequest}
+     * @param key 键
+     *
+     * @return 字符串
+     *
+     * @since 1.1.0
+     */
     public static String getString(HttpServletRequest request, String key) {
         return request.getParameter(key);
     }
 
+    /**
+     * 获取字符串
+     *
+     * @param request {@link HttpServletRequest}
+     * @param key 键
+     * @param defaultValue 默认值
+     *
+     * @return 字符串
+     *
+     * @since 1.1.0
+     */
     public static String getString(HttpServletRequest request, String key, String defaultValue) {
         return ObjectUtil.defaultIfNull(request.getParameter(key), defaultValue);
     }
@@ -176,7 +197,6 @@ public class HttpUtils {
         return StrUtil.isBlank(token) ? request.getParameter(tokenKey) : token;
     }
 
-
     /**
      * 获取Token
      *
@@ -193,7 +213,7 @@ public class HttpUtils {
     /**
      * 向浏览器响应文件
      *
-     * @param fileService 文件服务 {@link FileService}
+     * @param service 文件服务 {@link BootFileService}
      * @param request HTTP请求
      * @param <T> 文件实体类型
      *
@@ -202,9 +222,9 @@ public class HttpUtils {
      * @throws IOException 可能发生的异常
      * @since 1.0.2
      */
-    public static <T> ResponseEntity<InputStreamSource> responseFile(FileService<T> fileService,
+    public static <T> ResponseEntity<InputStreamSource> responseFile(BootFileService<T> service,
                                                                      HttpServletRequest request) throws IOException {
-        return responseFile(fileService.getLocalPathByAccessUrl(request.getServletPath()));
+        return responseFile(service.getLocalPathByAccessUrl(request.getServletPath()));
     }
 
     /**
@@ -233,8 +253,8 @@ public class HttpUtils {
      * 批量上传文件
      *
      * @param request 文件请求 {@link MultipartHttpServletRequest}
-     * @param storagePath 文件存储路径，如：/root/boot/
-     * @param digestBytes 是否计算文件的MD5码（大文件不建议计算，防止堆内存泄漏）
+     * @param storage 文件存储路径，如：/root/boot/
+     * @param md5 是否计算文件的MD5码（大文件不建议计算，防止堆内存泄漏）
      * @param <T> 数据表类型
      *
      * @return 响应结果
@@ -242,110 +262,108 @@ public class HttpUtils {
      * @since 1.0.0
      */
     public static <T> Response<ArrayList<Response<T>>> multiUpload(MultipartHttpServletRequest request,
-                                                                   String storagePath, boolean digestBytes) {
-        return multiUpload(new FileService<T>() {}, request, storagePath, digestBytes, null, false);
+                                                                   String storage, boolean md5) {
+        return multiUpload(new BootFileService<T>() {}, request, storage, md5, null, false);
     }
 
     /**
      * 批量上传文件
      *
      * @param request 文件请求 {@link MultipartHttpServletRequest}
-     * @param storagePath 文件存储路径，如：/root/boot/
-     * @param digestBytes 是否计算文件的MD5码（大文件不建议计算，防止堆内存泄漏）
+     * @param storage 文件存储路径，如：/root/boot/
+     * @param md5 是否计算文件的MD5码（大文件不建议计算，防止堆内存泄漏）
      * @param <T> 数据表类型
-     * @param forceWrite 是否强制写入文件
+     * @param force 是否强制写入文件
      *
      * @return 响应结果
      *
      * @since 1.0.4
      */
     public static <T> Response<ArrayList<Response<T>>> multiUpload(MultipartHttpServletRequest request,
-                                                                   String storagePath, boolean digestBytes,
-                                                                   boolean forceWrite) {
-        return multiUpload(new FileService<T>() {}, request, storagePath, digestBytes, null, forceWrite);
+                                                                   String storage, boolean md5, boolean force) {
+        return multiUpload(new BootFileService<T>() {}, request, storage, md5, null, force);
     }
 
     /**
      * 批量上传文件
      *
-     * @param fileService 文件服务 {@link FileService}
+     * @param service 文件服务 {@link BootFileService}
      * @param request 文件请求 {@link MultipartHttpServletRequest}
-     * @param storagePath 文件存储路径，如：/root/boot/
-     * @param digestBytes 是否计算文件的MD5码（大文件不建议计算，防止堆内存泄漏）
+     * @param storage 文件存储路径，如：/root/boot/
+     * @param md5 是否计算文件的MD5码（大文件不建议计算，防止堆内存泄漏）
      * @param <T> 数据表类型
      *
      * @return 响应结果
      *
      * @since 1.0.0
      */
-    public static <T> Response<ArrayList<Response<T>>> multiUpload(FileService<T> fileService,
+    public static <T> Response<ArrayList<Response<T>>> multiUpload(BootFileService<T> service,
                                                                    MultipartHttpServletRequest request,
-                                                                   String storagePath, boolean digestBytes) {
-        return multiUpload(fileService, request, storagePath, digestBytes, null, false);
+                                                                   String storage, boolean md5) {
+        return multiUpload(service, request, storage, md5, null, false);
     }
 
     /**
      * 批量上传文件
      *
-     * @param fileService 文件服务 {@link FileService}
+     * @param service 文件服务 {@link BootFileService}
      * @param request 文件请求 {@link MultipartHttpServletRequest}
-     * @param storagePath 文件存储路径，如：/root/boot/
-     * @param digestBytes 是否计算文件的MD5码（大文件不建议计算，防止堆内存泄漏）
+     * @param storage 文件存储路径，如：/root/boot/
+     * @param md5 是否计算文件的MD5码（大文件不建议计算，防止堆内存泄漏）
      * @param <T> 数据表类型
-     * @param forceWrite 是否强制写入文件
+     * @param force 是否强制写入文件
      *
      * @return 响应结果
      *
      * @since 1.0.4
      */
-    public static <T> Response<ArrayList<Response<T>>> multiUpload(FileService<T> fileService,
+    public static <T> Response<ArrayList<Response<T>>> multiUpload(BootFileService<T> service,
                                                                    MultipartHttpServletRequest request,
-                                                                   String storagePath, boolean digestBytes,
-                                                                   boolean forceWrite) {
-        return multiUpload(fileService, request, storagePath, digestBytes, null, forceWrite);
+                                                                   String storage, boolean md5, boolean force) {
+        return multiUpload(service, request, storage, md5, null, force);
     }
 
     /**
      * 批量上传文件
      *
-     * @param fileService 文件服务 {@link FileService}
+     * @param service 文件服务 {@link BootFileService}
      * @param request 文件请求 {@link MultipartHttpServletRequest}
-     * @param storagePath 文件存储路径，如：/root/boot/
-     * @param digestBytes 是否计算文件的MD5码（大文件不建议计算，防止堆内存泄漏）
-     * @param params 自定义参数，在自己实现的 {@link FileService}方法中使用
+     * @param storage 文件存储路径，如：/root/boot/
+     * @param md5 是否计算文件的MD5码（大文件不建议计算，防止堆内存泄漏）
+     * @param params 自定义参数，在自己实现的 {@link BootFileService}方法中使用
      * @param <T> 数据表类型
      *
      * @return 响应结果
      *
      * @since 1.0.0
      */
-    public static <T> Response<ArrayList<Response<T>>> multiUpload(FileService<T> fileService,
+    public static <T> Response<ArrayList<Response<T>>> multiUpload(BootFileService<T> service,
                                                                    MultipartHttpServletRequest request,
-                                                                   String storagePath, boolean digestBytes,
+                                                                   String storage, boolean md5,
                                                                    Map<String, Object> params) {
-        return multiUpload(fileService, request, storagePath, digestBytes, params, false);
+        return multiUpload(service, request, storage, md5, params, false);
     }
 
 
     /**
      * 批量上传文件
      *
-     * @param fileService 文件服务 {@link FileService}
+     * @param service 文件服务 {@link BootFileService}
      * @param request 文件请求 {@link MultipartHttpServletRequest}
-     * @param storagePath 文件存储路径，如：/root/boot/
-     * @param digestBytes 是否计算文件的MD5码（大文件不建议计算，防止堆内存泄漏）
-     * @param params 自定义参数，在自己实现的 {@link FileService}方法中使用
+     * @param storage 文件存储路径，如：/root/boot/
+     * @param md5 是否计算文件的MD5码（大文件不建议计算，防止堆内存泄漏）
+     * @param params 自定义参数，在自己实现的 {@link BootFileService}方法中使用
      * @param <T> 数据表类型
-     * @param forceWrite 是否强制写入文件
+     * @param force 是否强制写入文件
      *
      * @return 响应结果
      *
      * @since 1.0.4
      */
-    public static <T> Response<ArrayList<Response<T>>> multiUpload(FileService<T> fileService,
+    public static <T> Response<ArrayList<Response<T>>> multiUpload(BootFileService<T> service,
                                                                    MultipartHttpServletRequest request,
-                                                                   String storagePath, boolean digestBytes,
-                                                                   Map<String, Object> params, boolean forceWrite) {
+                                                                   String storage, boolean md5,
+                                                                   Map<String, Object> params, boolean force) {
         Map<String, MultipartFile> fileMap = request.getFileMap();
         if (CollectionUtil.isEmpty(fileMap)) {
             // 文件集合为空
@@ -354,7 +372,7 @@ public class HttpUtils {
             ArrayList<Response<T>> list = new ArrayList<>();
             Collection<MultipartFile> set = fileMap.values();
             // 遍历的上传每个文件，并记录结果
-            set.forEach(f -> list.add(upload(fileService, f, storagePath, digestBytes, params, forceWrite)));
+            set.forEach(f -> list.add(upload(service, f, storage, md5, params, force)));
             return new Response<>(list);
         }
     }
@@ -372,34 +390,33 @@ public class HttpUtils {
      * @since 1.0.0
      */
     public static <T> Response<T> upload(MultipartFile file, String storagePath, boolean digestBytes) {
-        return upload(new FileService<T>() {}, file, storagePath, digestBytes, null, false);
+        return upload(new BootFileService<T>() {}, file, storagePath, digestBytes, null, false);
     }
 
     /**
      * 文件上传（无数据表）
      *
      * @param file 文件 {@link MultipartFile}
-     * @param storagePath 文件存储路径，如：/root/boot/
-     * @param digestBytes 是否计算文件的MD5码（大文件不建议计算，防止堆内存泄漏）
+     * @param storage 文件存储路径，如：/root/boot/
+     * @param md5 是否计算文件的MD5码（大文件不建议计算，防止堆内存泄漏）
      * @param <T> 数据表类型
-     * @param forceWrite 是否强制写入文件
+     * @param force 是否强制写入文件
      *
      * @return 响应结果 {@link Response}。如果上传成功，{@link Response#getMsg()}返回文件的MD5文件名
      *
      * @since 1.0.4
      */
-    public static <T> Response<T> upload(MultipartFile file, String storagePath, boolean digestBytes,
-                                         boolean forceWrite) {
-        return upload(new FileService<T>() {}, file, storagePath, digestBytes, null, forceWrite);
+    public static <T> Response<T> upload(MultipartFile file, String storage, boolean md5, boolean force) {
+        return upload(new BootFileService<T>() {}, file, storage, md5, null, force);
     }
 
     /**
      * 文件上传
      *
-     * @param fileService 文件服务 {@link FileService}
+     * @param service 文件服务 {@link BootFileService}
      * @param file 文件 {@link MultipartFile}
-     * @param storagePath 文件存储路径，如：/root/boot/
-     * @param digestBytes 是否计算文件的MD5码（大文件不建议计算，防止堆内存泄漏）
+     * @param storage 文件存储路径，如：/root/boot/
+     * @param md5 是否计算文件的MD5码（大文件不建议计算，防止堆内存泄漏）
      * @param <T> 数据表类型
      *
      * @return 响应结果 {@link Response}。如果文件上传成功且最后得到的 {@link Response#getData()}为NULL，则{@link
@@ -407,39 +424,38 @@ public class HttpUtils {
      *
      * @since 1.0.0
      */
-    public static <T> Response<T> upload(FileService<T> fileService, MultipartFile file, String storagePath,
-                                         boolean digestBytes) {
-        return upload(fileService, file, storagePath, digestBytes, null, false);
+    public static <T> Response<T> upload(BootFileService<T> service, MultipartFile file, String storage, boolean md5) {
+        return upload(service, file, storage, md5, null, false);
     }
 
     /**
      * 文件上传
      *
-     * @param fileService 文件服务 {@link FileService}
+     * @param service 文件服务 {@link BootFileService}
      * @param file 文件 {@link MultipartFile}
-     * @param storagePath 文件存储路径，如：/root/boot/
-     * @param digestBytes 是否计算文件的MD5码（大文件不建议计算，防止堆内存泄漏）
+     * @param storage 文件存储路径，如：/root/boot/
+     * @param md5 是否计算文件的MD5码（大文件不建议计算，防止堆内存泄漏）
      * @param <T> 数据表类型
-     * @param forceWrite 是否强制写入文件
+     * @param force 是否强制写入文件
      *
      * @return 响应结果 {@link Response}。如果文件上传成功且最后得到的 {@link Response#getData()}为NULL，则{@link
      *         Response#getMsg()}将返回文件的MD5文件名
      *
      * @since 1.0.4
      */
-    public static <T> Response<T> upload(FileService<T> fileService, MultipartFile file, String storagePath,
-                                         boolean digestBytes, boolean forceWrite) {
-        return upload(fileService, file, storagePath, digestBytes, null, forceWrite);
+    public static <T> Response<T> upload(BootFileService<T> service, MultipartFile file, String storage, boolean md5,
+                                         boolean force) {
+        return upload(service, file, storage, md5, null, force);
     }
 
     /**
      * 文件上传
      *
-     * @param fileService 文件服务 {@link FileService}
+     * @param service 文件服务 {@link BootFileService}
      * @param file 文件 {@link MultipartFile}
-     * @param storagePath 文件存储路径，如：/root/boot/
-     * @param digestBytes 是否计算文件的MD5码（大文件不建议计算，防止堆内存泄漏）
-     * @param params 自定义参数，在自己实现的 {@link FileService}方法中使用
+     * @param storage 文件存储路径，如：/root/boot/
+     * @param md5 是否计算文件的MD5码（大文件不建议计算，防止堆内存泄漏）
+     * @param params 自定义参数，在自己实现的 {@link BootFileService}方法中使用
      * @param <T> 数据表类型
      *
      * @return 响应结果 {@link Response}。如果文件上传成功且最后得到的 {@link Response#getData()}为NULL，则{@link
@@ -447,29 +463,29 @@ public class HttpUtils {
      *
      * @since 1.0.0
      */
-    public static <T> Response<T> upload(FileService<T> fileService, MultipartFile file, String storagePath,
-                                         boolean digestBytes, Map<String, Object> params) {
-        return upload(fileService, file, storagePath, digestBytes, params, false);
+    public static <T> Response<T> upload(BootFileService<T> service, MultipartFile file, String storage, boolean md5,
+                                         Map<String, Object> params) {
+        return upload(service, file, storage, md5, params, false);
     }
 
     /**
      * 文件上传
      *
-     * @param fileService 文件服务 {@link FileService}
+     * @param service 文件服务 {@link BootFileService}
      * @param file 文件 {@link MultipartFile}
-     * @param storagePath 文件存储路径，如：/root/boot/
-     * @param digestBytes 是否计算文件的MD5码（大文件不建议计算，防止堆内存泄漏）
-     * @param params 自定义参数，在自己实现的 {@link FileService}方法中使用
+     * @param storage 文件存储路径，如：/root/boot/
+     * @param md5 是否计算文件的MD5码（大文件不建议计算，防止堆内存泄漏）
+     * @param params 自定义参数，在自己实现的 {@link BootFileService}方法中使用
      * @param <T> 数据表类型
-     * @param forceWrite 是否强制写入文件
+     * @param force 是否强制写入文件
      *
      * @return 响应结果 {@link Response}。如果文件上传成功且最后得到的 {@link Response#getData()}为NULL，则{@link
      *         Response#getMsg()}将返回文件的MD5文件名
      *
      * @since 1.0.0
      */
-    public static <T> Response<T> upload(FileService<T> fileService, MultipartFile file, String storagePath,
-                                         boolean digestBytes, Map<String, Object> params, boolean forceWrite) {
+    public static <T> Response<T> upload(BootFileService<T> service, MultipartFile file, String storage, boolean md5,
+                                         Map<String, Object> params, boolean force) {
         Response<T> result = new Response<>();
         // 检测文件大小是否超标
         if (file.getSize() > BootConfig.getMaxUploadFileSize()) {
@@ -477,10 +493,10 @@ public class HttpUtils {
         }
         // 格式化存储路径
         MultipartFileBean fileBean = new MultipartFileBean();
-        fileBean.setStoragePath(storagePath + (storagePath.endsWith(File.separator) ? "" : File.separator));
+        fileBean.setStoragePath(storage + (storage.endsWith(File.separator) ? "" : File.separator));
         // 设置文件信息
         String ofn = file.getOriginalFilename();
-        if (digestBytes) {
+        if (md5) {
             try {
                 // 设置MD5
                 fileBean.setMd5(DigestUtil.md5Hex(file.getBytes()));
@@ -494,12 +510,12 @@ public class HttpUtils {
         }
         fileBean.setOriginalFilename(ofn).setSize(file.getSize()).setParams(params);
         // 检测文件是否存在
-        Boolean exists = fileService.exists(fileBean);
+        Boolean exists = service.exists(fileBean);
         boolean shouldWrite = false;
         T t = null;
         if (Objects.isNull(exists)) {
             // 如果进入这里，表示用户没有实现exists方法
-            t = fileService.getBy(fileBean);
+            t = service.getBy(fileBean);
             if (Objects.isNull(t)) {
                 // 不存在时则可以写入磁盘
                 shouldWrite = true;
@@ -508,7 +524,7 @@ public class HttpUtils {
             // 不存在时则可以写入磁盘
             shouldWrite = true;
         }
-        if (shouldWrite || forceWrite) {
+        if (shouldWrite || force) {
             try {
                 // 写入磁盘
                 file.transferTo(new File(fileBean.getStoragePath() + fileBean.getFilename()));
@@ -517,7 +533,7 @@ public class HttpUtils {
                 return result.error(HttpStatus.HTTP_UNAVAILABLE, ofn + " upload failed");
             }
             // 将数据写入数据库
-            t = fileService.save(fileBean, t);
+            t = service.save(fileBean, t);
         }
         return Objects.isNull(t) ? result.setMsg(fileBean.getFilename()) : result.setData(t);
     }

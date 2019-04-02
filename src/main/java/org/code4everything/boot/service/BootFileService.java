@@ -11,7 +11,7 @@ import javax.annotation.Nullable;
  * @author pantao
  * @since 2018/11/2
  **/
-public interface FileService<T> {
+public interface BootFileService<T> {
 
     /**
      * 检测当前 {@link MultipartFileBean}是否存在，如果文件不存在则写入磁盘，否则不写入，返回NULL时会尝试调用 {@link #getBy(MultipartFileBean)}。

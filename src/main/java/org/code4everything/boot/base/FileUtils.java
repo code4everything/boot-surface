@@ -11,7 +11,6 @@ import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
 import org.code4everything.boot.config.BootConfig;
 import org.code4everything.boot.constant.StringConsts;
-import org.code4everything.boot.interfaces.FileWatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -3,7 +3,6 @@ package org.code4everything.boot.web.mvc;
 import cn.hutool.core.util.StrUtil;
 import org.code4everything.boot.bean.ConfigBean;
 import org.code4everything.boot.config.BootConfig;
-import org.code4everything.boot.interfaces.InterceptHandler;
 import org.code4everything.boot.web.HttpUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

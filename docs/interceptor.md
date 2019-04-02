@@ -53,7 +53,7 @@ public void addInterceptors(InterceptorRegistry registry) {
 
 ``` java
 import cn.hutool.core.lang.Validator;
-import org.code4everything.boot.interfaces.InterceptHandler;
+import org.code4everything.boot.web.mvc.InterceptHandler;
 import org.code4everything.boot.web.mvc.DefaultWebInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;

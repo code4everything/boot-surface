@@ -1,4 +1,4 @@
-package org.code4everything.boot.interfaces;
+package org.code4everything.boot.web.mvc;
 
 import cn.hutool.http.ContentType;
 import cn.hutool.http.HttpStatus;

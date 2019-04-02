@@ -9,7 +9,7 @@ import org.code4everything.boot.base.FileUtils;
 import org.code4everything.boot.bean.ConfigBean;
 import org.code4everything.boot.encoder.DefaultFieldEncoder;
 import org.code4everything.boot.encoder.FieldEncoder;
-import org.code4everything.boot.interfaces.FileWatcher;
+import org.code4everything.boot.base.FileWatcher;
 import org.code4everything.boot.log.AopLogUtils;
 import org.code4everything.boot.message.MailUtils;
 import org.code4everything.boot.module.redis.RedisTemplateUtils;
