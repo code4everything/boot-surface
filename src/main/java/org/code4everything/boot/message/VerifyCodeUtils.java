@@ -6,7 +6,6 @@ import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import org.code4everything.boot.interfaces.EmailCallable;
 
 import javax.mail.MessagingException;
 import java.util.concurrent.TimeUnit;
@@ -61,7 +60,7 @@ public class VerifyCodeUtils {
      *
      * @since 1.0.9
      */
-    public static void removeVerifyCode(String key) {
+    public static void remove(String key) {
         codeCache.asMap().remove(key);
         frequentlyCache.asMap().remove(key);
     }
@@ -76,7 +75,7 @@ public class VerifyCodeUtils {
      *
      * @since 1.0.9
      */
-    public static boolean validateVerifyCode(String key, String code) {
+    public static boolean validate(String key, String code) {
         return StrUtil.isNotEmpty(code) && code.equals(codeCache.getIfPresent(key));
     }
 
@@ -90,10 +89,10 @@ public class VerifyCodeUtils {
      *
      * @since 1.0.9
      */
-    public static boolean validateVerifyCodeAndRemove(String key, String code) {
-        boolean result = validateVerifyCode(key, code);
+    public static boolean validateAndRemove(String key, String code) {
+        boolean result = validate(key, code);
         if (result) {
-            removeVerifyCode(key);
+            remove(key);
         }
         return result;
     }
@@ -109,8 +108,8 @@ public class VerifyCodeUtils {
      *
      * @since 1.0.9
      */
-    public static String sendVerifyCodeByEmailAsync(String email, String subject, String template) {
-        return sendVerifyCodeByEmailAsync(email, subject, template, null);
+    public static String sendByMailAsync(String email, String subject, String template) {
+        return sendByMailAsync(email, subject, template, null);
     }
 
     /**
@@ -119,15 +118,14 @@ public class VerifyCodeUtils {
      * @param email 邮箱
      * @param subject 主题
      * @param template 内容模板
-     * @param callable 回调函数
+     * @param callback 回调函数
      *
      * @return 验证码
      *
      * @since 1.0.9
      */
-    public static String sendVerifyCodeByEmailAsync(String email, String subject, String template,
-                                                    EmailCallable callable) {
-        return sendVerifyCodeByEmailAsync(email, subject, template, 6, callable);
+    public static String sendByMailAsync(String email, String subject, String template, MailCallback callback) {
+        return sendByMailAsync(email, subject, template, 6, callback);
     }
 
     /**
@@ -137,14 +135,14 @@ public class VerifyCodeUtils {
      * @param subject 主题
      * @param template 内容模板
      * @param codeLen 验证码长度
-     * @param callable 回调函数
+     * @param callback 回调函数
      *
      * @return 验证码
      *
      * @since 1.0.9
      */
-    public static String sendVerifyCodeByEmailAsync(String email, String subject, String template, int codeLen,
-                                                    EmailCallable callable) {
+    public static String sendByMailAsync(String email, String subject, String template, int codeLen,
+                                         MailCallback callback) {
         // 生成验证码
         final String code = RandomUtil.randomNumbers(codeLen);
         // 异步执行，并进行相应的回调
@@ -153,18 +151,18 @@ public class VerifyCodeUtils {
             String html = StrUtil.format(String.format(template, code), code);
             try {
                 // 发送验证码
-                EmailUtils.sendEmail(email, subject, html);
+                MailUtils.send(email, subject, html);
                 // 放入缓存
                 codeCache.put(email, code);
                 frequentlyCache.put(email, code);
                 // 成功回调
-                if (ObjectUtil.isNotNull(callable)) {
-                    callable.handleSuccess(email, subject, html);
+                if (ObjectUtil.isNotNull(callback)) {
+                    callback.handleSuccess(email, subject, html);
                 }
             } catch (MessagingException e) {
-                if (ObjectUtil.isNotNull(callable)) {
+                if (ObjectUtil.isNotNull(callback)) {
                     // 失败回调
-                    callable.handleFailed(email, subject, html, e);
+                    callback.handleFailed(email, subject, html, e);
                 }
             }
         });
@@ -183,8 +181,8 @@ public class VerifyCodeUtils {
      * @throws MessagingException 异常
      * @since 1.0.9
      */
-    public static String sendVerifyCodeByEmail(String email, String subject, String template) throws MessagingException {
-        return sendVerifyCodeByEmail(email, subject, template, 6);
+    public static String sendByMail(String email, String subject, String template) throws MessagingException {
+        return sendByMail(email, subject, template, 6);
     }
 
     /**
@@ -200,11 +198,11 @@ public class VerifyCodeUtils {
      * @throws MessagingException 异常
      * @since 1.0.9
      */
-    public static String sendVerifyCodeByEmail(String email, String subject, String template, int codeLen) throws MessagingException {
+    public static String sendByMail(String email, String subject, String template, int codeLen) throws MessagingException {
         // 生成验证码
         final String code = RandomUtil.randomNumbers(codeLen);
         // 格式化并发送
-        EmailUtils.sendEmail(email, subject, StrUtil.format(String.format(template, code), code));
+        MailUtils.send(email, subject, StrUtil.format(String.format(template, code), code));
         // 放入缓存
         codeCache.put(email, code);
         frequentlyCache.put(email, code);

@@ -11,7 +11,7 @@ import org.code4everything.boot.encoder.DefaultFieldEncoder;
 import org.code4everything.boot.encoder.FieldEncoder;
 import org.code4everything.boot.interfaces.FileWatcher;
 import org.code4everything.boot.log.AopLogUtils;
-import org.code4everything.boot.message.EmailUtils;
+import org.code4everything.boot.message.MailUtils;
 import org.code4everything.boot.module.redis.RedisTemplateUtils;
 import org.code4everything.boot.web.mvc.BaseController;
 import org.code4everything.boot.web.mvc.DefaultWebInterceptor;
@@ -72,7 +72,7 @@ public class BootConfig {
      * @since 1.0.9
      */
     public static void setMailSender(String outbox, JavaMailSender mailSender) {
-        EmailUtils.setMailSender(outbox, mailSender);
+        MailUtils.setMailSender(outbox, mailSender);
     }
 
     /**

@@ -1,4 +1,4 @@
-package org.code4everything.boot.interfaces;
+package org.code4everything.boot.message;
 
 import javax.mail.MessagingException;
 
@@ -6,7 +6,7 @@ import javax.mail.MessagingException;
  * @author pantao
  * @since 2019/3/22
  **/
-public interface EmailCallable {
+public interface MailCallback {
 
     /**
      * 异步发送邮件的回调
