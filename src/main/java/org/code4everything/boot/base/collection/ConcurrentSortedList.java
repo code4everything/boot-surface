@@ -13,7 +13,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * @since 2019-01-19
  */
 @ThreadSafe
-public class ConcurrentSortedList<E, T extends List<E>> extends SortedList<E, T> {
+public final class ConcurrentSortedList<E, T extends List<E>> extends SortedList<E, T> {
 
     /**
      * 重入锁
