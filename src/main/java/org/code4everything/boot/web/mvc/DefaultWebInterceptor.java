@@ -91,25 +91,16 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
         }
         // 黑名单
         if (StrUtil.startWithAny(url, DefaultWebInterceptor.configBean.getBlackPrefixes())) {
-            if (BootConfig.isDebug()) {
-                LOGGER.info("url -> {}, in black list", url);
-            }
             interceptHandler.handleBlackList(request, response, handler);
             return false;
         }
         // 白名单
         if (StrUtil.startWithAny(url, DefaultWebInterceptor.configBean.getWhitePrefixes())) {
-            if (BootConfig.isDebug()) {
-                LOGGER.info("url -> {}, in white list", url);
-            }
             interceptHandler.handleWhiteList(request, response, handler);
             return true;
         }
         // 拦截名单
         if (StrUtil.startWithAny(url, DefaultWebInterceptor.configBean.getInterceptPrefixes())) {
-            if (BootConfig.isDebug()) {
-                LOGGER.info("url -> {}, in intercept list", url);
-            }
             return interceptHandler.handleInterceptList(request, response, handler);
         }
         return true;

@@ -86,7 +86,8 @@ public class DefaultExceptionHandler implements HandlerExceptionResolver {
     protected void wrapAttributes(Map<String, Object> attr, HttpServletRequest req, Exception ex, ExceptionBean bean) {
         attr.put("code", bean.getCode());
         attr.put("msg", Validator.isEmpty(bean.getMsg()) ? ex.getMessage() : bean.getMsg());
-        attr.put("timestamp", DateUtil.format(new Date(), DATE_FORMAT));
+        attr.put("timestamp", System.currentTimeMillis());
+        attr.put("dateTime", DateUtil.formatDateTime(new Date(System.currentTimeMillis())));
         String queryString = req.getQueryString();
         attr.put("path", req.getRequestURI() + (Validator.isEmpty(queryString) ? "" : "?" + queryString));
         attr.put("data", ex.getMessage());
@@ -146,7 +147,7 @@ public class DefaultExceptionHandler implements HandlerExceptionResolver {
     public ModelAndView resolveException(HttpServletRequest req, HttpServletResponse res, Object o, Exception e) {
         if (BootConfig.isDebug()) {
             LOGGER.error("url -> {}, ip -> {}, exception -> {}, message -> {}", req.getServletPath(),
-                    req.getRemoteAddr(), e.getClass().getName(), e.getMessage());
+                         req.getRemoteAddr(), e.getClass().getName(), e.getMessage());
             // 输出异常信息
             StringWriter stringWriter = new StringWriter();
             e.printStackTrace(new PrintWriter(stringWriter));

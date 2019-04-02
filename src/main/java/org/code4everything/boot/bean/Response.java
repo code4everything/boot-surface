@@ -2,7 +2,6 @@ package org.code4everything.boot.bean;
 
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.http.HttpStatus;
-import com.alibaba.fastjson.annotation.JSONField;
 import org.code4everything.boot.config.BootConfig;
 import org.code4everything.boot.constant.MessageConsts;
 import org.code4everything.boot.web.mvc.BaseController;
@@ -11,7 +10,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Objects;
 
 /**
@@ -57,8 +56,7 @@ public class Response<T> implements Serializable {
      *
      * @since 1.0.0
      */
-    @JSONField(format = "yyyy-MM-dd HH:mm:ss.SSS")
-    private Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+    private Long timestamp = System.currentTimeMillis();
 
     /**
      * 无参构造函数
@@ -204,7 +202,7 @@ public class Response<T> implements Serializable {
      *
      * @since 1.0.0
      */
-    public Timestamp getTimestamp() {
+    public Long getTimestamp() {
         return timestamp;
     }
 
@@ -217,9 +215,20 @@ public class Response<T> implements Serializable {
      *
      * @since 1.0.0
      */
-    public Response<T> setTimestamp(Timestamp timestamp) {
+    public Response<T> setTimestamp(Long timestamp) {
         this.timestamp = timestamp;
         return this;
+    }
+
+    /**
+     * 获取当前时间
+     *
+     * @return 当前时间
+     *
+     * @since 1.1.0
+     */
+    public Date getDateTime() {
+        return new Date(timestamp);
     }
 
     /**
@@ -230,7 +239,7 @@ public class Response<T> implements Serializable {
      * @since 1.0.9
      */
     public Response<T> setTimestamp() {
-        return setTimestamp(new Timestamp(System.currentTimeMillis()));
+        return setTimestamp(System.currentTimeMillis());
     }
 
 
@@ -405,9 +414,9 @@ public class Response<T> implements Serializable {
     private void writeObject(ObjectOutputStream outputStream) throws IOException {
         outputStream.defaultWriteObject();
         outputStream.writeInt(code);
+        outputStream.writeLong(timestamp);
         outputStream.writeBoolean(sealed);
         outputStream.writeObject(msg);
-        outputStream.writeObject(timestamp);
         outputStream.writeObject(data);
     }
 
@@ -415,9 +424,9 @@ public class Response<T> implements Serializable {
     private void readObject(ObjectInputStream inputStream) throws IOException, ClassNotFoundException {
         inputStream.defaultReadObject();
         inputStream.readInt();
+        timestamp = inputStream.readLong();
         inputStream.readBoolean();
         msg = (String) inputStream.readObject();
-        timestamp = (Timestamp) inputStream.readObject();
         data = (T) inputStream.readObject();
     }
 }
