@@ -3,7 +3,6 @@ package org.code4everything.boot.web.mvc;
 import cn.hutool.core.util.StrUtil;
 import org.code4everything.boot.bean.ConfigBean;
 import org.code4everything.boot.config.BootConfig;
-import org.code4everything.boot.web.HttpUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -11,7 +10,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.Objects;
 
 /**
@@ -69,16 +67,12 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
         DefaultWebInterceptor.configBean = configBean;
     }
 
-    private String buildVisitLog(String method, String url, String queryString, String requestBody) {
+    private String buildVisitLog(String method, String url, String queryString) {
         StringBuilder builder = new StringBuilder().append(method).append(" [").append(url);
         if (StrUtil.isNotBlank(queryString)) {
             builder.append("?").append(queryString);
         }
-        builder.append("]");
-        if (StrUtil.isNotBlank(requestBody)) {
-            builder.append(" with body >>> ").append(requestBody);
-        }
-        return builder.toString();
+        return builder.append("]").toString();
     }
 
     /**
@@ -99,13 +93,7 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
         if (BootConfig.isDebug()) {
             // 打印请求的详细信息
             String queryString = StrUtil.nullToEmpty(request.getQueryString());
-            String requestBody = null;
-            try {
-                requestBody = HttpUtils.parseRequestBody(request);
-            } catch (IOException e) {
-                LOGGER.warn(e.getMessage());
-            }
-            String logStr = buildVisitLog(request.getMethod(), url, queryString, requestBody);
+            String logStr = buildVisitLog(request.getMethod(), url, queryString);
             LOGGER.info(logStr);
         }
         // 黑名单
