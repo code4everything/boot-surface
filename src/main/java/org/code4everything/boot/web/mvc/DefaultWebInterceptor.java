@@ -92,8 +92,7 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
         String url = request.getServletPath();
         if (BootConfig.isDebug()) {
             // 打印请求的详细信息
-            String queryString = StrUtil.nullToEmpty(request.getQueryString());
-            String logStr = buildVisitLog(request.getMethod(), url, queryString);
+            String logStr = buildVisitLog(request.getMethod(), url, request.getQueryString());
             LOGGER.info(logStr);
         }
         // 黑名单
