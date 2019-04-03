@@ -11,6 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.Objects;
 
 /**
@@ -68,6 +69,18 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
         DefaultWebInterceptor.configBean = configBean;
     }
 
+    private String buildVisitLog(String method, String url, String queryString, String requestBody) {
+        StringBuilder builder = new StringBuilder().append(method).append(" [").append(url);
+        if (StrUtil.isNotBlank(queryString)) {
+            builder.append("?").append(queryString);
+        }
+        builder.append("]");
+        if (StrUtil.isNotBlank(requestBody)) {
+            builder.append(" with body >>> ").append(requestBody);
+        }
+        return builder.toString();
+    }
+
     /**
      * 默认拦截器
      *
@@ -86,8 +99,14 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
         if (BootConfig.isDebug()) {
             // 打印请求的详细信息
             String queryString = StrUtil.nullToEmpty(request.getQueryString());
-            String requestBody = HttpUtils.parseRequestBody(request);
-            LOGGER.info("{} [{}?{}] with body >>> {}", request.getMethod(), url, queryString, requestBody);
+            String requestBody = null;
+            try {
+                requestBody = HttpUtils.parseRequestBody(request);
+            } catch (IOException e) {
+                LOGGER.warn(e.getMessage());
+            }
+            String logStr = buildVisitLog(request.getMethod(), url, queryString, requestBody);
+            LOGGER.info(logStr);
         }
         // 黑名单
         if (StrUtil.startWithAny(url, DefaultWebInterceptor.configBean.getBlackPrefixes())) {

@@ -59,6 +59,13 @@ public class Response<T> implements Serializable {
     private Long timestamp = System.currentTimeMillis();
 
     /**
+     * 时间
+     *
+     * @since 1.1.0
+     */
+    private Date datetime;
+
+    /**
      * 无参构造函数
      *
      * @since 1.0.0
@@ -228,7 +235,13 @@ public class Response<T> implements Serializable {
      * @since 1.1.0
      */
     public Date getDateTime() {
-        return new Date(timestamp);
+        if (Objects.isNull(datetime)) {
+            datetime = new Date(timestamp);
+        } else if (timestamp != datetime.getTime()) {
+            // 防篡改
+            datetime.setTime(timestamp);
+        }
+        return datetime;
     }
 
     /**
