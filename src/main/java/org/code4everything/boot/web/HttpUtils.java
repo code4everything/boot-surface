@@ -179,7 +179,7 @@ public class HttpUtils {
      * @since 1.0.4
      */
     public static String getToken(HttpServletRequest request) {
-        return getToken(StringConsts.TOKEN, request);
+        return getTokenAwesome(StringConsts.TOKEN, request);
     }
 
     /**
@@ -193,8 +193,23 @@ public class HttpUtils {
      * @since 1.0.9
      */
     public static String getToken(String tokenKey, HttpServletRequest request) {
+        String token = getTokenAwesome(tokenKey, request);
+        return StrUtil.isEmpty(token) && !StringConsts.TOKEN.equalsIgnoreCase(tokenKey) ? getToken(request) : token;
+    }
+
+    /**
+     * 获取Token
+     *
+     * @param tokenKey 自定义Token Key
+     * @param request HTTP请求
+     *
+     * @return Token
+     *
+     * @since 1.1.0
+     */
+    private static String getTokenAwesome(String tokenKey, HttpServletRequest request) {
         String token = request.getHeader(tokenKey);
-        return StrUtil.isBlank(token) ? request.getParameter(tokenKey) : token;
+        return StrUtil.isEmpty(token) ? request.getParameter(tokenKey) : token;
     }
 
     /**

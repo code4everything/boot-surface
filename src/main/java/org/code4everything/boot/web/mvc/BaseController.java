@@ -425,6 +425,19 @@ public class BaseController {
     /**
      * 解析结果
      *
+     * @param isOk 是否请求成功
+     *
+     * @return 结果
+     *
+     * @since 1.1.0
+     */
+    public Response<Boolean> parseBoolean(boolean isOk) {
+        return parseBoolean(DEFAULT_OK_MSG, DEFAULT_OK_MSG, isOk);
+    }
+
+    /**
+     * 解析结果
+     *
      * @param errMsg 请求失败消息
      * @param isOk 是否请求成功
      *
