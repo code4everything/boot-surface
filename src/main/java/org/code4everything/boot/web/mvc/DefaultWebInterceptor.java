@@ -1,8 +1,12 @@
 package org.code4everything.boot.web.mvc;
 
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import org.code4everything.boot.bean.ConfigBean;
 import org.code4everything.boot.config.BootConfig;
+import org.code4everything.boot.exception.ExceptionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -11,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 默认拦截器<br>拦截顺序依次为：黑名单 - 白名单 - 拦截名单
@@ -23,11 +28,20 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
     private static final Logger LOGGER = LoggerFactory.getLogger(DefaultWebInterceptor.class);
 
     /**
+     * 默认请求检测的频率，单位：毫秒
+     *
+     * @since 1.1.0
+     */
+    private static int frequency = 1000;
+
+    /**
      * 配置信息
      *
      * @since 1.0.0
      */
     private static ConfigBean configBean;
+
+    private static Cache<String, Byte> cache = null;
 
     /**
      * 拦截处理器
@@ -54,6 +68,17 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
      */
     public DefaultWebInterceptor(InterceptHandler interceptHandler) {
         this.interceptHandler = interceptHandler;
+    }
+
+    /**
+     * 设置请求检测的频率，单位：毫秒
+     *
+     * @param frequency 频率
+     *
+     * @since 1.1.0
+     */
+    public static void setFrequency(int frequency) {
+        DefaultWebInterceptor.frequency = frequency;
     }
 
     /**
@@ -89,6 +114,24 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         Objects.requireNonNull(DefaultWebInterceptor.configBean);
+        String key = interceptHandler.buildCacheKey(request);
+        if (StrUtil.isNotEmpty(key) && Objects.isNull(cache)) {
+            // 创建频率检测缓存
+            synchronized (DefaultExceptionHandler.class) {
+                if (Objects.isNull(cache)) {
+                    cache = CacheBuilder.newBuilder().expireAfterWrite(frequency, TimeUnit.MILLISECONDS).build();
+                }
+            }
+        }
+        if (StrUtil.isNotEmpty(key) && ObjectUtil.isNotNull(cache)) {
+            // 频率检测
+            Byte b = cache.getIfPresent(key);
+            if (Objects.isNull(b)) {
+                cache.put(key, Byte.MAX_VALUE);
+            } else {
+                throw ExceptionFactory.requestFrequently();
+            }
+        }
         String url = request.getServletPath();
         if (BootConfig.isDebug()) {
             // 打印请求的详细信息

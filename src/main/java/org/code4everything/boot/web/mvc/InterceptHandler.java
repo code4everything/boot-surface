@@ -20,6 +20,19 @@ import javax.servlet.http.HttpServletResponse;
 public interface InterceptHandler {
 
     /**
+     * 构建频率检测缓存的键
+     *
+     * @param request {@link HttpServletRequest}
+     *
+     * @return 缓存键
+     *
+     * @since 1.1.0
+     */
+    default String buildCacheKey(HttpServletRequest request) {
+        return null;
+    }
+
+    /**
      * 处理黑名单
      *
      * @param request {@link HttpServletRequest}

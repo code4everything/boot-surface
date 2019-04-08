@@ -3,6 +3,7 @@ package org.code4everything.boot.exception;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import org.code4everything.boot.exception.template.EntityNotFoundException;
+import org.code4everything.boot.exception.template.RequestFrequentlyException;
 import org.code4everything.boot.exception.template.TokenBlankException;
 import org.code4everything.boot.exception.template.UserNotLoggedInException;
 
@@ -31,6 +32,12 @@ public class ExceptionFactory {
      */
     private static final UserNotLoggedInException USER_NOT_LOGGED_IN_EXCEPTION = new UserNotLoggedInException();
 
+    /**
+     * 全局唯一实例
+     *
+     * @since 1.1.0
+     */
+    private static final RequestFrequentlyException REQUEST_FREQUENTLY_EXCEPTION = new RequestFrequentlyException();
 
     /**
      * 已创建对象的存储器，有效期一天
@@ -84,5 +91,16 @@ public class ExceptionFactory {
      */
     public static UserNotLoggedInException userNotLoggedIn() {
         return USER_NOT_LOGGED_IN_EXCEPTION;
+    }
+
+    /**
+     * 获取 {@link RequestFrequentlyException}
+     *
+     * @return {@link RequestFrequentlyException}
+     *
+     * @since 1.1.0
+     */
+    public static RequestFrequentlyException requestFrequently() {
+        return REQUEST_FREQUENTLY_EXCEPTION;
     }
 }

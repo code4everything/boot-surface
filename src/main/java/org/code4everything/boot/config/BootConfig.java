@@ -6,10 +6,10 @@ import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.cache.Cache;
 import org.code4everything.boot.base.FileUtils;
+import org.code4everything.boot.base.FileWatcher;
 import org.code4everything.boot.bean.ConfigBean;
 import org.code4everything.boot.encoder.DefaultFieldEncoder;
 import org.code4everything.boot.encoder.FieldEncoder;
-import org.code4everything.boot.base.FileWatcher;
 import org.code4everything.boot.log.AopLogUtils;
 import org.code4everything.boot.message.MailUtils;
 import org.code4everything.boot.module.redis.RedisTemplateUtils;
@@ -76,6 +76,17 @@ public class BootConfig {
     }
 
     /**
+     * 设置请求检测的频率，单位：毫秒
+     *
+     * @param frequency 频率
+     *
+     * @since 1.1.0
+     */
+    public static void setFrequency(int frequency) {
+        DefaultWebInterceptor.setFrequency(frequency);
+    }
+
+    /**
      * 监听工作路径下的 boot-config.json 配置文件
      *
      * @since 1.0.6
@@ -133,6 +144,11 @@ public class BootConfig {
             if (ObjectUtil.isNotNull(okCode)) {
                 // 请求成功的响应码
                 setOkCode(okCode);
+            }
+            Integer frequency = boot.getInteger("frequency");
+            if (ObjectUtil.isNotNull(frequency)) {
+                // 设置请求检测频率
+                setFrequency(frequency);
             }
             LOGGER.info("boot config is changed >>> {}", boot);
         }
