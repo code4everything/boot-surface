@@ -311,6 +311,20 @@ public class BaseController {
     }
 
     /**
+     * 获取用户
+     *
+     * @param user 用户实体
+     * @param <T> 用户
+     *
+     * @return 用户
+     *
+     * @since 1.1.0
+     */
+    public <T> T requireUser(T user) {
+        return AssertUtils.assertUserLoggedIn(user);
+    }
+
+    /**
      * 获取Token
      *
      * @return Token

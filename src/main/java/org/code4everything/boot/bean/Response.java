@@ -175,6 +175,32 @@ public class Response<T> implements Serializable {
     }
 
     /**
+     * 调试模式时，打印到终端
+     *
+     * @return {@link Response}
+     *
+     * @since 1.1.0
+     */
+    public Response<T> debug() {
+        if (BootConfig.isDebug()) {
+            return println();
+        }
+        return this;
+    }
+
+    /**
+     * 打印到终端
+     *
+     * @return {@link Response}
+     *
+     * @since 1.1.0
+     */
+    public Response<T> println() {
+        System.out.println(this);
+        return this;
+    }
+
+    /**
      * 获取数据
      *
      * @return 数据
