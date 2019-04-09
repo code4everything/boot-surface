@@ -1,5 +1,6 @@
 package org.code4everything.boot.web.mvc;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.ContentType;
 import cn.hutool.http.HttpStatus;
 import org.code4everything.boot.bean.Response;
@@ -18,6 +19,28 @@ import javax.servlet.http.HttpServletResponse;
  * @since 2018/11/4
  */
 public interface InterceptHandler {
+
+    /**
+     * 构建请求日志
+     *
+     * @param request {@link HttpServletRequest}
+     *
+     * @return 请求日志
+     *
+     * @since 1.1.0
+     */
+    default String buildVisitLog(HttpServletRequest request) {
+        // 构建IP地址
+        StringBuilder builder = new StringBuilder().append(request.getRemoteAddr()).append(" ");
+        // 构建请求方法和URI
+        builder.append(request.getMethod()).append(" ").append(request.getRequestURI());
+        String queryString = request.getQueryString();
+        if (StrUtil.isNotBlank(queryString)) {
+            // 构建QueryString
+            builder.append("?").append(queryString);
+        }
+        return builder.toString();
+    }
 
     /**
      * 构建频率检测缓存的键

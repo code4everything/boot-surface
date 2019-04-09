@@ -92,14 +92,6 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
         DefaultWebInterceptor.configBean = configBean;
     }
 
-    private String buildVisitLog(String method, String url, String queryString) {
-        StringBuilder builder = new StringBuilder().append(method).append(" [").append(url);
-        if (StrUtil.isNotBlank(queryString)) {
-            builder.append("?").append(queryString);
-        }
-        return builder.append("]").toString();
-    }
-
     /**
      * 默认拦截器
      *
@@ -132,10 +124,10 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
                 throw ExceptionFactory.requestFrequently();
             }
         }
-        String url = request.getServletPath();
+        String url = request.getRequestURI();
         if (BootConfig.isDebug()) {
             // 打印请求的详细信息
-            String logStr = buildVisitLog(request.getMethod(), url, request.getQueryString());
+            String logStr = interceptHandler.buildVisitLog(request);
             LOGGER.info(logStr);
         }
         // 黑名单
