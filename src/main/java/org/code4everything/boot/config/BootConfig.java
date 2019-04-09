@@ -8,12 +8,12 @@ import com.google.common.cache.Cache;
 import org.code4everything.boot.base.FileUtils;
 import org.code4everything.boot.base.FileWatcher;
 import org.code4everything.boot.bean.ConfigBean;
+import org.code4everything.boot.bean.Response;
 import org.code4everything.boot.encoder.DefaultFieldEncoder;
 import org.code4everything.boot.encoder.FieldEncoder;
 import org.code4everything.boot.log.AopLogUtils;
 import org.code4everything.boot.message.MailUtils;
 import org.code4everything.boot.module.redis.RedisTemplateUtils;
-import org.code4everything.boot.web.mvc.BaseController;
 import org.code4everything.boot.web.mvc.DefaultWebInterceptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -184,7 +184,7 @@ public class BootConfig {
      * @since 1.0.5
      */
     public static void setOkCode(int okCode) {
-        BaseController.setOkCode(okCode);
+        Response.setOkCode(okCode);
     }
 
     /**

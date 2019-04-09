@@ -24,6 +24,13 @@ public class StringConsts {
 
     private StringConsts() {}
 
+    public class DateFormat {
+
+        public static final String DATE_TIME_MILLIS = "yyyy-MM-dd HH:mm:ss.SSS";
+
+        private DateFormat() {}
+    }
+
     public class Sign {
 
         public static final String ZERO = "0";

@@ -1,11 +1,15 @@
 package org.code4everything.boot.bean;
 
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpStatus;
 import org.code4everything.boot.config.BootConfig;
+import org.code4everything.boot.constant.IntegerConsts;
 import org.code4everything.boot.constant.MessageConsts;
-import org.code4everything.boot.web.mvc.BaseController;
+import org.code4everything.boot.constant.StringConsts;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -23,6 +27,8 @@ public class Response<T> implements Serializable {
 
     private static final long serialVersionUID = -5763007029340547926L;
 
+    private static int okCode = IntegerConsts.ZERO;
+
     /**
      * 是否对数据进行加密
      *
@@ -35,7 +41,7 @@ public class Response<T> implements Serializable {
      *
      * @since 1.0.0
      */
-    private int code = BaseController.getOkCode();
+    private int code = Response.okCode;
 
     /**
      * 消息
@@ -125,6 +131,28 @@ public class Response<T> implements Serializable {
     }
 
     /**
+     * 获取正确码
+     *
+     * @return 正确码
+     *
+     * @since 1.0.5
+     */
+    public static int getOkCode() {
+        return Response.okCode;
+    }
+
+    /**
+     * 设置正确码
+     *
+     * @param okCode 正确码
+     *
+     * @since 1.1.0
+     */
+    public static void setOkCode(int okCode) {
+        Response.okCode = okCode;
+    }
+
+    /**
      * 获取错误码
      *
      * @return 错误码
@@ -182,8 +210,19 @@ public class Response<T> implements Serializable {
      * @since 1.1.0
      */
     public Response<T> debug() {
+        return debug(null);
+    }
+
+    /**
+     * 调试模式时，打印到终端
+     *
+     * @return {@link Response}
+     *
+     * @since 1.1.0
+     */
+    public Response<T> debug(HttpServletRequest request) {
         if (BootConfig.isDebug()) {
-            return println();
+            return println(request);
         }
         return this;
     }
@@ -196,8 +235,62 @@ public class Response<T> implements Serializable {
      * @since 1.1.0
      */
     public Response<T> println() {
-        System.out.println(this);
+        log(formatDate() + " - " + this);
         return this;
+    }
+
+    /**
+     * 打印到终端
+     *
+     * @param req {@link HttpServletRequest}
+     *
+     * @return {@link Response}
+     *
+     * @since 1.1.0
+     */
+    public Response<T> println(HttpServletRequest req) {
+        if (Objects.isNull(req)) {
+            return println();
+        }
+        // 构建时间、IP地址
+        StringBuilder builder = new StringBuilder(formatDate()).append(" [").append(req.getRemoteAddr()).append("] [");
+        // 构建请求方法、接口地址
+        builder.append(req.getMethod()).append(" ").append(req.getServletPath());
+        String queryString = req.getQueryString();
+        if (StrUtil.isNotEmpty(queryString)) {
+            // 构建QueryString
+            builder.append("?").append(queryString);
+        }
+        // 构建响应信息
+        builder.append("] - ").append(this);
+        log(builder.toString());
+        return this;
+    }
+
+    /**
+     * 打印响应到终端
+     *
+     * @param log 响应日志
+     *
+     * @since 1.1.0
+     */
+    private void log(String log) {
+        if (isOk()) {
+            System.out.println(log);
+        } else {
+            System.err.println(log);
+        }
+    }
+
+    /**
+     * 格式化日期时间
+     *
+     * @return 时间字符串
+     *
+     * @since 1.1.0
+     */
+    private String formatDate() {
+        return DateUtil.format(getDateTime(), StringConsts.DateFormat.DATE_TIME_MILLIS);
     }
 
     /**
@@ -389,7 +482,7 @@ public class Response<T> implements Serializable {
      * @since 1.1.0
      */
     public boolean isOk() {
-        return code == BaseController.getOkCode();
+        return code == Response.okCode;
     }
 
     /**

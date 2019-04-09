@@ -31,8 +31,6 @@ import java.util.Objects;
  */
 public class DefaultExceptionHandler implements HandlerExceptionResolver {
 
-    private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";
-
     private static final Logger LOGGER = LoggerFactory.getLogger(DefaultExceptionHandler.class);
 
     /**

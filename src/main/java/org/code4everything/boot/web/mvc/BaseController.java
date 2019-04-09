@@ -8,7 +8,6 @@ import org.code4everything.boot.base.function.BooleanFunction;
 import org.code4everything.boot.base.function.ResponseFunction;
 import org.code4everything.boot.bean.Response;
 import org.code4everything.boot.config.BootConfig;
-import org.code4everything.boot.constant.IntegerConsts;
 import org.code4everything.boot.constant.MessageConsts;
 import org.code4everything.boot.exception.ExceptionThrower;
 import org.code4everything.boot.service.BootUserService;
@@ -33,8 +32,6 @@ public class BaseController {
 
     private static final String DEFAULT_OK_MSG = MessageConsts.REQUEST_OK_ZH;
 
-    private static int okCode = IntegerConsts.ZERO;
-
     @Autowired
     public HttpServletRequest request;
 
@@ -46,28 +43,6 @@ public class BaseController {
      * @since 1.0.9
      */
     protected BaseController() {}
-
-    /**
-     * 获取正确码
-     *
-     * @return 正确码
-     *
-     * @since 1.0.5
-     */
-    public static int getOkCode() {
-        return okCode;
-    }
-
-    /**
-     * 设置正确码
-     *
-     * @param okCode 正确码
-     *
-     * @since 1.0.5
-     */
-    public static void setOkCode(int okCode) {
-        BaseController.okCode = okCode;
-    }
 
     /**
      * 抛出异常
@@ -108,7 +83,7 @@ public class BaseController {
         if (Objects.isNull(responseResult)) {
             return null;
         } else {
-            Response<T> result = new Response<T>().copyFrom(responseResult);
+            Response<T> result = printAndReturn(new Response<T>().copyFrom(responseResult));
             resultThreadLocal.remove();
             return result;
         }
@@ -345,7 +320,7 @@ public class BaseController {
      * @since 1.0.4
      */
     public <T> Response<T> successResult() {
-        return new Response<T>().setCode(okCode);
+        return printAndReturn(new Response<>());
     }
 
     /**
@@ -359,7 +334,7 @@ public class BaseController {
      * @since 1.0.8
      */
     public <T> Response<T> successResult(T data) {
-        return new Response<>(data).setCode(okCode);
+        return printAndReturn(new Response<>(data));
     }
 
     /**
@@ -373,7 +348,7 @@ public class BaseController {
      * @since 1.0.0
      */
     public <T> Response<T> successResult(String okMsg) {
-        return new Response<T>().setMsg(okMsg).setCode(okCode);
+        return printAndReturn(new Response<T>().setMsg(okMsg));
     }
 
     /**
@@ -388,7 +363,7 @@ public class BaseController {
      * @since 1.0.4
      */
     public <T> Response<T> successResult(String okMsg, T data) {
-        return new Response<>(okCode, okMsg, data);
+        return printAndReturn(new Response<>(okMsg, data));
     }
 
     /**
@@ -404,7 +379,7 @@ public class BaseController {
      * @since 1.0.5
      */
     public <T> Response<T> successResult(int okCode, String okMsg, T data) {
-        return new Response<>(okCode, okMsg, data);
+        return printAndReturn(new Response<>(okCode, okMsg, data));
     }
 
     /**
@@ -418,7 +393,7 @@ public class BaseController {
      * @since 1.0.0
      */
     public <T> Response<T> errorResult(String errMsg) {
-        return new Response<T>().error(errMsg);
+        return printAndReturn(new Response<T>().error(errMsg));
     }
 
     /**
@@ -433,7 +408,7 @@ public class BaseController {
      * @since 1.0.0
      */
     public <T> Response<T> errorResult(int errCode, String errMsg) {
-        return new Response<T>().error(errCode, errMsg);
+        return printAndReturn(new Response<T>().error(errCode, errMsg));
     }
 
     /**
@@ -475,7 +450,7 @@ public class BaseController {
      * @since 1.0.0
      */
     public Response<Boolean> parseBoolean(String okMsg, String errMsg, boolean isOk) {
-        return new Response<Boolean>().setMsg(isOk ? okMsg : errMsg).setData(isOk).setCode(okCode);
+        return printAndReturn(new Response<Boolean>().setMsg(isOk ? okMsg : errMsg).setData(isOk));
     }
 
     /**
@@ -754,7 +729,21 @@ public class BaseController {
             if (sealed) {
                 BootConfig.getFieldEncoder().encode(data);
             }
-            return new Response<>(okCode, okMsg, data);
+            return printAndReturn(new Response<>(okMsg, data));
         }
+    }
+
+    /**
+     * 输出日志信息
+     *
+     * @param response {@link Response}
+     * @param <T> 数据类型
+     *
+     * @return {@link Response}
+     *
+     * @since 1.1.0
+     */
+    public <T> Response<T> printAndReturn(Response<T> response) {
+        return response.debug(request);
     }
 }
