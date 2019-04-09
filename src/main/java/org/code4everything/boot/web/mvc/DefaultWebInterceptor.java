@@ -117,11 +117,10 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
         }
         if (StrUtil.isNotEmpty(key) && ObjectUtil.isNotNull(cache)) {
             // 频率检测
-            Byte b = cache.getIfPresent(key);
-            if (Objects.isNull(b)) {
-                cache.put(key, Byte.MAX_VALUE);
-            } else {
+            if (cache.asMap().containsKey(key)) {
                 throw ExceptionFactory.requestFrequently();
+            } else {
+                cache.put(key, Byte.MAX_VALUE);
             }
         }
         String url = request.getRequestURI();
