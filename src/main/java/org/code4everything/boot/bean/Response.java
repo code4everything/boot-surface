@@ -235,7 +235,7 @@ public class Response<T> implements Serializable {
      * @since 1.1.0
      */
     public Response<T> println() {
-        log(formatDate() + " - " + this);
+        log(formatDate() + " - " + formatResponse());
         return this;
     }
 
@@ -262,9 +262,20 @@ public class Response<T> implements Serializable {
             builder.append("?").append(queryString);
         }
         // 构建响应信息
-        builder.append("] - ").append(this);
+        builder.append("] - ").append(formatResponse());
         log(builder.toString());
         return this;
+    }
+
+    /**
+     * 格式化响应消息
+     *
+     * @return 格式化的响应消息
+     *
+     * @since 1.1.0
+     */
+    private String formatResponse() {
+        return code + " " + msg + " " + data;
     }
 
     /**
