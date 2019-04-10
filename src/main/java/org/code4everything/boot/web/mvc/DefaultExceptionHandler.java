@@ -1,12 +1,12 @@
 package org.code4everything.boot.web.mvc;
 
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.lang.Console;
-import cn.hutool.core.lang.Validator;
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.support.spring.FastJsonJsonView;
 import org.code4everything.boot.bean.ExceptionBean;
 import org.code4everything.boot.config.BootConfig;
 import org.code4everything.boot.constant.IntegerConsts;
+import org.code4everything.boot.constant.StringConsts;
 import org.code4everything.boot.exception.BootException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -83,11 +83,11 @@ public class DefaultExceptionHandler implements HandlerExceptionResolver {
      */
     protected void wrapAttributes(Map<String, Object> attr, HttpServletRequest req, Exception ex, ExceptionBean bean) {
         attr.put("code", bean.getCode());
-        attr.put("msg", Validator.isEmpty(bean.getMsg()) ? ex.getMessage() : bean.getMsg());
+        attr.put("msg", StrUtil.isEmpty(bean.getMsg()) ? ex.getMessage() : bean.getMsg());
         attr.put("timestamp", System.currentTimeMillis());
-        attr.put("dateTime", DateUtil.formatDateTime(new Date(System.currentTimeMillis())));
+        attr.put("dateTime", DateUtil.format(new Date(), StringConsts.DateFormat.DATE_TIME_MILLIS));
         String queryString = req.getQueryString();
-        attr.put("path", req.getRequestURI() + (Validator.isEmpty(queryString) ? "" : "?" + queryString));
+        attr.put("path", req.getRequestURI() + (StrUtil.isEmpty(queryString) ? "" : "?" + queryString));
         attr.put("data", ex.getMessage());
     }
 
@@ -150,7 +150,7 @@ public class DefaultExceptionHandler implements HandlerExceptionResolver {
             StringWriter stringWriter = new StringWriter();
             e.printStackTrace(new PrintWriter(stringWriter));
             String exception = stringWriter.toString();
-            Console.log(exception);
+            System.err.println(exception);
             LOGGER.error(exception);
         }
         // 判断异常是否可以转换成ExceptionBean

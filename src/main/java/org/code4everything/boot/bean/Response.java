@@ -253,7 +253,7 @@ public class Response<T> implements Serializable {
             return println();
         }
         // 构建时间、IP地址
-        StringBuilder builder = new StringBuilder(formatDate()).append(" [").append(req.getRemoteAddr()).append("] [");
+        StringBuilder builder = new StringBuilder(formatDate()).append(" [").append(req.getRemoteAddr()).append(" ");
         // 构建请求方法、接口地址
         builder.append(req.getMethod()).append(" ").append(req.getServletPath());
         String queryString = req.getQueryString();
