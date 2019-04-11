@@ -31,8 +31,7 @@ public class AopLogUtils {
      *
      * @since 1.0.1
      */
-    private static Cache<String, Object> logCache =
-            CacheBuilder.newBuilder().expireAfterWrite(5, TimeUnit.SECONDS).build();
+    private static Cache<String, Object> logCache = null;
 
     private AopLogUtils() {}
 
@@ -132,6 +131,13 @@ public class AopLogUtils {
      */
     @SuppressWarnings("unchecked")
     public static <T> T saveLog(BootLogService<T> service, String key, JoinPoint point, Throwable throwable) {
+        if (Objects.isNull(logCache)) {
+            synchronized (AopLogUtils.class) {
+                if (Objects.isNull(logCache)) {
+                    logCache = CacheBuilder.newBuilder().expireAfterWrite(5, TimeUnit.SECONDS).build();
+                }
+            }
+        }
         T log;
         if (Objects.isNull(throwable)) {
             // 从切点获取日志基本信息，并进行保存
@@ -174,7 +180,7 @@ public class AopLogUtils {
         logBean.setClassName(targetClass.getName()).setMethodName(joinPoint.getSignature().getName());
         for (Method method : targetClass.getMethods()) {
             // 找到对应的方法名（目前只判断了方法名和参数个数是否一致）
-            if (method.getName().equals(logBean.getMethodName()) && method.getParameterTypes().length == logBean.getArgs().length()) {
+            if (method.getName().equals(logBean.getMethodName()) && method.getParameterTypes().length == joinPoint.getArgs().length) {
                 AopLog aopLog = method.getAnnotation(AopLog.class);
                 if (ObjectUtil.isNotNull(aopLog)) {
                     // 设置描述信息
@@ -197,7 +203,8 @@ public class AopLogUtils {
      *
      * @since 1.0.4
      */
-    private static <T> LogTempBean<T> proceedAround(BootLogService<T> service, ProceedingJoinPoint point, boolean saveLog) {
+    private static <T> LogTempBean<T> proceedAround(BootLogService<T> service, ProceedingJoinPoint point,
+                                                    boolean saveLog) {
         // 获取日志信息
         LogBean logBean = parse(point);
         Throwable t = null;

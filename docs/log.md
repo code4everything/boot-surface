@@ -64,7 +64,7 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 
 @Service
-public class LogServiceImpl implements LogService<Log> {
+public class LogServiceImpl implements BootLogService<Log> {
 
     private final LogDAO logDAO;
 
@@ -123,12 +123,12 @@ import javax.servlet.http.HttpServletRequest;
 @Component
 public class LogAspect {
 
-    private final LogService<Log> logService;
+    private final BootLogService<Log> logService;
 
     private final HttpServletRequest request;
 
     @Autowired
-    public LogAspect(LogService<Log> logService, HttpServletRequest request) {
+    public LogAspect(BootLogService<Log> logService, HttpServletRequest request) {
         this.logService = logService;
         this.request = request;
     }
