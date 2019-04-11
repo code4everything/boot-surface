@@ -1,6 +1,7 @@
 package org.code4everything.boot.bean;
 
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpStatus;
@@ -235,7 +236,7 @@ public class Response<T> implements Serializable {
      * @since 1.1.0
      */
     public Response<T> println() {
-        log(formatDate() + " - " + formatResponse());
+        log(formatDateAndClass() + " - " + formatResponse());
         return this;
     }
 
@@ -253,7 +254,8 @@ public class Response<T> implements Serializable {
             return println();
         }
         // 构建时间、IP地址
-        StringBuilder builder = new StringBuilder(formatDate()).append(" [").append(req.getRemoteAddr()).append(" ");
+        StringBuilder builder =
+                new StringBuilder(formatDateAndClass()).append(" [").append(req.getRemoteAddr()).append(" ");
         // 构建请求方法、接口地址
         builder.append(req.getMethod()).append(" ").append(req.getServletPath());
         String queryString = req.getQueryString();
@@ -287,9 +289,9 @@ public class Response<T> implements Serializable {
      */
     private void log(String log) {
         if (isOk()) {
-            System.out.println(log);
+            Console.log(log);
         } else {
-            System.err.println(log);
+            Console.error(log);
         }
     }
 
@@ -300,8 +302,8 @@ public class Response<T> implements Serializable {
      *
      * @since 1.1.0
      */
-    private String formatDate() {
-        return DateUtil.format(getDateTime(), StringConsts.DateFormat.DATE_TIME_MILLIS);
+    private String formatDateAndClass() {
+        return DateUtil.format(getDateTime(), StringConsts.DateFormat.DATE_TIME_MILLIS) + " " + Response.class.getSimpleName();
     }
 
     /**

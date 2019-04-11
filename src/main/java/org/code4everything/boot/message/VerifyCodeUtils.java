@@ -1,13 +1,18 @@
 package org.code4everything.boot.message;
 
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.lang.Console;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import org.code4everything.boot.config.BootConfig;
+import org.code4everything.boot.constant.StringConsts;
 
 import javax.mail.MessagingException;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -160,7 +165,7 @@ public class VerifyCodeUtils {
     public static String sendByMailAsync(String email, String subject, String template, int codeLen,
                                          MailCallback callback) {
         // 生成验证码
-        final String code = RandomUtil.randomNumbers(codeLen);
+        final String code = generateCode(email, codeLen);
         // 异步执行，并进行相应的回调
         ThreadUtil.execute(() -> {
             // 格式化内容
@@ -214,7 +219,7 @@ public class VerifyCodeUtils {
      * @since 1.0.9
      */
     public static String sendByMail(String email, String subject, String template, int codeLen) throws MessagingException {
-        final String code = RandomUtil.randomNumbers(codeLen);
+        final String code = generateCode(email, codeLen);
         MailUtils.send(email, subject, StrUtil.format(String.format(template, code), code));
         put2cache(email, code);
         return code;
@@ -248,13 +253,33 @@ public class VerifyCodeUtils {
      * @since 1.1.0
      */
     public static String sendBy(MessageSender sender, String address, String template, int codeLen) {
-        final String code = RandomUtil.randomNumbers(codeLen);
+        final String code = generateCode(address, codeLen);
         boolean success = sender.sendMessage(address, StrUtil.format(String.format(template, code), code));
         if (success) {
             put2cache(address, code);
             return code;
         }
         return "";
+    }
+
+    /**
+     * 生成验证码
+     *
+     * @param key 键
+     * @param len 长度
+     *
+     * @return 验证码
+     *
+     * @since 1.1.0
+     */
+    private static String generateCode(String key, int len) {
+        final String code = RandomUtil.randomNumbers(len);
+        if (BootConfig.isDebug()) {
+            String time = DateUtil.format(new Date(), StringConsts.DateFormat.DATE_TIME_MILLIS);
+            String name = VerifyCodeUtils.class.getSimpleName();
+            Console.log("{} {} - generate code '{}' for user '{}'", time, name, code, key);
+        }
+        return code;
     }
 
     /**
