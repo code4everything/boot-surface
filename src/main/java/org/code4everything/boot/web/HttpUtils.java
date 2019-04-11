@@ -507,10 +507,10 @@ public class HttpUtils {
      */
     public static <T> Response<T> upload(BootFileService<T> service, MultipartFile file, String storage, boolean md5,
                                          Map<String, Object> params, boolean force) {
-        Response<T> result = new Response<>();
+        Response<T> response = new Response<>();
         // 检测文件大小是否超标
         if (file.getSize() > BootConfig.getMaxUploadFileSize()) {
-            return result.error("file size must less than " + BootConfig.getMaxUploadFileSize());
+            return response.error("file size must less than " + BootConfig.getMaxUploadFileSize());
         }
         // 格式化存储路径
         MultipartFileBean fileBean = new MultipartFileBean();
@@ -523,7 +523,7 @@ public class HttpUtils {
                 fileBean.setMd5(DigestUtil.md5Hex(file.getBytes()));
             } catch (Exception e) {
                 LOGGER.error("get md5 of file[{}] failed, message -> {}", ofn, e.getMessage());
-                return result.error(HttpStatus.HTTP_UNAVAILABLE, ofn + " upload failed");
+                return response.error(HttpStatus.HTTP_UNAVAILABLE, ofn + " upload failed");
             }
             fileBean.setFilename(fileBean.getMd5() + StrUtil.DOT + FileUtil.extName(ofn));
         } else {
@@ -551,46 +551,138 @@ public class HttpUtils {
                 file.transferTo(new File(fileBean.getStoragePath() + fileBean.getFilename()));
             } catch (Exception e) {
                 LOGGER.error("upload file failed, message -> {}", e.getMessage());
-                return result.error(HttpStatus.HTTP_UNAVAILABLE, ofn + " upload failed");
+                return response.error(HttpStatus.HTTP_UNAVAILABLE, ofn + " upload failed");
             }
             // 将数据写入数据库
             t = service.save(fileBean, t);
         }
-        return Objects.isNull(t) ? result.setMsg(fileBean.getFilename()) : result.setData(t);
+        return Objects.isNull(t) ? response.setMsg(fileBean.getFilename()) : response.setData(t);
     }
 
     // ------------------------------------------------字节数组-----------------------------------------
 
+    /**
+     * 文件上传
+     *
+     * @param bytes 文件字节流
+     * @param storage 文件存储路径，如：/root/boot/
+     * @param name 文件名
+     * @param md5 是否计算文件的MD5码（大文件不建议计算，防止堆内存泄漏）
+     * @param <T> 数据表类型
+     *
+     * @return 响应结果 {@link Response}。如果文件上传成功且最后得到的 {@link Response#getData()}为NULL，则{@link
+     *         Response#getMsg()}将返回文件的MD5文件名
+     *
+     * @since 1.1.0
+     */
     public static <T> Response<T> upload(byte[] bytes, String storage, String name, boolean md5) {
         return upload(bytes, storage, name, md5, false);
     }
 
+    /**
+     * 文件上传
+     *
+     * @param bytes 文件字节流
+     * @param storage 文件存储路径，如：/root/boot/
+     * @param name 文件名
+     * @param md5 是否计算文件的MD5码（大文件不建议计算，防止堆内存泄漏）
+     * @param force 是否强制写入文件
+     * @param <T> 数据表类型
+     *
+     * @return 响应结果 {@link Response}。如果文件上传成功且最后得到的 {@link Response#getData()}为NULL，则{@link
+     *         Response#getMsg()}将返回文件的MD5文件名
+     *
+     * @since 1.1.0
+     */
     public static <T> Response<T> upload(byte[] bytes, String storage, String name, boolean md5, boolean force) {
         return upload(new BootFileService<T>() {}, bytes, storage, name, md5, null, force);
     }
 
+    /**
+     * 文件上传
+     *
+     * @param service 文件服务 {@link BootFileService}
+     * @param bytes 文件字节流
+     * @param storage 文件存储路径，如：/root/boot/
+     * @param name 文件名
+     * @param md5 是否计算文件的MD5码（大文件不建议计算，防止堆内存泄漏）
+     * @param <T> 数据表类型
+     *
+     * @return 响应结果 {@link Response}。如果文件上传成功且最后得到的 {@link Response#getData()}为NULL，则{@link
+     *         Response#getMsg()}将返回文件的MD5文件名
+     *
+     * @since 1.1.0
+     */
     public static <T> Response<T> upload(BootFileService<T> service, byte[] bytes, String name, String storage,
                                          boolean md5) {
         return upload(service, bytes, storage, name, md5, null, false);
     }
 
+    /**
+     * 文件上传
+     *
+     * @param service 文件服务 {@link BootFileService}
+     * @param bytes 文件字节流
+     * @param storage 文件存储路径，如：/root/boot/
+     * @param name 文件名
+     * @param md5 是否计算文件的MD5码（大文件不建议计算，防止堆内存泄漏）
+     * @param force 是否强制写入文件
+     * @param <T> 数据表类型
+     *
+     * @return 响应结果 {@link Response}。如果文件上传成功且最后得到的 {@link Response#getData()}为NULL，则{@link
+     *         Response#getMsg()}将返回文件的MD5文件名
+     *
+     * @since 1.1.0
+     */
     public static <T> Response<T> upload(BootFileService<T> service, byte[] bytes, String storage, String name,
                                          boolean md5, boolean force) {
         return upload(service, bytes, storage, name, md5, null, force);
     }
 
+    /**
+     * 文件上传
+     *
+     * @param service 文件服务 {@link BootFileService}
+     * @param bytes 文件字节流
+     * @param storage 文件存储路径，如：/root/boot/
+     * @param name 文件名
+     * @param md5 是否计算文件的MD5码（大文件不建议计算，防止堆内存泄漏）
+     * @param params 自定义参数，在自己实现的 {@link BootFileService}方法中使用
+     * @param <T> 数据表类型
+     *
+     * @return 响应结果 {@link Response}。如果文件上传成功且最后得到的 {@link Response#getData()}为NULL，则{@link
+     *         Response#getMsg()}将返回文件的MD5文件名
+     *
+     * @since 1.1.0
+     */
     public static <T> Response<T> upload(BootFileService<T> service, byte[] bytes, String storage, String name,
                                          boolean md5, Map<String, Object> params) {
         return upload(service, bytes, storage, name, md5, params, false);
-
     }
 
+    /**
+     * 文件上传
+     *
+     * @param service 文件服务 {@link BootFileService}
+     * @param bytes 文件字节流
+     * @param storage 文件存储路径，如：/root/boot/
+     * @param name 文件名
+     * @param md5 是否计算文件的MD5码（大文件不建议计算，防止堆内存泄漏）
+     * @param params 自定义参数，在自己实现的 {@link BootFileService}方法中使用
+     * @param force 是否强制写入文件
+     * @param <T> 数据表类型
+     *
+     * @return 响应结果 {@link Response}。如果文件上传成功且最后得到的 {@link Response#getData()}为NULL，则{@link
+     *         Response#getMsg()}将返回文件的MD5文件名
+     *
+     * @since 1.1.0
+     */
     public static <T> Response<T> upload(BootFileService<T> service, byte[] bytes, String storage, String name,
                                          boolean md5, Map<String, Object> params, boolean force) {
-        Response<T> result = new Response<>();
+        Response<T> response = new Response<>();
         // 检测文件大小是否超标
         if (bytes.length > BootConfig.getMaxUploadFileSize()) {
-            return result.error("file size must less than " + BootConfig.getMaxUploadFileSize());
+            return response.error("file size must less than " + BootConfig.getMaxUploadFileSize());
         }
         // 格式化存储路径
         MultipartFileBean fileBean = new MultipartFileBean();
@@ -602,7 +694,7 @@ public class HttpUtils {
                 fileBean.setMd5(DigestUtil.md5Hex(bytes));
             } catch (Exception e) {
                 LOGGER.error("get md5 of file[{}] failed, message -> {}", name, e.getMessage());
-                return result.error(HttpStatus.HTTP_UNAVAILABLE, name + " upload failed");
+                return response.error(HttpStatus.HTTP_UNAVAILABLE, name + " upload failed");
             }
             fileBean.setFilename(fileBean.getMd5() + StrUtil.DOT + FileUtil.extName(name));
         } else {
@@ -622,14 +714,14 @@ public class HttpUtils {
         if (shouldWrite || force) {
             try {
                 // 写入磁盘
-                FileUtil.writeBytes(bytes, new File(fileBean.getStoragePath() + fileBean.getFilename()));
+                FileUtil.writeBytes(bytes, fileBean.getStoragePath() + fileBean.getFilename());
             } catch (Exception e) {
                 LOGGER.error("upload file failed, message -> {}", e.getMessage());
-                return result.error(HttpStatus.HTTP_UNAVAILABLE, name + " upload failed");
+                return response.error(HttpStatus.HTTP_UNAVAILABLE, name + " upload failed");
             }
             // 将数据写入数据库
             t = service.save(fileBean, t);
         }
-        return Objects.isNull(t) ? result.setMsg(fileBean.getFilename()) : result.setData(t);
+        return Objects.isNull(t) ? response.setMsg(fileBean.getFilename()) : response.setData(t);
     }
 }

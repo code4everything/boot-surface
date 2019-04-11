@@ -18,6 +18,7 @@ import java.util.concurrent.TimeUnit;
  **/
 public class VerifyCodeUtils {
 
+    private static final int DEFAULT_CODE_LENGTH = 6;
 
     /**
      * 验证码缓存
@@ -61,8 +62,8 @@ public class VerifyCodeUtils {
      * @since 1.0.9
      */
     public static void remove(String key) {
-        codeCache.asMap().remove(key);
-        frequentlyCache.asMap().remove(key);
+        codeCache.invalidate(key);
+        frequentlyCache.invalidate(key);
     }
 
     /**
@@ -80,6 +81,25 @@ public class VerifyCodeUtils {
     }
 
     /**
+     * 校验验证码
+     *
+     * @param key 邮箱或手机号
+     * @param code 验证码
+     * @param remove 验证通过后是否删除
+     *
+     * @return 验证码是否正确
+     *
+     * @since 1.0.9
+     */
+    public static boolean validate(String key, String code, boolean remove) {
+        boolean result = validate(key, code);
+        if (remove && result) {
+            remove(key);
+        }
+        return result;
+    }
+
+    /**
      * 校验验证码，当验证码正确时从缓存中删除
      *
      * @param key 邮箱或手机号
@@ -90,11 +110,7 @@ public class VerifyCodeUtils {
      * @since 1.0.9
      */
     public static boolean validateAndRemove(String key, String code) {
-        boolean result = validate(key, code);
-        if (result) {
-            remove(key);
-        }
-        return result;
+        return validate(key, code, true);
     }
 
     /**
@@ -125,7 +141,7 @@ public class VerifyCodeUtils {
      * @since 1.0.9
      */
     public static String sendByMailAsync(String email, String subject, String template, MailCallback callback) {
-        return sendByMailAsync(email, subject, template, 6, callback);
+        return sendByMailAsync(email, subject, template, DEFAULT_CODE_LENGTH, callback);
     }
 
     /**
@@ -153,8 +169,7 @@ public class VerifyCodeUtils {
                 // 发送验证码
                 MailUtils.send(email, subject, html);
                 // 放入缓存
-                codeCache.put(email, code);
-                frequentlyCache.put(email, code);
+                put2cache(email, code);
                 // 成功回调
                 if (ObjectUtil.isNotNull(callback)) {
                     callback.handleSuccess(email, subject, html);
@@ -182,7 +197,7 @@ public class VerifyCodeUtils {
      * @since 1.0.9
      */
     public static String sendByMail(String email, String subject, String template) throws MessagingException {
-        return sendByMail(email, subject, template, 6);
+        return sendByMail(email, subject, template, DEFAULT_CODE_LENGTH);
     }
 
     /**
@@ -199,13 +214,59 @@ public class VerifyCodeUtils {
      * @since 1.0.9
      */
     public static String sendByMail(String email, String subject, String template, int codeLen) throws MessagingException {
-        // 生成验证码
         final String code = RandomUtil.randomNumbers(codeLen);
-        // 格式化并发送
         MailUtils.send(email, subject, StrUtil.format(String.format(template, code), code));
-        // 放入缓存
-        codeCache.put(email, code);
-        frequentlyCache.put(email, code);
+        put2cache(email, code);
         return code;
+    }
+
+    /**
+     * 发送验证码
+     *
+     * @param sender 发送器
+     * @param address 通常为邮箱地址或手机号
+     * @param template 内容模板
+     *
+     * @return 验证码
+     *
+     * @since 1.1.0
+     */
+    public static String sendBy(MessageSender sender, String address, String template) {
+        return sendBy(sender, address, template, DEFAULT_CODE_LENGTH);
+    }
+
+    /**
+     * 发送验证码
+     *
+     * @param sender 发送器
+     * @param address 通常为邮箱地址或手机号
+     * @param template 内容模板
+     * @param codeLen 验证码长度
+     *
+     * @return 验证码
+     *
+     * @since 1.1.0
+     */
+    public static String sendBy(MessageSender sender, String address, String template, int codeLen) {
+        final String code = RandomUtil.randomNumbers(codeLen);
+        boolean success = sender.sendMessage(address, StrUtil.format(String.format(template, code), code));
+        if (success) {
+            put2cache(address, code);
+            return code;
+        }
+        return "";
+    }
+
+    /**
+     * 缓存
+     *
+     * @param key 键
+     * @param code 验证码
+     *
+     * @since 1.1.0
+     */
+    private static void put2cache(String key, String code) {
+        codeCache.put(key, code);
+        frequentlyCache.put(key, code);
     }
 }
