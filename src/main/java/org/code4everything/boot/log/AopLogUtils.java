@@ -8,7 +8,7 @@ import com.google.common.cache.CacheBuilder;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
-import org.code4everything.boot.annotations.AopLog;
+import org.code4everything.boot.annotation.AopLog;
 import org.code4everything.boot.bean.LogBean;
 import org.code4everything.boot.bean.LogTempBean;
 import org.code4everything.boot.config.BootConfig;

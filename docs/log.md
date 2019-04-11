@@ -133,7 +133,7 @@ public class LogAspect {
         this.request = request;
     }
 
-    @Pointcut("@annotation(org.code4everything.boot.annotations.AopLog)")
+    @Pointcut("@annotation(org.code4everything.boot.annotation.AopLog)")
     public void serviceAspect() {}
 
     @Before("serviceAspect()")

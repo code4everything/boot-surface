@@ -57,7 +57,7 @@ public interface DemoFileService extends FileService<FileInfo> {}
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.util.IdUtil;
-import org.code4everything.boot.annotations.AopLog;
+import org.code4everything.boot.annotation.AopLog;
 import org.code4everything.boot.bean.MultipartFileBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

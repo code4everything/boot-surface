@@ -2,7 +2,7 @@ package org.code4everything.boot.encoder;
 
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.crypto.digest.DigestUtil;
-import org.code4everything.boot.annotations.Sealed;
+import org.code4everything.boot.annotation.Sealed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.ClassUtils;

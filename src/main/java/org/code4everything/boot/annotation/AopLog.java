@@ -1,4 +1,4 @@
-package org.code4everything.boot.annotations;
+package org.code4everything.boot.annotation;
 
 import java.lang.annotation.*;
 
