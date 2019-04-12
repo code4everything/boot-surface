@@ -34,6 +34,8 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
      */
     private static int frequency = 1000;
 
+    private static boolean firstLoad = true;
+
     /**
      * 配置信息
      *
@@ -105,7 +107,46 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
      */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        Objects.requireNonNull(DefaultWebInterceptor.configBean);
+        checkFrequency(request);
+        if (BootConfig.isDebug()) {
+            // 打印请求的详细信息
+            String logStr = interceptHandler.buildVisitLog(request);
+            LOGGER.info(logStr);
+        }
+        if (Objects.isNull(configBean)) {
+            if (firstLoad) {
+                LOGGER.warn("has no config for this interceptor, it will not work in anyway.");
+            }
+            return true;
+        }
+
+        String url = request.getRequestURI();
+
+        // 黑名单
+        if (StrUtil.startWithAny(url, DefaultWebInterceptor.configBean.getBlackPrefixes())) {
+            interceptHandler.handleBlackList(request, response, handler);
+            return false;
+        }
+        // 白名单
+        if (StrUtil.startWithAny(url, DefaultWebInterceptor.configBean.getWhitePrefixes())) {
+            interceptHandler.handleWhiteList(request, response, handler);
+            return true;
+        }
+        // 拦截名单
+        if (StrUtil.startWithAny(url, DefaultWebInterceptor.configBean.getInterceptPrefixes())) {
+            return interceptHandler.handleInterceptList(request, response, handler);
+        }
+        return true;
+    }
+
+    /**
+     * 检测请求频率
+     *
+     * @param request {@link HttpServletRequest}
+     *
+     * @since 1.1.0
+     */
+    private void checkFrequency(HttpServletRequest request) {
         String key = interceptHandler.buildCacheKey(request);
         if (StrUtil.isNotEmpty(key) && Objects.isNull(cache)) {
             // 创建频率检测缓存
@@ -123,27 +164,6 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
                 cache.put(key, Byte.MAX_VALUE);
             }
         }
-        String url = request.getRequestURI();
-        if (BootConfig.isDebug()) {
-            // 打印请求的详细信息
-            String logStr = interceptHandler.buildVisitLog(request);
-            LOGGER.info(logStr);
-        }
-        // 黑名单
-        if (StrUtil.startWithAny(url, DefaultWebInterceptor.configBean.getBlackPrefixes())) {
-            interceptHandler.handleBlackList(request, response, handler);
-            return false;
-        }
-        // 白名单
-        if (StrUtil.startWithAny(url, DefaultWebInterceptor.configBean.getWhitePrefixes())) {
-            interceptHandler.handleWhiteList(request, response, handler);
-            return true;
-        }
-        // 拦截名单
-        if (StrUtil.startWithAny(url, DefaultWebInterceptor.configBean.getInterceptPrefixes())) {
-            return interceptHandler.handleInterceptList(request, response, handler);
-        }
-        return true;
     }
 
     /**
