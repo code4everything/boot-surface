@@ -56,6 +56,20 @@ public class ExceptionFactory {
      *
      * @param code 错误码
      * @param msg 消息
+     *
+     * @return 异常
+     *
+     * @since 1.1.0
+     */
+    public static BootException exception(int code, String msg) {
+        return exception(code, msg, HttpStatus.BAD_REQUEST, BootException.class);
+    }
+
+    /**
+     * 获取异常
+     *
+     * @param code 错误码
+     * @param msg 消息
      * @param clazz 类
      * @param <T> 异常
      *
@@ -72,6 +86,20 @@ public class ExceptionFactory {
      *
      * @param msg 消息
      * @param status 响应状态
+     *
+     * @return 异常
+     *
+     * @since 1.1.0
+     */
+    public static BootException exception(String msg, HttpStatus status) {
+        return exception(status.value(), msg, status, BootException.class);
+    }
+
+    /**
+     * 获取异常
+     *
+     * @param msg 消息
+     * @param status 响应状态
      * @param clazz 类
      * @param <T> 异常
      *
@@ -81,6 +109,21 @@ public class ExceptionFactory {
      */
     public static <T extends BootException> T exception(String msg, HttpStatus status, Class<T> clazz) {
         return exception(status.value(), msg, status, clazz);
+    }
+
+    /**
+     * 获取异常
+     *
+     * @param code 错误码
+     * @param msg 消息
+     * @param status 响应状态
+     *
+     * @return 异常
+     *
+     * @since 1.1.0
+     */
+    public static BootException exception(int code, String msg, HttpStatus status) {
+        return exception(code, msg, status, BootException.class);
     }
 
     /**
@@ -106,6 +149,17 @@ public class ExceptionFactory {
             return exception;
         }
         return exception(key, clazz);
+    }
+
+    /**
+     * 获取异常
+     *
+     * @return 异常
+     *
+     * @since 1.1.0
+     */
+    public static BootException exception() {
+        return exception(BootException.class);
     }
 
     /**
