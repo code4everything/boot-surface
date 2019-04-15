@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
  **/
 public class EntityNotFoundException extends BootException {
 
+    public EntityNotFoundException() {}
+
     /**
      * 普通构造函数
      *

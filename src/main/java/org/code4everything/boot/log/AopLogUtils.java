@@ -141,11 +141,14 @@ public class AopLogUtils {
         T log;
         if (Objects.isNull(throwable)) {
             // 从切点获取日志基本信息，并进行保存
-            log = service.save(service.getLog(parse(point)));
-            // 当入缓存，当发生异常时，方便更新异常信息
-            logCache.put(key, log);
-            if (BootConfig.isDebug()) {
-                Console.log(log);
+            log = service.getLog(parse((point)));
+            if (ObjectUtil.isNotNull(log)) {
+                service.save(log);
+                // 当入缓存，当发生异常时，方便更新异常信息
+                logCache.put(key, log);
+                if (BootConfig.isDebug()) {
+                    Console.log(log);
+                }
             }
         } else {
             log = (T) logCache.asMap().get(key);
@@ -153,10 +156,12 @@ public class AopLogUtils {
                 // 如果缓存中没有，则直接创建一条新的日志
                 log = service.getLog(parse(point));
             }
-            // 增补异常信息
-            log = service.saveException(log, throwable);
-            if (BootConfig.isDebug()) {
-                Console.error(throwable, log.toString());
+            if (ObjectUtil.isNotNull(log)) {
+                // 增补异常信息
+                log = service.saveException(log, throwable);
+                if (BootConfig.isDebug()) {
+                    Console.error(throwable, log.toString());
+                }
             }
             // 移除日志缓存
             logCache.invalidate(key);
@@ -218,7 +223,7 @@ public class AopLogUtils {
         }
         logBean.setExecutedTime(System.currentTimeMillis() - beginTime);
         T log = service.getLog(logBean);
-        if (saveLog) {
+        if (saveLog && ObjectUtil.isNotNull(log)) {
             // 保存日志
             if (Objects.isNull(t)) {
                 service.save(log);
