@@ -30,10 +30,10 @@
 
     ``` java
     @Configuration
-    public class EmailConfiguration {
+    public class MailConfiguration {
     
         @Autowired
-        public EmailConfiguration(JavaMailSender mailSender, @Value("${spring.mail.username}") String outbox) {
+        public MailConfiguration(JavaMailSender mailSender, @Value("${spring.mail.username}") String outbox) {
             BootConfig.setMailSender(outbox, mailSender);
         }
     }
@@ -42,7 +42,7 @@
 - 到这里，配置就结束了，下面测试一下如何发送一封简单的邮件
 
     ``` java
-    EmailUtils.sendEmail("sendto@example.com", "your subject", "your message");
+    MailUtils.send("sendto@example.com", "your subject", "your message");
     ```
     
 #### 验证码
@@ -55,20 +55,20 @@
 
     ``` java
     // 验证码有效期：30分钟
-    VerifyCodeUtils.sendVerifyCodeByEmailAsync("sendto@example.com", "验证码", "你的验证码：{}，请不要告诉其他人哦");
+    VerifyCodeUtils.sendByMailAsync("sendto@example.com", "验证码", "你的验证码：{}，请不要告诉其他人哦");
     ```
     
 - 校验验证码
 
     ``` java
     // 验证码正确将返回true，否则返回false
-    boolean result = VerifyCodeUtils.validateVerifyCode("sendto@example.com", "123456");
+    boolean result = VerifyCodeUtils.validate("sendto@example.com", "123456");
     ```
     
 - 从缓存中移除验证码
 
     ``` java
-    VerifyCodeUtils.removeVerifyCode("sendto@example.com");
+    VerifyCodeUtils.remove("sendto@example.com");
     ```
     
 - 检测频率（一分钟）
