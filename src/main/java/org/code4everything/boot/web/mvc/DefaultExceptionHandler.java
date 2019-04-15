@@ -119,6 +119,22 @@ public class DefaultExceptionHandler implements HandlerExceptionResolver {
      * @param e 自定义异常
      * @param code 错误码
      * @param msg 消息
+     * @param <T> 异常类型
+     *
+     * @since 1.1.0
+     */
+    public <T extends Exception> void addException(int code, String msg, Class<T> e) {
+        Objects.requireNonNull(e);
+        HttpStatus status = HttpStatus.valueOf(code);
+        exceptionMap.put(e.getName(), new ExceptionBean().setCode(code).setMsg(msg).setStatus(status));
+    }
+
+    /**
+     * 添加异常信息
+     *
+     * @param e 自定义异常
+     * @param code 错误码
+     * @param msg 消息
      * @param status {@link HttpStatus} 状态
      * @param <T> 异常类型
      *
@@ -145,7 +161,7 @@ public class DefaultExceptionHandler implements HandlerExceptionResolver {
     public ModelAndView resolveException(HttpServletRequest req, HttpServletResponse res, Object o, Exception e) {
         if (BootConfig.isDebug()) {
             LOGGER.error("url -> {}, ip -> {}, exception -> {}, message -> {}", req.getServletPath(),
-                         req.getRemoteAddr(), e.getClass().getName(), e.getMessage());
+                    req.getRemoteAddr(), e.getClass().getName(), e.getMessage());
             // 输出异常信息
             StringWriter stringWriter = new StringWriter();
             e.printStackTrace(new PrintWriter(stringWriter));
