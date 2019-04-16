@@ -79,8 +79,10 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
      *
      * @since 1.1.0
      */
-    public static void setFrequency(int frequency) {
-        DefaultWebInterceptor.frequency = frequency;
+    public static void setFrequency(Integer frequency) {
+        if (ObjectUtil.isNotNull(frequency)) {
+            DefaultWebInterceptor.frequency = frequency;
+        }
     }
 
     /**

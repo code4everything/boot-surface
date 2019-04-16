@@ -148,6 +148,7 @@ public class MailUtils {
      * @since 1.0.9
      */
     public static MimeMessageHelper buildDefaultMessageHelper() {
+        Objects.requireNonNull(mailSender, "please set a java mail sender");
         return new MimeMessageHelper(mailSender.createMimeMessage());
     }
 }

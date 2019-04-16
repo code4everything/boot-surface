@@ -82,7 +82,7 @@ public class BootConfig {
      *
      * @since 1.1.0
      */
-    public static void setFrequency(int frequency) {
+    public static void setFrequency(Integer frequency) {
         DefaultWebInterceptor.setFrequency(frequency);
     }
 
@@ -125,31 +125,16 @@ public class BootConfig {
      */
     public static void parseJson(JSONObject boot) {
         if (ObjectUtil.isNotNull(boot)) {
-            Long maxUploadFileSize = boot.getLong("maxUploadFileSize");
-            if (ObjectUtil.isNotNull(maxUploadFileSize)) {
-                // 最大文件上传大小
-                setMaxUploadFileSize(maxUploadFileSize);
-            }
-            Boolean debug = boot.getBoolean("debug");
-            if (ObjectUtil.isNotNull(debug)) {
-                // 是否开启debug模式
-                setDebug(debug);
-            }
-            Boolean sealed = boot.getBoolean("sealed");
-            if (ObjectUtil.isNotNull(sealed)) {
-                // 是否对响应字段加密
-                setSealed(sealed);
-            }
-            Integer okCode = boot.getInteger("okCode");
-            if (ObjectUtil.isNotNull(okCode)) {
-                // 请求成功的响应码
-                setOkCode(okCode);
-            }
-            Integer frequency = boot.getInteger("frequency");
-            if (ObjectUtil.isNotNull(frequency)) {
-                // 设置请求检测频率
-                setFrequency(frequency);
-            }
+            // 最大文件上传大小
+            setMaxUploadFileSize(boot.getLong("maxUploadFileSize"));
+            // 是否开启debug模式
+            setDebug(boot.getBoolean("debug"));
+            // 是否对响应字段加密
+            setSealed(boot.getBoolean("sealed"));
+            // 请求成功的响应码
+            setOkCode(boot.getInteger("okCode"));
+            // 设置请求检测频率
+            setFrequency(boot.getInteger("frequency"));
             LOGGER.info("boot config is changed >>> {}", boot);
         }
     }
@@ -183,7 +168,7 @@ public class BootConfig {
      *
      * @since 1.0.5
      */
-    public static void setOkCode(int okCode) {
+    public static void setOkCode(Integer okCode) {
         Response.setOkCode(okCode);
     }
 
@@ -278,8 +263,10 @@ public class BootConfig {
      *
      * @since 1.0.0
      */
-    public static void setSealed(boolean sealed) {
-        BootConfig.sealed = sealed;
+    public static void setSealed(Boolean sealed) {
+        if (ObjectUtil.isNotNull(sealed)) {
+            BootConfig.sealed = sealed;
+        }
     }
 
     /**
@@ -300,8 +287,10 @@ public class BootConfig {
      *
      * @since 1.0.0
      */
-    public static void setDebug(boolean debug) {
-        BootConfig.debug = debug;
+    public static void setDebug(Boolean debug) {
+        if (ObjectUtil.isNotNull(debug)) {
+            BootConfig.debug = debug;
+        }
     }
 
     /**
@@ -322,7 +311,9 @@ public class BootConfig {
      *
      * @since 1.0.0
      */
-    public static void setMaxUploadFileSize(long maxUploadFileSize) {
-        BootConfig.maxUploadFileSize = maxUploadFileSize;
+    public static void setMaxUploadFileSize(Long maxUploadFileSize) {
+        if (ObjectUtil.isNotNull(maxUploadFileSize)) {
+            BootConfig.maxUploadFileSize = maxUploadFileSize;
+        }
     }
 }

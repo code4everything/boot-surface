@@ -45,6 +45,32 @@ public class HttpUtils {
     private HttpUtils() {}
 
     /**
+     * 是否是设置的成功响应码
+     *
+     * @param response {@link Response}
+     *
+     * @return 是否是设置的成功响应码
+     *
+     * @since 1.1.0
+     */
+    public static boolean isOk(Response<?> response) {
+        return ObjectUtil.isNotNull(response) && response.isOk();
+    }
+
+    /**
+     * 是否是2xx成功响应码
+     *
+     * @param response {@link Response}
+     *
+     * @return 是否是2xx成功响应码
+     *
+     * @since 1.1.0
+     */
+    public static boolean is2xxOk(Response<?> response) {
+        return ObjectUtil.isNotNull(response) && response.getCode() >= 200 && response.getCode() < 300;
+    }
+
+    /**
      * 获取布尔值
      *
      * @param request {@link HttpServletRequest}

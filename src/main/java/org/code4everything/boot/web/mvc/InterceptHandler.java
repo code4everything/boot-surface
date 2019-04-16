@@ -72,7 +72,7 @@ public interface InterceptHandler {
     }
 
     /**
-     * 处理黑白名单
+     * 处理白名单
      *
      * @param request {@link HttpServletRequest}
      * @param response {@link HttpServletResponse}
