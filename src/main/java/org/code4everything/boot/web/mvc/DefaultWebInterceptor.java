@@ -32,7 +32,7 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
      *
      * @since 1.1.0
      */
-    private static Integer frequency = 1000;
+    private static int frequency = 1000;
 
     private static boolean firstLoad = true;
 

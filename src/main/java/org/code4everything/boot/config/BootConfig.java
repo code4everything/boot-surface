@@ -168,7 +168,7 @@ public class BootConfig {
      *
      * @since 1.0.5
      */
-    public static void setOkCode(int okCode) {
+    public static void setOkCode(Integer okCode) {
         Response.setOkCode(okCode);
     }
 
@@ -263,7 +263,7 @@ public class BootConfig {
      *
      * @since 1.0.0
      */
-    public static void setSealed(boolean sealed) {
+    public static void setSealed(Boolean sealed) {
         if (ObjectUtil.isNotNull(sealed)) {
             BootConfig.sealed = sealed;
         }
@@ -287,7 +287,7 @@ public class BootConfig {
      *
      * @since 1.0.0
      */
-    public static void setDebug(boolean debug) {
+    public static void setDebug(Boolean debug) {
         if (ObjectUtil.isNotNull(debug)) {
             BootConfig.debug = debug;
         }
@@ -311,7 +311,7 @@ public class BootConfig {
      *
      * @since 1.0.0
      */
-    public static void setMaxUploadFileSize(long maxUploadFileSize) {
+    public static void setMaxUploadFileSize(Long maxUploadFileSize) {
         if (ObjectUtil.isNotNull(maxUploadFileSize)) {
             BootConfig.maxUploadFileSize = maxUploadFileSize;
         }
