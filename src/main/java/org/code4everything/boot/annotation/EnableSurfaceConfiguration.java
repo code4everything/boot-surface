@@ -14,4 +14,4 @@ import java.lang.annotation.*;
 @Documented
 @Inherited
 @Import({BootConfiguration.class})
-public @interface EnableSurfaceAutoConfiguration {}
+public @interface EnableSurfaceConfiguration {}

@@ -1,6 +1,7 @@
 package org.code4everything.boot.web.mvc;
 
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.support.spring.FastJsonJsonView;
 import org.code4everything.boot.bean.ExceptionBean;
@@ -166,7 +167,7 @@ public class DefaultExceptionHandler implements HandlerExceptionResolver {
             StringWriter stringWriter = new StringWriter();
             e.printStackTrace(new PrintWriter(stringWriter));
             String exception = stringWriter.toString();
-            System.err.println(exception);
+            Console.error(exception);
             LOGGER.error(exception);
         }
         // 判断异常是否可以转换成ExceptionBean
