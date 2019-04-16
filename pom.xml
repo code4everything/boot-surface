@@ -35,6 +35,8 @@
         <spring.redis.version>2.1.2.RELEASE</spring.redis.version>
         <redis.version>2.9.0</redis.version>
         <mybatis.version>3.5.0</mybatis.version>
+        <java.mail.version>1.6.2</java.mail.version>
+        <spring.boot.version>2.1.4.RELEASE</spring.boot.version>
     </properties>
 
     <dependencies>
@@ -86,6 +88,15 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>${guava.version}</version>
+        </dependency>
+
+        <!--Spring Boot依赖包-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+            <version>${spring.boot.version}</version>
+            <optional>true</optional>
+            <scope>provided</scope>
         </dependency>
 
         <!--WEB开发依赖包-->
@@ -172,7 +183,7 @@
         <dependency>
             <groupId>com.sun.mail</groupId>
             <artifactId>javax.mail</artifactId>
-            <version>1.6.2</version>
+            <version>${java.mail.version}</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>

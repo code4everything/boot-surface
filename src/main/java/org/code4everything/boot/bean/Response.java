@@ -150,7 +150,9 @@ public class Response<T> implements Serializable {
      * @since 1.1.0
      */
     public static void setOkCode(int okCode) {
-        Response.okCode = okCode;
+        if (ObjectUtil.isNotNull(okCode)) {
+            Response.okCode = okCode;
+        }
     }
 
     /**
