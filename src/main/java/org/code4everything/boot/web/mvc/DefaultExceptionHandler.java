@@ -163,12 +163,6 @@ public class DefaultExceptionHandler implements HandlerExceptionResolver {
         if (BootConfig.isDebug()) {
             LOGGER.error("url -> {}, ip -> {}, exception -> {}, message -> {}", req.getServletPath(),
                     req.getRemoteAddr(), e.getClass().getName(), e.getMessage());
-            // 输出异常信息
-            StringWriter stringWriter = new StringWriter();
-            e.printStackTrace(new PrintWriter(stringWriter));
-            String exception = stringWriter.toString();
-            Console.error(exception);
-            LOGGER.error(exception);
         }
         // 判断异常是否可以转换成ExceptionBean
         ExceptionBean exceptionBean;
@@ -177,7 +171,15 @@ public class DefaultExceptionHandler implements HandlerExceptionResolver {
         } else {
             exceptionBean = exceptionMap.get(e.getClass().getName());
         }
-        // 解析并返回
-        return parseModelAndView(req, e, Objects.isNull(exceptionBean) ? bean : exceptionBean);
+        if (Objects.isNull(exceptionBean)) {
+            // 输出未处理的异常信息
+            StringWriter stringWriter = new StringWriter();
+            e.printStackTrace(new PrintWriter(stringWriter));
+            String exception = stringWriter.toString();
+            Console.error(exception);
+            LOGGER.error(exception);
+            return parseModelAndView(req, e, bean);
+        }
+        return parseModelAndView(req, e, exceptionBean);
     }
 }
