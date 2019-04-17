@@ -1,5 +1,6 @@
 package org.code4everything.boot.web.mvc;
 
+import cn.hutool.core.thread.ThreadFactoryBuilder;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.google.common.cache.Cache;
@@ -21,8 +22,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -51,29 +53,24 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
      */
     private static ConfigBean configBean;
 
-    private static Cache<String, Byte> cache = null;
-
     private static Map<String, Long> userVisitMap;
 
     private static Map<String, Long> urlVisitMap;
 
     private static long totalVisit;
 
-    private ExecutorService service = Executors.newSingleThreadExecutor();
-
-    /**
-     * 每天的第一次访问时间
-     *
-     * @since 1.1.0
-     */
-    private long firstVisitPerDay = 0;
+    private static ThreadPoolExecutor executor = null;
 
     /**
      * 拦截处理器
      *
      * @since 1.0.0
      */
-    private InterceptHandler interceptHandler;
+    private final InterceptHandler interceptHandler;
+
+    private Cache<String, Byte> cache = null;
+
+    private ScheduledThreadPoolExecutor scheduledExecutor = null;
 
     /**
      * 构造函数
@@ -127,7 +124,7 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
      * @since 1.1.0
      */
     public static Map<String, Long> getUserVisitMapAndClear() {
-        Map<String, Long> tmp = new HashMap<>(userVisitMap);
+        Map<String, Long> tmp = getUserVisitMap();
         userVisitMap.clear();
         return tmp;
     }
@@ -152,7 +149,7 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
      * @since 1.1.0
      */
     public static Map<String, Long> getUrlVisitMapAndClear() {
-        Map<String, Long> tmp = new HashMap<>(urlVisitMap);
+        Map<String, Long> tmp = getUrlVisitMap();
         urlVisitMap.clear();
         return tmp;
     }
@@ -190,17 +187,23 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
      * @since 1.1.0
      */
     public static void setVisitLog(Boolean visitLog) {
-        if (ObjectUtil.isNotNull(visitLog)) {
-            // 初始化
-            if (visitLog) {
-                resetVisitObjects(1024, 128);
-            } else {
-                userVisitMap = null;
-                urlVisitMap = null;
-                totalVisit = 0;
-            }
-            DefaultWebInterceptor.visitLog = visitLog;
+        if (Objects.isNull(visitLog)) {
+            return;
         }
+        if (visitLog) {
+            // 初始化
+            resetVisitObjects(1024, 128);
+            if (Objects.isNull(executor)) {
+                // 初始化统计线程
+                executor = new ThreadPoolExecutor(1, 1, 0, TimeUnit.SECONDS, new ArrayBlockingQueue<>(0),
+                        ThreadFactoryBuilder.create().setDaemon(true).build());
+            }
+        } else {
+            userVisitMap = null;
+            urlVisitMap = null;
+            totalVisit = 0;
+        }
+        DefaultWebInterceptor.visitLog = visitLog;
     }
 
     /**
@@ -223,6 +226,10 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
         DefaultWebInterceptor.configBean = configBean;
     }
 
+    private static void incrementVisit() {
+        DefaultWebInterceptor.totalVisit++;
+    }
+
     /**
      * 默认拦截器
      *
@@ -242,24 +249,29 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
             final String userKey = interceptHandler.buildUserKey(request);
             final String urlKey = request.getRequestURI();
             // 在另一个线程中执行
-            service.execute(() -> {
-                if (firstVisitPerDay != 0 && firstVisitPerDay < DateUtils.getStartOfToday().getTime()) {
-                    // 回调处理每日的访问统计
-                    Date date = new Date(firstVisitPerDay);
-                    interceptHandler.handleVisitLog(date, getUserVisitMap(), getUrlVisitMap(), totalVisit);
-                    // 重置统计数据
-                    firstVisitPerDay = System.currentTimeMillis();
-                    resetVisitObjects(userVisitMap.size(), urlVisitMap.size());
-                }
+            executor.execute(() -> {
                 // 统计用户访问次数
                 if (StrUtil.isNotEmpty(userKey)) {
                     DefaultWebInterceptor.userVisitMap.put(userKey, userVisitMap.getOrDefault(userKey, 0L) + 1);
                 }
                 // 统计URL访问次数
-                DefaultWebInterceptor.urlVisitMap.put(urlKey, urlVisitMap.getOrDefault(urlKey, 0L) + 1);
+                urlVisitMap.put(urlKey, urlVisitMap.getOrDefault(urlKey, 0L) + 1);
                 // 统计总访问次数
-                DefaultWebInterceptor.totalVisit++;
+                incrementVisit();
             });
+            if (Objects.isNull(scheduledExecutor)) {
+                // 初始化回调线程
+                scheduledExecutor = new ScheduledThreadPoolExecutor(1,
+                        ThreadFactoryBuilder.create().setDaemon(true).build());
+                long initialDelay = DateUtils.getEndOfToday().getTime() - System.currentTimeMillis() - 999;
+                scheduledExecutor.scheduleAtFixedRate(() -> {
+                    // 回调处理每日的访问统计
+                    Date date = new Date(System.currentTimeMillis());
+                    interceptHandler.handleVisitLog(date, getUserVisitMap(), getUrlVisitMap(), totalVisit);
+                    // 重置统计数据
+                    resetVisitObjects(userVisitMap.size(), urlVisitMap.size());
+                }, initialDelay, 24, TimeUnit.HOURS);
+            }
         }
 
         if (BootConfig.isDebug()) {
