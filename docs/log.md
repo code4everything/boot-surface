@@ -2,8 +2,6 @@
 
 > 任何项目的开发都少不了日志的记录，如果你也像我一样是用的Spring AOP进行的日志记录，并且需要将日志保存至数据库，那么这个类可以帮到你
 
-
-
 #### 新建一个日志实体类
 
 ``` java
@@ -103,7 +101,7 @@ public class LogServiceImpl implements BootLogService<Log> {
 }
 ```
 
-#### 创建切面类
+#### 创建切面类或直接在 `Spring Boot` 应用的主类上使用注解 `@EnableSurfaceAutoLog`
 
 ``` java
 import org.aspectj.lang.JoinPoint;

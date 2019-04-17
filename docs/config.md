@@ -2,6 +2,25 @@
 
 > 本库所有的设置都可以通过 `BootConfit` 类来设置，类下所有方法均为静态方法
 
+### 在 `Spring Boot` 应用中使用 `properties` 进行配置
+
+开启属性配置
+
+``` java
+@EnableSurfaceConfiguration
+```
+
+在 `application.properties` 或 `application.yml` 中配置
+
+``` properties
+boot.surface.max-upload-file-size=1024
+boot.surface.debug=false
+boot.surface.sealed=false
+boot.surface.ok-code=0
+boot.surface.frequency=1000
+```
+
+
 ### 设置日志缓存
 
 ``` java

@@ -29,14 +29,7 @@
 - 将邮箱配置传递到`BootSurface`库
 
     ``` java
-    @Configuration
-    public class MailConfiguration {
-    
-        @Autowired
-        public MailConfiguration(JavaMailSender mailSender, @Value("${spring.mail.username}") String outbox) {
-            BootConfig.setMailSender(outbox, mailSender);
-        }
-    }
+    @EnableSurfaceMailSender
     ```
     
 - 到这里，配置就结束了，下面测试一下如何发送一封简单的邮件

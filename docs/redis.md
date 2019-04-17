@@ -13,6 +13,12 @@ public YourRedisConfigurationCustructor(RedisConnectionFactory redisConnectionFa
 }
 ```
 
+或直接使用注解
+
+``` java
+@EnableSurfaceRedisTemplate
+```
+
 #### 新建 `RedisTemplate`
 
 ``` java
