@@ -7,7 +7,6 @@ import cn.hutool.core.io.watch.WatchMonitor;
 import cn.hutool.core.io.watch.Watcher;
 import cn.hutool.core.io.watch.watchers.DelayWatcher;
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
 import org.code4everything.boot.config.BootConfig;
 import org.code4everything.boot.constant.StringConsts;
@@ -172,7 +171,18 @@ public class FileUtils {
      *
      * @since 1.0.0
      */
-    public static String currentWorkDir() {
-        return Paths.get(StrUtil.DOT).toAbsolutePath().normalize().toString();
+    public static String currentWorkDir(String... more) {
+        return getPath(StringConsts.Sign.DOT, more);
+    }
+
+    /**
+     * 获取路径
+     *
+     * @return 路径
+     *
+     * @since 1.1.0
+     */
+    public static String getPath(String path, String... more) {
+        return Paths.get(path, more).toAbsolutePath().normalize().toString();
     }
 }

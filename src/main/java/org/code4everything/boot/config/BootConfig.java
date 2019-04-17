@@ -20,7 +20,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.mail.javamail.JavaMailSender;
 
-import java.io.File;
 import java.util.Objects;
 
 /**
@@ -92,7 +91,7 @@ public class BootConfig {
      * @since 1.0.6
      */
     public static void watchBootConfig() {
-        watchBootConfig(FileUtils.currentWorkDir() + File.separator + "boot-config.json");
+        watchBootConfig(FileUtils.currentWorkDir("boot-config.json"));
     }
 
     /**
