@@ -526,21 +526,22 @@ public class Response<T> implements Serializable {
     /**
      * 不比较时间戳
      *
-     * @param obj 对象
+     * @param o 对象
      *
      * @return 是否相等
      *
      * @since 1.0.5
      */
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
+    public boolean equals(Object o) {
+        if (this == o) {
             return true;
-        } else if (obj instanceof Response) {
-            Response result = (Response) obj;
-            return code == result.code && msg.equals(result.msg) && Objects.equals(data, result.data);
         }
-        return false;
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Response<?> response = (Response<?>) o;
+        return code == response.code && Objects.equals(msg, response.msg) && Objects.equals(data, response.data);
     }
 
     /**
@@ -552,10 +553,7 @@ public class Response<T> implements Serializable {
      */
     @Override
     public int hashCode() {
-        int hasCode = 1;
-        hasCode = hasCode << 8 ^ code;
-        hasCode = hasCode << 8 | msg.hashCode();
-        return data == null ? hasCode : hasCode << 8 & data.hashCode();
+        return Objects.hash(code, msg, data);
     }
 
     private void writeObject(ObjectOutputStream outputStream) throws IOException {

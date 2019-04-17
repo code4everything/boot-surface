@@ -1,14 +1,15 @@
 package org.code4everything.boot.config;
 
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ObjectUtil;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.cache.Cache;
 import org.code4everything.boot.base.FileUtils;
 import org.code4everything.boot.base.FileWatcher;
 import org.code4everything.boot.bean.ConfigBean;
 import org.code4everything.boot.bean.Response;
+import org.code4everything.boot.constant.StringConsts;
 import org.code4everything.boot.encoder.DefaultFieldEncoder;
 import org.code4everything.boot.encoder.FieldEncoder;
 import org.code4everything.boot.log.AopLogUtils;
@@ -106,11 +107,11 @@ public class BootConfig {
 
             @Override
             public void doSomething() {
-                if (FileUtil.exist(bootConfigPath)) {
-                    parseJson(JSONObject.parseObject(FileUtil.readString(bootConfigPath, CharsetUtil.UTF_8)));
-                } else {
+                if (!FileUtil.exist(bootConfigPath)) {
                     LOGGER.warn("boot config file [{}] is not found", bootConfigPath);
+                    return;
                 }
+                setConfig(JSONObject.parseObject(FileUtil.readUtf8String(bootConfigPath), BootConfigProperties.class));
             }
         }, true);
     }
@@ -118,24 +119,47 @@ public class BootConfig {
     /**
      * 解析JSON配置
      *
-     * @param boot JSON 配置
+     * @param root JSON 配置
      *
      * @since 1.0.6
      */
-    public static void parseJson(JSONObject boot) {
-        if (ObjectUtil.isNotNull(boot)) {
-            // 最大文件上传大小
-            setMaxUploadFileSize(boot.getLong("maxUploadFileSize"));
-            // 是否开启debug模式
-            setDebug(boot.getBoolean("debug"));
-            // 是否对响应字段加密
-            setSealed(boot.getBoolean("sealed"));
-            // 请求成功的响应码
-            setOkCode(boot.getInteger("okCode"));
-            // 设置请求检测频率
-            setFrequency(boot.getInteger("frequency"));
-            LOGGER.info("boot config is changed >>> {}", boot);
+    public static void parseJson(JSONObject root) {
+        if (root.containsKey(StringConsts.BOOT)) {
+            setConfig(root.getObject(StringConsts.BOOT, BootConfigProperties.class));
+        } else {
+            setConfig(JSON.parseObject(root.toJSONString(), BootConfigProperties.class));
         }
+    }
+
+    /**
+     * 设置
+     *
+     * @param properties 设置
+     *
+     * @since 1.1.0
+     */
+    public static void setConfig(BootConfigProperties properties) {
+        if (Objects.isNull(properties)) {
+            return;
+        }
+        setFrequency(properties.getFrequency());
+        setOkCode(properties.getOkCode());
+        setSealed(properties.getSealed());
+        setDebug(properties.getDebug());
+        setMaxUploadFileSize(properties.getMaxUploadFileSize());
+        setVisitLog(properties.getVisitLog());
+        LOGGER.info("boot config is changed >>> {}", properties);
+    }
+
+    /**
+     * 设置是否统计访问数据
+     *
+     * @param visitLog 是否统计访问数据
+     *
+     * @since 1.1.0
+     */
+    public static void setVisitLog(Boolean visitLog) {
+        DefaultWebInterceptor.setVisitLog(visitLog);
     }
 
     /**

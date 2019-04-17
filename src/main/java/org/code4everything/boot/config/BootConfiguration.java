@@ -14,10 +14,6 @@ public class BootConfiguration {
 
     @Autowired
     public BootConfiguration(BootConfigProperties properties) {
-        BootConfig.setFrequency(properties.getFrequency());
-        BootConfig.setOkCode(properties.getOkCode());
-        BootConfig.setSealed(properties.getSealed());
-        BootConfig.setDebug(properties.getDebug());
-        BootConfig.setMaxUploadFileSize(properties.getMaxUploadFileSize());
+        BootConfig.setConfig(properties);
     }
 }

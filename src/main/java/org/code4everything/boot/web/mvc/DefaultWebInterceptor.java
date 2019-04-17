@@ -4,6 +4,8 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import org.code4everything.boot.base.DateUtils;
+import org.code4everything.boot.base.ObjectUtils;
 import org.code4everything.boot.bean.ConfigBean;
 import org.code4everything.boot.config.BootConfig;
 import org.code4everything.boot.exception.ExceptionFactory;
@@ -14,6 +16,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.sql.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -36,12 +41,26 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
 
     private static boolean firstLoad = true;
 
+    private volatile static boolean visitLog = false;
+
+    private static Map<String, Long> userVisitMap;
+
+    private static int userVisitMapCapacity = 1024;
+
     /**
      * 配置信息
      *
      * @since 1.0.0
      */
     private static ConfigBean configBean;
+
+    private static Map<String, Long> urlVisitMap;
+
+    private static int urlVisitMapCapacity = 128;
+
+    private static long totalVisit;
+
+    private static long firstVisit = 0;
 
     private static Cache<String, Byte> cache = null;
 
@@ -86,6 +105,82 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
     }
 
     /**
+     * 获取用户访问统计
+     *
+     * @return 用户访问统计
+     *
+     * @since 1.1.0
+     */
+    public static Map<String, Long> getUserVisitMap() {
+        return userVisitMap;
+    }
+
+    /**
+     * 获取URL访问统计
+     *
+     * @return URL访问统计
+     *
+     * @since 1.1.0
+     */
+    public static Map<String, Long> getUrlVisitMap() {
+        return urlVisitMap;
+    }
+
+    /**
+     * 获取总访问次数
+     *
+     * @return 总访问次数
+     *
+     * @since 1.1.0
+     */
+    public static long getTotalVisit() {
+        return totalVisit;
+    }
+
+    /**
+     * 获取总访问次数，并且清空
+     *
+     * @return 总访问次数
+     *
+     * @since 1.1.0
+     */
+    public static long getTotalVisitAndClear() {
+        long tmp = totalVisit;
+        totalVisit = 0;
+        return tmp;
+    }
+
+    /**
+     * 设置是否统计访问数据
+     *
+     * @param visitLog 是否统计访问数据
+     *
+     * @since 1.1.0
+     */
+    public static void setVisitLog(Boolean visitLog) {
+        if (ObjectUtil.isNotNull(visitLog)) {
+            // 初始化
+            if (visitLog) {
+                resetVisitObjects();
+            } else {
+                userVisitMap = null;
+                urlVisitMap = null;
+                totalVisit = 0;
+            }
+            DefaultWebInterceptor.visitLog = visitLog;
+        }
+    }
+
+    /**
+     * 初始化请求统计的对象
+     */
+    private static void resetVisitObjects() {
+        userVisitMap = new HashMap<>(userVisitMapCapacity);
+        urlVisitMap = new HashMap<>(urlVisitMapCapacity);
+        totalVisit = 0;
+    }
+
+    /**
      * 设置配置类
      *
      * @param configBean {@link ConfigBean}
@@ -110,6 +205,30 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         checkFrequency(request);
+        // 统计请求数据
+        if (visitLog && ObjectUtils.isNotNull(userVisitMap, urlVisitMap)) {
+            if (firstVisit != 0 && firstVisit < DateUtils.getStartOfToday().getTime()) {
+                // 重置容器大小
+                userVisitMapCapacity = userVisitMap.size();
+                urlVisitMapCapacity = urlVisitMap.size();
+                // 回调处理每日的访问统计
+                interceptHandler.handleVisitLog(new Date(firstVisit), userVisitMap, urlVisitMap, totalVisit);
+                // 重置统计数据
+                resetVisitObjects();
+                firstVisit = System.currentTimeMillis();
+            }
+            // 统计用户访问次数
+            String userKey = interceptHandler.buildUserKey(request);
+            if (StrUtil.isNotEmpty(userKey)) {
+                userVisitMap.put(userKey, userVisitMap.getOrDefault(userKey, 0L) + 1);
+            }
+            // 统计URL访问次数
+            String urlKey = request.getRequestURI();
+            urlVisitMap.put(urlKey, urlVisitMap.getOrDefault(urlKey, 0L) + 1);
+            // 统计总访问次数
+            totalVisit++;
+        }
+
         if (BootConfig.isDebug()) {
             // 打印请求的详细信息
             String logStr = interceptHandler.buildVisitLog(request);
@@ -117,7 +236,8 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
         }
         if (Objects.isNull(configBean)) {
             if (firstLoad) {
-                LOGGER.warn("has no config for this interceptor, it will not work in anyway.");
+                LOGGER.warn("has no config for this interceptor, it will does not work in anyway.");
+                firstLoad = false;
             }
             return true;
         }

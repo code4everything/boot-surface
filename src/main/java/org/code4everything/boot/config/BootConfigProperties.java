@@ -35,6 +35,19 @@ public class BootConfigProperties {
      */
     private Integer frequency;
 
+    /**
+     * 是否统计访问数据
+     */
+    private Boolean visitLog;
+
+    public Boolean getVisitLog() {
+        return visitLog;
+    }
+
+    public void setVisitLog(Boolean visitLog) {
+        this.visitLog = visitLog;
+    }
+
     public Long getMaxUploadFileSize() {
         return maxUploadFileSize;
     }

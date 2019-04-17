@@ -11,6 +11,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.sql.Date;
+import java.util.Map;
 
 /**
  * 拦截处理器接口
@@ -19,6 +21,31 @@ import javax.servlet.http.HttpServletResponse;
  * @since 2018/11/4
  */
 public interface InterceptHandler {
+
+    /**
+     * 处理每日的访问统计
+     *
+     * @param date 日期
+     * @param userVisit 用户访问统计
+     * @param urlVisit URL访问统计
+     * @param totalVisit 总访问次数
+     *
+     * @since 1.1.0
+     */
+    default void handleVisitLog(Date date, Map<String, Long> userVisit, Map<String, Long> urlVisit, long totalVisit) {}
+
+    /**
+     * 构建统计用户访问次数的键，返回NULL时不统计
+     *
+     * @param request {@link HttpServletRequest}
+     *
+     * @return 用户键
+     *
+     * @since 1.1.0
+     */
+    default String buildUserKey(HttpServletRequest request) {
+        return buildCacheKey(request);
+    }
 
     /**
      * 构建请求日志
@@ -43,7 +70,7 @@ public interface InterceptHandler {
     }
 
     /**
-     * 构建频率检测缓存的键
+     * 构建频率检测缓存的键，返回NULL时不检测请求频率
      *
      * @param request {@link HttpServletRequest}
      *
