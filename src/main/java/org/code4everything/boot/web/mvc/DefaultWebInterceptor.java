@@ -17,9 +17,12 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.sql.Date;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -39,13 +42,7 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
      */
     private static int frequency = 1000;
 
-    private static boolean firstLoad = true;
-
-    private volatile static boolean visitLog = false;
-
-    private static Map<String, Long> userVisitMap;
-
-    private static int userVisitMapCapacity = 1024;
+    private static boolean visitLog = false;
 
     /**
      * 配置信息
@@ -54,15 +51,22 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
      */
     private static ConfigBean configBean;
 
-    private static Map<String, Long> urlVisitMap;
+    private static Cache<String, Byte> cache = null;
 
-    private static int urlVisitMapCapacity = 128;
+    private static Map<String, Long> userVisitMap;
+
+    private static Map<String, Long> urlVisitMap;
 
     private static long totalVisit;
 
-    private static long firstVisit = 0;
+    private ExecutorService service = Executors.newSingleThreadExecutor();
 
-    private static Cache<String, Byte> cache = null;
+    /**
+     * 每天的第一次访问时间
+     *
+     * @since 1.1.0
+     */
+    private long firstVisitPerDay = 0;
 
     /**
      * 拦截处理器
@@ -77,7 +81,7 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
      * @since 1.0.0
      */
     public DefaultWebInterceptor() {
-        this.interceptHandler = new InterceptHandler() {};
+        this(new InterceptHandler() {});
     }
 
     /**
@@ -112,8 +116,22 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
      * @since 1.1.0
      */
     public static Map<String, Long> getUserVisitMap() {
-        return userVisitMap;
+        return Collections.unmodifiableMap(userVisitMap);
     }
+
+    /**
+     * 获取用户访问统计并清空
+     *
+     * @return 用户访问统计
+     *
+     * @since 1.1.0
+     */
+    public static Map<String, Long> getUserVisitMapAndClear() {
+        Map<String, Long> tmp = new HashMap<>(userVisitMap);
+        userVisitMap.clear();
+        return tmp;
+    }
+
 
     /**
      * 获取URL访问统计
@@ -123,8 +141,22 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
      * @since 1.1.0
      */
     public static Map<String, Long> getUrlVisitMap() {
-        return urlVisitMap;
+        return Collections.unmodifiableMap(urlVisitMap);
     }
+
+    /**
+     * 获取URL访问统计并清空
+     *
+     * @return URL访问统计
+     *
+     * @since 1.1.0
+     */
+    public static Map<String, Long> getUrlVisitMapAndClear() {
+        Map<String, Long> tmp = new HashMap<>(urlVisitMap);
+        urlVisitMap.clear();
+        return tmp;
+    }
+
 
     /**
      * 获取总访问次数
@@ -138,7 +170,7 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
     }
 
     /**
-     * 获取总访问次数，并且清空
+     * 获取总访问次数并清空
      *
      * @return 总访问次数
      *
@@ -161,7 +193,7 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
         if (ObjectUtil.isNotNull(visitLog)) {
             // 初始化
             if (visitLog) {
-                resetVisitObjects();
+                resetVisitObjects(1024, 128);
             } else {
                 userVisitMap = null;
                 urlVisitMap = null;
@@ -174,9 +206,9 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
     /**
      * 初始化请求统计的对象
      */
-    private static void resetVisitObjects() {
-        userVisitMap = new HashMap<>(userVisitMapCapacity);
-        urlVisitMap = new HashMap<>(urlVisitMapCapacity);
+    private static void resetVisitObjects(int userCapacity, int urlCapacity) {
+        userVisitMap = new HashMap<>(userCapacity);
+        urlVisitMap = new HashMap<>(urlCapacity);
         totalVisit = 0;
     }
 
@@ -207,26 +239,27 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
         checkFrequency(request);
         // 统计请求数据
         if (visitLog && ObjectUtils.isNotNull(userVisitMap, urlVisitMap)) {
-            if (firstVisit != 0 && firstVisit < DateUtils.getStartOfToday().getTime()) {
-                // 重置容器大小
-                userVisitMapCapacity = userVisitMap.size();
-                urlVisitMapCapacity = urlVisitMap.size();
-                // 回调处理每日的访问统计
-                interceptHandler.handleVisitLog(new Date(firstVisit), userVisitMap, urlVisitMap, totalVisit);
-                // 重置统计数据
-                resetVisitObjects();
-                firstVisit = System.currentTimeMillis();
-            }
-            // 统计用户访问次数
-            String userKey = interceptHandler.buildUserKey(request);
-            if (StrUtil.isNotEmpty(userKey)) {
-                userVisitMap.put(userKey, userVisitMap.getOrDefault(userKey, 0L) + 1);
-            }
-            // 统计URL访问次数
-            String urlKey = request.getRequestURI();
-            urlVisitMap.put(urlKey, urlVisitMap.getOrDefault(urlKey, 0L) + 1);
-            // 统计总访问次数
-            totalVisit++;
+            final String userKey = interceptHandler.buildUserKey(request);
+            final String urlKey = request.getRequestURI();
+            // 在另一个线程中执行
+            service.execute(() -> {
+                if (firstVisitPerDay != 0 && firstVisitPerDay < DateUtils.getStartOfToday().getTime()) {
+                    // 回调处理每日的访问统计
+                    Date date = new Date(firstVisitPerDay);
+                    interceptHandler.handleVisitLog(date, getUserVisitMap(), getUrlVisitMap(), totalVisit);
+                    // 重置统计数据
+                    firstVisitPerDay = System.currentTimeMillis();
+                    resetVisitObjects(userVisitMap.size(), urlVisitMap.size());
+                }
+                // 统计用户访问次数
+                if (StrUtil.isNotEmpty(userKey)) {
+                    DefaultWebInterceptor.userVisitMap.put(userKey, userVisitMap.getOrDefault(userKey, 0L) + 1);
+                }
+                // 统计URL访问次数
+                DefaultWebInterceptor.urlVisitMap.put(urlKey, urlVisitMap.getOrDefault(urlKey, 0L) + 1);
+                // 统计总访问次数
+                DefaultWebInterceptor.totalVisit++;
+            });
         }
 
         if (BootConfig.isDebug()) {
@@ -234,28 +267,21 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
             String logStr = interceptHandler.buildVisitLog(request);
             LOGGER.info(logStr);
         }
-        if (Objects.isNull(configBean)) {
-            if (firstLoad) {
-                LOGGER.warn("has no config for this interceptor, it will does not work in anyway.");
-                firstLoad = false;
-            }
-            return true;
-        }
 
         String url = request.getRequestURI();
 
         // 黑名单
-        if (StrUtil.startWithAny(url, DefaultWebInterceptor.configBean.getBlackPrefixes())) {
+        if (StrUtil.startWithAny(url, getBlackList())) {
             interceptHandler.handleBlackList(request, response, handler);
             return false;
         }
         // 白名单
-        if (StrUtil.startWithAny(url, DefaultWebInterceptor.configBean.getWhitePrefixes())) {
+        if (StrUtil.startWithAny(url, getWhiteList())) {
             interceptHandler.handleWhiteList(request, response, handler);
             return true;
         }
         // 拦截名单
-        if (StrUtil.startWithAny(url, DefaultWebInterceptor.configBean.getInterceptPrefixes())) {
+        if (StrUtil.startWithAny(url, getInterceptList())) {
             return interceptHandler.handleInterceptList(request, response, handler);
         }
         return true;
@@ -320,5 +346,21 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler,
                                 Exception ex) throws Exception {
         interceptHandler.afterCompletion(request, response, handler, ex);
+    }
+
+    private String[] getBlackList() {
+        return isNull() ? null : DefaultWebInterceptor.configBean.getBlackPrefixes();
+    }
+
+    private String[] getWhiteList() {
+        return isNull() ? null : DefaultWebInterceptor.configBean.getWhitePrefixes();
+    }
+
+    private String[] getInterceptList() {
+        return isNull() ? null : DefaultWebInterceptor.configBean.getInterceptPrefixes();
+    }
+
+    private boolean isNull() {
+        return Objects.isNull(DefaultWebInterceptor.configBean);
     }
 }
