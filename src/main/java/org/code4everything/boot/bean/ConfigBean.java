@@ -35,6 +35,38 @@ public class ConfigBean implements BaseBean, Serializable {
     private String[] interceptPrefixes;
 
     /**
+     * 忽略统计访问的名单前缀
+     *
+     * @since 1.1.0
+     */
+    private String[] visitIgnorePrefixes;
+
+    /**
+     * 获取忽略统计访问的名单前缀
+     *
+     * @return 忽略统计访问的名单前缀
+     *
+     * @since 1.1.0
+     */
+    public String[] getVisitIgnorePrefixes() {
+        return visitIgnorePrefixes;
+    }
+
+    /**
+     * 设置忽略统计访问的名单前缀
+     *
+     * @param visitIgnorePrefixes 忽略统计访问的名单前缀
+     *
+     * @return {@link ConfigBean}
+     *
+     * @since 1.1.0
+     */
+    public ConfigBean setVisitIgnorePrefixes(String[] visitIgnorePrefixes) {
+        this.visitIgnorePrefixes = visitIgnorePrefixes;
+        return this;
+    }
+
+    /**
      * 获取黑名单前缀
      *
      * @return 黑名单前缀
@@ -109,6 +141,6 @@ public class ConfigBean implements BaseBean, Serializable {
 
     @Override
     public String toString() {
-        return "ConfigBean{" + "blackPrefixes=" + Arrays.toString(blackPrefixes) + ", whitePrefixes=" + Arrays.toString(whitePrefixes) + ", interceptPrefixes=" + Arrays.toString(interceptPrefixes) + '}';
+        return "ConfigBean{" + "blackPrefixes=" + Arrays.toString(blackPrefixes) + ", whitePrefixes=" + Arrays.toString(whitePrefixes) + ", interceptPrefixes=" + Arrays.toString(interceptPrefixes) + ", visitIgnorePrefixes=" + Arrays.toString(visitIgnorePrefixes) + '}';
     }
 }

@@ -48,7 +48,7 @@ public interface BootUserService<T> {
      *
      * @since 1.1.0
      */
-    default void put2cache(String token, T user) {}
+    default void put2Cache(String token, T user) {}
 
     /**
      * 自定义查询

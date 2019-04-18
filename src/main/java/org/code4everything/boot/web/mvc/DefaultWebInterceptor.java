@@ -9,6 +9,7 @@ import org.code4everything.boot.base.DateUtils;
 import org.code4everything.boot.base.ObjectUtils;
 import org.code4everything.boot.bean.ConfigBean;
 import org.code4everything.boot.config.BootConfig;
+import org.code4everything.boot.constant.IntegerConsts;
 import org.code4everything.boot.exception.ExceptionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,10 +23,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 /**
  * 默认拦截器<br>拦截顺序依次为：黑名单 - 白名单 - 拦截名单
@@ -59,8 +57,6 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
 
     private static long totalVisit;
 
-    private static ThreadPoolExecutor executor = null;
-
     /**
      * 拦截处理器
      *
@@ -68,9 +64,13 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
      */
     private final InterceptHandler interceptHandler;
 
+    private ThreadPoolExecutor executor = null;
+
     private Cache<String, Byte> cache = null;
 
     private ScheduledThreadPoolExecutor scheduledExecutor = null;
+
+    private ThreadFactory factory = ThreadFactoryBuilder.create().setDaemon(true).build();
 
     /**
      * 构造函数
@@ -193,11 +193,6 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
         if (visitLog) {
             // 初始化
             resetVisitObjects(1024, 128);
-            if (Objects.isNull(executor)) {
-                // 初始化统计线程
-                executor = new ThreadPoolExecutor(1, 1, 0, TimeUnit.SECONDS, new ArrayBlockingQueue<>(0),
-                        ThreadFactoryBuilder.create().setDaemon(true).build());
-            }
         } else {
             userVisitMap = null;
             urlVisitMap = null;
@@ -246,32 +241,7 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
         checkFrequency(request);
         // 统计请求数据
         if (visitLog && ObjectUtils.isNotNull(userVisitMap, urlVisitMap)) {
-            final String userKey = interceptHandler.buildUserKey(request);
-            final String urlKey = request.getRequestURI();
-            // 在另一个线程中执行
-            executor.execute(() -> {
-                // 统计用户访问次数
-                if (StrUtil.isNotEmpty(userKey)) {
-                    DefaultWebInterceptor.userVisitMap.put(userKey, userVisitMap.getOrDefault(userKey, 0L) + 1);
-                }
-                // 统计URL访问次数
-                urlVisitMap.put(urlKey, urlVisitMap.getOrDefault(urlKey, 0L) + 1);
-                // 统计总访问次数
-                incrementVisit();
-            });
-            if (Objects.isNull(scheduledExecutor)) {
-                // 初始化回调线程
-                scheduledExecutor = new ScheduledThreadPoolExecutor(1,
-                        ThreadFactoryBuilder.create().setDaemon(true).build());
-                long initialDelay = DateUtils.getEndOfToday().getTime() - System.currentTimeMillis() - 999;
-                scheduledExecutor.scheduleAtFixedRate(() -> {
-                    // 回调处理每日的访问统计
-                    Date date = new Date(System.currentTimeMillis());
-                    interceptHandler.handleVisitLog(date, getUserVisitMap(), getUrlVisitMap(), totalVisit);
-                    // 重置统计数据
-                    resetVisitObjects(userVisitMap.size(), urlVisitMap.size());
-                }, initialDelay, 24, TimeUnit.HOURS);
-            }
+            countVisit(interceptHandler.buildUserKey(request), request.getRequestURI());
         }
 
         if (BootConfig.isDebug()) {
@@ -358,6 +328,44 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler,
                                 Exception ex) throws Exception {
         interceptHandler.afterCompletion(request, response, handler, ex);
+    }
+
+    private void countVisit(final String userKey, final String urlKey) {
+        if (Objects.isNull(executor)) {
+            // 初始化统计线程
+            BlockingQueue<Runnable> queue = new ArrayBlockingQueue<>(IntegerConsts.ONE_THOUSAND_AND_TWENTY_FOUR);
+            executor = new ThreadPoolExecutor(1, 1, 0, TimeUnit.SECONDS, queue, factory);
+        }
+        if (Objects.isNull(scheduledExecutor)) {
+            // 初始化回调线程
+            scheduledExecutor = new ScheduledThreadPoolExecutor(1, factory);
+            long initialDelay = DateUtils.getEndOfToday().getTime() - System.currentTimeMillis() - 999;
+            scheduledExecutor.scheduleAtFixedRate(() -> {
+                // 回调处理每日的访问统计
+                Date date = new Date(System.currentTimeMillis());
+                interceptHandler.handleVisitLog(date, getUserVisitMap(), getUrlVisitMap(), totalVisit);
+                // 重置统计数据
+                resetVisitObjects(userVisitMap.size(), urlVisitMap.size());
+            }, initialDelay, 24, TimeUnit.HOURS);
+        }
+        // 使用单独一个线程来进行统计
+        executor.execute(() -> {
+            if (StrUtil.startWithAny(urlKey, getVisitIgnorePrefixes())) {
+                return;
+            }
+            // 统计用户访问次数
+            if (StrUtil.isNotEmpty(userKey)) {
+                userVisitMap.put(userKey, userVisitMap.getOrDefault(userKey, 0L) + 1);
+            }
+            // 统计URL访问次数
+            urlVisitMap.put(urlKey, urlVisitMap.getOrDefault(urlKey, 0L) + 1);
+            // 统计总访问次数
+            incrementVisit();
+        });
+    }
+
+    private String[] getVisitIgnorePrefixes() {
+        return isNull() ? null : DefaultWebInterceptor.configBean.getVisitIgnorePrefixes();
     }
 
     private String[] getBlackList() {

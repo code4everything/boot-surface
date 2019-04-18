@@ -90,6 +90,6 @@ public class BootConfigProperties {
 
     @Override
     public String toString() {
-        return "BootConfigProperties{" + "maxUploadFileSize=" + maxUploadFileSize + ", debug=" + debug + ", sealed=" + sealed + ", okCode=" + okCode + ", frequency=" + frequency + '}';
+        return "BootConfigProperties{" + "maxUploadFileSize=" + maxUploadFileSize + ", debug=" + debug + ", sealed=" + sealed + ", okCode=" + okCode + ", frequency=" + frequency + ", visitLog=" + visitLog + '}';
     }
 }
