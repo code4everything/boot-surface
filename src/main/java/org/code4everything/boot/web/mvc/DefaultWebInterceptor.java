@@ -6,6 +6,7 @@ import cn.hutool.core.util.StrUtil;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import org.code4everything.boot.base.DateUtils;
+import org.code4everything.boot.base.MapUtils;
 import org.code4everything.boot.base.ObjectUtils;
 import org.code4everything.boot.bean.ConfigBean;
 import org.code4everything.boot.config.BootConfig;
@@ -19,7 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.sql.Date;
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -113,7 +114,7 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
      * @since 1.1.0
      */
     public static Map<String, Long> getUserVisitMap() {
-        return Collections.unmodifiableMap(userVisitMap);
+        return MapUtils.sortByValue(userVisitMap, Comparator.reverseOrder());
     }
 
     /**
@@ -138,7 +139,7 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
      * @since 1.1.0
      */
     public static Map<String, Long> getUrlVisitMap() {
-        return Collections.unmodifiableMap(urlVisitMap);
+        return MapUtils.sortByValue(urlVisitMap, Comparator.reverseOrder());
     }
 
     /**
@@ -346,7 +347,7 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
                 interceptHandler.handleVisitLog(date, getUserVisitMap(), getUrlVisitMap(), totalVisit);
                 // 重置统计数据
                 resetVisitObjects(userVisitMap.size(), urlVisitMap.size());
-            }, initialDelay, 24, TimeUnit.HOURS);
+            }, initialDelay, IntegerConsts.ONE_DAY_MILLIS, TimeUnit.MILLISECONDS);
         }
         // 使用单独一个线程来进行统计
         executor.execute(() -> {

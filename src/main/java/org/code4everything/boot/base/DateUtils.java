@@ -50,7 +50,7 @@ public class DateUtils {
     private static Date checkToday(Date origin, Date copied) {
         long curr = System.currentTimeMillis();
         if (curr > endOfToday.getTime()) {
-            // 如果现当前的时间戳超过了endOfToday的时间戳，说明Today的时间戳已经过期，需重新设置
+            // 如果当前的时间戳超过了endOfToday的时间戳，说明Today的时间戳已经过期，需重新设置
             startOfToday.setTime(DateUtil.beginOfDay(new Date(curr)).getTime());
             endOfToday.setTime(DateUtil.endOfDay(startOfToday).getTime());
         }
