@@ -4,6 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.ContentType;
 import cn.hutool.http.HttpStatus;
 import org.code4everything.boot.bean.Response;
+import org.code4everything.boot.constant.IntegerConsts;
 import org.code4everything.boot.constant.MessageConsts;
 import org.springframework.http.HttpHeaders;
 import org.springframework.lang.Nullable;
@@ -13,6 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.sql.Date;
 import java.util.Map;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 
 /**
  * 拦截处理器接口
@@ -21,6 +24,17 @@ import java.util.Map;
  * @since 2018/11/4
  */
 public interface InterceptHandler {
+
+    /**
+     * 创建访问统计的生产队列，如果当前的队列大小超过了设置的队列边界时，将发生阻塞，所以请选择合适的队列并设置一个合适的大小
+     *
+     * @return {@link BlockingQueue}
+     *
+     * @since 1.1.0
+     */
+    default BlockingQueue<Runnable> createWorkQueue() {
+        return new ArrayBlockingQueue<>(IntegerConsts.ONE_THOUSAND_AND_TWENTY_FOUR);
+    }
 
     /**
      * 处理每日的访问统计

@@ -8,7 +8,9 @@ import cn.hutool.core.io.watch.Watcher;
 import cn.hutool.core.io.watch.watchers.DelayWatcher;
 import cn.hutool.core.util.CharsetUtil;
 import com.alibaba.fastjson.JSONObject;
+import org.code4everything.boot.bean.ConfigBean;
 import org.code4everything.boot.config.BootConfig;
+import org.code4everything.boot.config.BootConfigProperties;
 import org.code4everything.boot.constant.StringConsts;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.WatchEvent;
+import java.util.Objects;
 
 /**
  * 文件工具类
@@ -34,13 +37,12 @@ public class FileUtils {
      *
      * @param jsonFile JSON文件
      * @param config Bean类
-     * @param clazz Bean类的类型
      * @param <T> 类型
      *
      * @since 1.0.4
      */
-    public static <T> void watchFile(String jsonFile, T config, Class<T> clazz) {
-        watchFile(jsonFile, new FileWatcher() {}, config, clazz, CharsetUtil.UTF_8);
+    public static <T> void watchFile(String jsonFile, T config) {
+        watchFile(jsonFile, new FileWatcher() {}, config, CharsetUtil.UTF_8);
     }
 
     /**
@@ -48,14 +50,13 @@ public class FileUtils {
      *
      * @param jsonFile JSON文件
      * @param config Bean类
-     * @param clazz Bean类的类型
      * @param charset 文件编码
      * @param <T> 类型
      *
      * @since 1.0.4
      */
-    public static <T> void watchFile(String jsonFile, T config, Class<T> clazz, String charset) {
-        watchFile(jsonFile, new FileWatcher() {}, config, clazz, charset);
+    public static <T> void watchFile(String jsonFile, T config, String charset) {
+        watchFile(jsonFile, new FileWatcher() {}, config, charset);
     }
 
     /**
@@ -64,13 +65,12 @@ public class FileUtils {
      * @param jsonFile JSON文件
      * @param fileWatcher {@link FileWatcher}
      * @param config Bean类
-     * @param clazz Bean类的类型
      * @param <T> 类型
      *
      * @since 1.0.4
      */
-    public static <T> void watchFile(String jsonFile, FileWatcher fileWatcher, T config, Class<T> clazz) {
-        watchFile(jsonFile, fileWatcher, config, clazz, CharsetUtil.UTF_8);
+    public static <T> void watchFile(String jsonFile, FileWatcher fileWatcher, T config) {
+        watchFile(jsonFile, fileWatcher, config, CharsetUtil.UTF_8);
     }
 
     /**
@@ -79,25 +79,31 @@ public class FileUtils {
      * @param jsonFile JSON文件
      * @param fileWatcher {@link FileWatcher}
      * @param config Bean类
-     * @param clazz Bean类的类型
      * @param charset 文件编码
      * @param <T> 类型
      *
      * @since 1.0.4
      */
-    public static <T> void watchFile(String jsonFile, FileWatcher fileWatcher, T config, Class<T> clazz,
-                                     String charset) {
+    public static <T> void watchFile(String jsonFile, FileWatcher fileWatcher, T config, String charset) {
+        Objects.requireNonNull(config, "the object 'config' must not be null");
         watchFile(jsonFile, new FileWatcher() {
+
+            private boolean notSet = config instanceof ConfigBean;
 
             @Override
             public void doSomething() {
                 // 解析JSON文件
                 JSONObject root = JSONObject.parseObject(FileUtil.readString(jsonFile, charset));
                 // 属性复制
-                BeanUtil.copyProperties(root.toJavaObject(clazz), config);
+                BeanUtil.copyProperties(root.toJavaObject(config.getClass()), config);
+                // 解析BootSurface配置
                 if (root.containsKey(StringConsts.BOOT)) {
-                    // 解析BootSurface配置
-                    BootConfig.parseJson(root.getJSONObject("boot"));
+                    BootConfig.setConfig(root.getObject(StringConsts.BOOT, BootConfigProperties.class));
+                }
+                // 自动设置拦截名单
+                if (notSet) {
+                    BootConfig.setConfigBean((ConfigBean) config);
+                    notSet = false;
                 }
                 fileWatcher.doSomething();
             }

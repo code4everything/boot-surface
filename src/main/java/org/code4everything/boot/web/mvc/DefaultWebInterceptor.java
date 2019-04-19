@@ -50,13 +50,13 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
      *
      * @since 1.0.0
      */
-    private static ConfigBean configBean;
+    private static ConfigBean configBean = null;
 
-    private static Map<String, Long> userVisitMap;
+    private static Map<String, Long> userVisitMap = null;
 
-    private static Map<String, Long> urlVisitMap;
+    private static Map<String, Long> urlVisitMap = null;
 
-    private static long totalVisit;
+    private static long totalVisit = 0;
 
     /**
      * 拦截处理器
@@ -65,13 +65,13 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
      */
     private final InterceptHandler interceptHandler;
 
+    private final ThreadFactory factory = ThreadFactoryBuilder.create().setDaemon(true).build();
+
     private ThreadPoolExecutor executor = null;
 
     private Cache<String, Byte> cache = null;
 
     private ScheduledThreadPoolExecutor scheduledExecutor = null;
-
-    private ThreadFactory factory = ThreadFactoryBuilder.create().setDaemon(true).build();
 
     /**
      * 构造函数
@@ -192,7 +192,7 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
             return;
         }
         if (visitLog) {
-            // 初始化
+            // 第一次初始化
             resetVisitObjects(1024, 128);
         } else {
             userVisitMap = null;
@@ -334,7 +334,7 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
     private void countVisit(final String userKey, final String urlKey) {
         if (Objects.isNull(executor)) {
             // 初始化统计线程
-            BlockingQueue<Runnable> queue = new ArrayBlockingQueue<>(IntegerConsts.ONE_THOUSAND_AND_TWENTY_FOUR);
+            BlockingQueue<Runnable> queue = interceptHandler.createWorkQueue();
             executor = new ThreadPoolExecutor(1, 1, 0, TimeUnit.SECONDS, queue, factory);
         }
         if (Objects.isNull(scheduledExecutor)) {
