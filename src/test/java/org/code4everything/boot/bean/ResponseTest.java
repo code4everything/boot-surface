@@ -12,12 +12,12 @@ public class ResponseTest {
 
     @Test
     public void serialize() {
-        Response<ConfigBean> response = new Response<>();
+        Response<InterceptorBean> response = new Response<>();
         System.out.println(response);
         response.setCode(404);
         response.setMsg("test");
         response.setTimestamp();
-        ConfigBean bean = new ConfigBean();
+        InterceptorBean bean = new InterceptorBean();
         bean.setWhitePrefixes(new String[]{"white"});
         bean.setBlackPrefixes(new String[]{"black"});
         bean.setInterceptPrefixes(new String[]{"intercept"});

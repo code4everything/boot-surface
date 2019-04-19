@@ -5,10 +5,10 @@
 #### 首先我们需要在主类的 `main` 方法中设置名单
 
 ``` java
-ConfigBean bean = new ConfigBean();
+InterceptorBean bean = new InterceptorBean();
 bean.setInterceptPrefixes(new String[]{"/user", "/custom"});
 bean.setInterceptPrefixes(new String[]{"/common"});
-DefaultWebInterceptor.setConfigBean(bean);
+DefaultWebInterceptor.setInterceptorBean(bean);
 ```
 
 #### 然后准备一个实现了 `WebMvcConfigurer` 接口的配置类

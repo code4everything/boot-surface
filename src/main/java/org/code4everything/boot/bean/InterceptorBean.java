@@ -9,7 +9,7 @@ import java.util.Arrays;
  * @author pantao
  * @since 2018/11/4
  */
-public class ConfigBean implements BaseBean, Serializable {
+public class InterceptorBean implements BaseBean, Serializable {
 
     private static final long serialVersionUID = -7136966024637207548L;
 
@@ -57,11 +57,11 @@ public class ConfigBean implements BaseBean, Serializable {
      *
      * @param visitIgnorePrefixes 忽略统计访问的名单前缀
      *
-     * @return {@link ConfigBean}
+     * @return {@link InterceptorBean}
      *
      * @since 1.1.0
      */
-    public ConfigBean setVisitIgnorePrefixes(String[] visitIgnorePrefixes) {
+    public InterceptorBean setVisitIgnorePrefixes(String[] visitIgnorePrefixes) {
         this.visitIgnorePrefixes = visitIgnorePrefixes;
         return this;
     }
@@ -80,11 +80,11 @@ public class ConfigBean implements BaseBean, Serializable {
      *
      * @param blackPrefixes 黑名单前缀
      *
-     * @return {@link ConfigBean}
+     * @return {@link InterceptorBean}
      *
      * @since 1.0.0
      */
-    public ConfigBean setBlackPrefixes(String[] blackPrefixes) {
+    public InterceptorBean setBlackPrefixes(String[] blackPrefixes) {
         this.blackPrefixes = blackPrefixes;
         return this;
     }
@@ -105,11 +105,11 @@ public class ConfigBean implements BaseBean, Serializable {
      *
      * @param whitePrefixes 白名单前缀
      *
-     * @return {@link ConfigBean}
+     * @return {@link InterceptorBean}
      *
      * @since 1.0.0
      */
-    public ConfigBean setWhitePrefixes(String[] whitePrefixes) {
+    public InterceptorBean setWhitePrefixes(String[] whitePrefixes) {
         this.whitePrefixes = whitePrefixes;
         return this;
     }
@@ -130,17 +130,17 @@ public class ConfigBean implements BaseBean, Serializable {
      *
      * @param interceptPrefixes 拦截名单前缀
      *
-     * @return {@link ConfigBean}
+     * @return {@link InterceptorBean}
      *
      * @since 1.0.0
      */
-    public ConfigBean setInterceptPrefixes(String[] interceptPrefixes) {
+    public InterceptorBean setInterceptPrefixes(String[] interceptPrefixes) {
         this.interceptPrefixes = interceptPrefixes;
         return this;
     }
 
     @Override
     public String toString() {
-        return "ConfigBean{" + "blackPrefixes=" + Arrays.toString(blackPrefixes) + ", whitePrefixes=" + Arrays.toString(whitePrefixes) + ", interceptPrefixes=" + Arrays.toString(interceptPrefixes) + ", visitIgnorePrefixes=" + Arrays.toString(visitIgnorePrefixes) + '}';
+        return "InterceptorBean{" + "blackPrefixes=" + Arrays.toString(blackPrefixes) + ", whitePrefixes=" + Arrays.toString(whitePrefixes) + ", interceptPrefixes=" + Arrays.toString(interceptPrefixes) + ", visitIgnorePrefixes=" + Arrays.toString(visitIgnorePrefixes) + '}';
     }
 }

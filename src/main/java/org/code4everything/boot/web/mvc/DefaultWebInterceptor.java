@@ -8,7 +8,7 @@ import com.google.common.cache.CacheBuilder;
 import org.code4everything.boot.base.DateUtils;
 import org.code4everything.boot.base.MapUtils;
 import org.code4everything.boot.base.ObjectUtils;
-import org.code4everything.boot.bean.ConfigBean;
+import org.code4everything.boot.bean.InterceptorBean;
 import org.code4everything.boot.config.BootConfig;
 import org.code4everything.boot.constant.IntegerConsts;
 import org.code4everything.boot.exception.ExceptionFactory;
@@ -50,7 +50,7 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
      *
      * @since 1.0.0
      */
-    private static ConfigBean configBean = null;
+    private static InterceptorBean interceptorBean = null;
 
     private static Map<String, Long> userVisitMap = null;
 
@@ -214,12 +214,12 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
     /**
      * 设置配置类
      *
-     * @param configBean {@link ConfigBean}
+     * @param interceptorBean {@link InterceptorBean}
      *
      * @since 1.0.0
      */
-    public static void setConfigBean(ConfigBean configBean) {
-        DefaultWebInterceptor.configBean = configBean;
+    public static void setInterceptorBean(InterceptorBean interceptorBean) {
+        DefaultWebInterceptor.interceptorBean = interceptorBean;
     }
 
     private static void incrementVisit() {
@@ -366,22 +366,22 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
     }
 
     private String[] getVisitIgnorePrefixes() {
-        return isNull() ? null : DefaultWebInterceptor.configBean.getVisitIgnorePrefixes();
+        return isNull() ? null : DefaultWebInterceptor.interceptorBean.getVisitIgnorePrefixes();
     }
 
     private String[] getBlackList() {
-        return isNull() ? null : DefaultWebInterceptor.configBean.getBlackPrefixes();
+        return isNull() ? null : DefaultWebInterceptor.interceptorBean.getBlackPrefixes();
     }
 
     private String[] getWhiteList() {
-        return isNull() ? null : DefaultWebInterceptor.configBean.getWhitePrefixes();
+        return isNull() ? null : DefaultWebInterceptor.interceptorBean.getWhitePrefixes();
     }
 
     private String[] getInterceptList() {
-        return isNull() ? null : DefaultWebInterceptor.configBean.getInterceptPrefixes();
+        return isNull() ? null : DefaultWebInterceptor.interceptorBean.getInterceptPrefixes();
     }
 
     private boolean isNull() {
-        return Objects.isNull(DefaultWebInterceptor.configBean);
+        return Objects.isNull(DefaultWebInterceptor.interceptorBean);
     }
 }

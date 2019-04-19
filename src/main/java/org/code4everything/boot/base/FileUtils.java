@@ -8,7 +8,7 @@ import cn.hutool.core.io.watch.Watcher;
 import cn.hutool.core.io.watch.watchers.DelayWatcher;
 import cn.hutool.core.util.CharsetUtil;
 import com.alibaba.fastjson.JSONObject;
-import org.code4everything.boot.bean.ConfigBean;
+import org.code4everything.boot.bean.InterceptorBean;
 import org.code4everything.boot.config.BootConfig;
 import org.code4everything.boot.config.BootConfigProperties;
 import org.code4everything.boot.constant.StringConsts;
@@ -88,7 +88,7 @@ public class FileUtils {
         Objects.requireNonNull(config, "the object 'config' must not be null");
         watchFile(jsonFile, new FileWatcher() {
 
-            private boolean notSet = config instanceof ConfigBean;
+            private boolean notSet = config instanceof InterceptorBean;
 
             @Override
             public void doSomething() {
@@ -102,7 +102,7 @@ public class FileUtils {
                 }
                 // 自动设置拦截名单
                 if (notSet) {
-                    BootConfig.setConfigBean((ConfigBean) config);
+                    BootConfig.setInterceptorBean((InterceptorBean) config);
                     notSet = false;
                 }
                 fileWatcher.doSomething();

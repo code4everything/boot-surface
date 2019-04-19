@@ -7,7 +7,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.cache.Cache;
 import org.code4everything.boot.base.FileUtils;
 import org.code4everything.boot.base.FileWatcher;
-import org.code4everything.boot.bean.ConfigBean;
+import org.code4everything.boot.bean.InterceptorBean;
 import org.code4everything.boot.bean.Response;
 import org.code4everything.boot.constant.StringConsts;
 import org.code4everything.boot.encoder.DefaultFieldEncoder;
@@ -176,12 +176,12 @@ public class BootConfig {
     /**
      * 设置配置类
      *
-     * @param configBean {@link ConfigBean}
+     * @param interceptorBean {@link InterceptorBean}
      *
      * @since 1.0.2
      */
-    public static void setConfigBean(ConfigBean configBean) {
-        DefaultWebInterceptor.setConfigBean(configBean);
+    public static void setInterceptorBean(InterceptorBean interceptorBean) {
+        DefaultWebInterceptor.setInterceptorBean(interceptorBean);
     }
 
     /**
