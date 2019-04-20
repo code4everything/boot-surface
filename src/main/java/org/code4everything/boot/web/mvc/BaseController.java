@@ -79,11 +79,11 @@ public class BaseController {
      * @since 1.0.5
      */
     public <T> Response<T> getReturn() {
-        Response<?> responseResult = resultThreadLocal.get();
-        if (Objects.isNull(responseResult)) {
+        Response<?> response = resultThreadLocal.get();
+        if (Objects.isNull(response)) {
             return null;
         } else {
-            Response<T> result = printAndReturn(new Response<T>().copyFrom(responseResult));
+            Response<T> result = printAndReturn(new Response<T>().copyFrom(response));
             resultThreadLocal.remove();
             return result;
         }
@@ -159,17 +159,17 @@ public class BaseController {
      * 如果条件为真时返回
      *
      * @param booleanFunction 布尔函数
-     * @param responseResultFunction 结果响应函数
+     * @param responseFunction 结果响应函数
      *
      * @return {@link BaseController}
      *
      * @since 1.0.5
      */
-    public BaseController ifReturn(BooleanFunction booleanFunction, ResponseFunction responseResultFunction) {
+    public BaseController ifReturn(BooleanFunction booleanFunction, ResponseFunction responseFunction) {
         if (!hasResult()) {
             boolean res = booleanFunction.call();
             if (res) {
-                resultThreadLocal.set(responseResultFunction.call());
+                resultThreadLocal.set(responseFunction.call());
             }
         }
         return this;

@@ -88,6 +88,7 @@ public class FileUtils {
         Objects.requireNonNull(config, "the object 'config' must not be null");
         watchFile(jsonFile, new FileWatcher() {
 
+            // 是否设置访问拦截名单
             private boolean notSet = config instanceof InterceptorBean;
 
             @Override
@@ -173,6 +174,8 @@ public class FileUtils {
     /**
      * 获取当前工作路径
      *
+     * @param more 子路径
+     *
      * @return 当前工作路径
      *
      * @since 1.0.0
@@ -183,6 +186,9 @@ public class FileUtils {
 
     /**
      * 获取路径
+     *
+     * @param path 父路径
+     * @param more 子路径
      *
      * @return 路径
      *

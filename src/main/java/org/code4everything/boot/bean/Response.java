@@ -219,13 +219,15 @@ public class Response<T> implements Serializable {
     /**
      * 调试模式时，打印到终端
      *
+     * @param req {@link HttpServletRequest}
+     *
      * @return {@link Response}
      *
      * @since 1.1.0
      */
-    public Response<T> debug(HttpServletRequest request) {
+    public Response<T> debug(HttpServletRequest req) {
         if (BootConfig.isDebug()) {
-            return println(request);
+            return println(req);
         }
         return this;
     }

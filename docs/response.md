@@ -63,14 +63,14 @@ public class DemoController extends BaseController {
      * 在 {@link BaseController} 类中封装了很多 `parseResult` 方法，同时也建议使用 parseResult 方法
      */
     @GetMapping("/foo")
-    public ResponseResult<DemoVO> foo() {
+    public Response<DemoVO> foo() {
         // 最后一个参数表示是否对对象字段进行加密
         return parseResult("success", "error", DEMO_VO, false);
     }
 
     @GetMapping("/bar")
-    public ResponseResult<DemoVO> bar() {
-        return new ResponseResult<DemoVO>().setCode(200).setMsg("success").setData(DEMO_VO).encode();
+    public Response<DemoVO> bar() {
+        return new Response<DemoVO>().setCode(200).setMsg("success").setData(DEMO_VO).encode();
     }
 }
 ```

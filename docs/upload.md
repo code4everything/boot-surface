@@ -123,7 +123,7 @@ public class FileController {
     }
 
     @PostMapping("/upload")
-    public ResponseResult<FileInfo> upload(@RequestBody MultipartFile file) {
+    public Response<FileInfo> upload(@RequestBody MultipartFile file) {
         return HttpUtils.upload(demoFileService, file, "/your-storage-path/", true);
     }
 
