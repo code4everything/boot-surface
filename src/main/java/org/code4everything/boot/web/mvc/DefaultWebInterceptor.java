@@ -344,6 +344,9 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
             scheduledExecutor.scheduleAtFixedRate(() -> {
                 // 回调处理每日的访问统计
                 Date date = new Date(System.currentTimeMillis());
+                if (BootConfig.isDebug()) {
+                    LOGGER.info("call method 'handleVisitLog' to save and reset today's http request data");
+                }
                 interceptHandler.handleVisitLog(date, getUserVisitMap(), getUrlVisitMap(), totalVisit);
                 // 重置统计数据
                 resetVisitObjects(userVisitMap.size(), urlVisitMap.size());
