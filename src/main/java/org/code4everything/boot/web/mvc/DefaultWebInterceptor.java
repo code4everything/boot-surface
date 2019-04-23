@@ -332,25 +332,30 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
     }
 
     private void countVisit(final String userKey, final String urlKey) {
-        if (Objects.isNull(executor)) {
-            // 初始化统计线程
-            BlockingQueue<Runnable> queue = interceptHandler.createWorkQueue();
-            executor = new ThreadPoolExecutor(1, 1, 0, TimeUnit.SECONDS, queue, factory);
-        }
-        if (Objects.isNull(scheduledExecutor)) {
-            // 初始化回调线程
-            scheduledExecutor = new ScheduledThreadPoolExecutor(1, factory);
-            long initialDelay = DateUtils.getEndOfToday().getTime() - System.currentTimeMillis() - 999;
-            scheduledExecutor.scheduleAtFixedRate(() -> {
-                // 回调处理每日的访问统计
-                Date date = new Date(System.currentTimeMillis());
-                if (BootConfig.isDebug()) {
-                    LOGGER.info("call method 'handleVisitLog' to save and reset today's http request data");
+        if (Objects.isNull(executor) || Objects.isNull(scheduledExecutor)) {
+            // 初始化线程池
+            synchronized (DefaultWebInterceptor.class) {
+                if (Objects.isNull(executor)) {
+                    // 初始化统计线程
+                    BlockingQueue<Runnable> queue = interceptHandler.createWorkQueue();
+                    executor = new ThreadPoolExecutor(1, 1, 0, TimeUnit.SECONDS, queue, factory);
                 }
-                interceptHandler.handleVisitLog(date, getUserVisitMap(), getUrlVisitMap(), totalVisit);
-                // 重置统计数据
-                resetVisitObjects(userVisitMap.size(), urlVisitMap.size());
-            }, initialDelay, IntegerConsts.ONE_DAY_MILLIS, TimeUnit.MILLISECONDS);
+                if (Objects.isNull(scheduledExecutor)) {
+                    // 初始化回调线程
+                    scheduledExecutor = new ScheduledThreadPoolExecutor(1, factory);
+                    long initialDelay = DateUtils.getEndOfToday().getTime() - System.currentTimeMillis() - 999;
+                    scheduledExecutor.scheduleAtFixedRate(() -> {
+                        // 回调处理每日的访问统计
+                        Date date = new Date(System.currentTimeMillis());
+                        if (BootConfig.isDebug()) {
+                            LOGGER.info("call method 'handleVisitLog' to save and reset today's http request data");
+                        }
+                        interceptHandler.handleVisitLog(date, getUserVisitMap(), getUrlVisitMap(), totalVisit);
+                        // 重置统计数据
+                        resetVisitObjects(userVisitMap.size(), urlVisitMap.size());
+                    }, initialDelay, IntegerConsts.ONE_DAY_MILLIS, TimeUnit.MILLISECONDS);
+                }
+            }
         }
         // 使用单独一个线程来进行统计
         executor.execute(() -> {
