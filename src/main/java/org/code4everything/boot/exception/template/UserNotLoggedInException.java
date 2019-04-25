@@ -1,8 +1,8 @@
 package org.code4everything.boot.exception.template;
 
-import cn.hutool.http.HttpStatus;
 import org.code4everything.boot.constant.MessageConsts;
 import org.code4everything.boot.exception.BootException;
+import org.springframework.http.HttpStatus;
 
 /**
  * 用户未登录异常
@@ -25,6 +25,6 @@ public class UserNotLoggedInException extends BootException {
      * @since 1.0.4
      */
     public UserNotLoggedInException() {
-        super(HttpStatus.HTTP_UNAUTHORIZED, org.springframework.http.HttpStatus.UNAUTHORIZED, MSG);
+        super(HttpStatus.UNAUTHORIZED.value(), org.springframework.http.HttpStatus.UNAUTHORIZED, MSG);
     }
 }

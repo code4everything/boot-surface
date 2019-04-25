@@ -17,7 +17,7 @@ public class BootException extends RuntimeException {
      *
      * @since 1.0.4
      */
-    private Integer code = cn.hutool.http.HttpStatus.HTTP_INTERNAL_ERROR;
+    private Integer code = HttpStatus.INTERNAL_SERVER_ERROR.value();
 
     /**
      * 消息

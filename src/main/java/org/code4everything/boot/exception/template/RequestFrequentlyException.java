@@ -11,6 +11,6 @@ import org.springframework.http.HttpStatus;
 public class RequestFrequentlyException extends BootException {
 
     public RequestFrequentlyException() {
-        super(cn.hutool.http.HttpStatus.HTTP_BAD_REQUEST, HttpStatus.BAD_REQUEST, MessageConsts.REQUEST_FREQUENTLY_ZH);
+        super(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST, MessageConsts.REQUEST_FREQUENTLY_ZH);
     }
 }

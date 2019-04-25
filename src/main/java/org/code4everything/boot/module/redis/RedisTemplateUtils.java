@@ -1,6 +1,7 @@
 package org.code4everything.boot.module.redis;
 
 import cn.hutool.core.lang.Validator;
+import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.fastjson.support.spring.FastJsonRedisSerializer;
 import org.code4everything.boot.config.BootConfig;
@@ -164,7 +165,7 @@ public class RedisTemplateUtils {
         redisTemplate.setConnectionFactory(getRedisConnectionFactory());
         if (ObjectUtil.isNotNull(keyType)) {
             // 选择键序列化的方式
-            if (keyType == String.class) {
+            if (keyType == String.class || ClassUtil.isBasicType(keyType)) {
                 // 使用String序列化
                 redisTemplate.setKeySerializer(new StringRedisSerializer());
             } else {

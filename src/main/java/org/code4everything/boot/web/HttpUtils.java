@@ -5,7 +5,6 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.digest.DigestUtil;
-import cn.hutool.http.HttpStatus;
 import org.code4everything.boot.base.AssertUtils;
 import org.code4everything.boot.bean.MultipartFileBean;
 import org.code4everything.boot.bean.Response;
@@ -18,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.InputStreamSource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
@@ -412,7 +412,7 @@ public class HttpUtils {
         Map<String, MultipartFile> fileMap = request.getFileMap();
         if (CollectionUtil.isEmpty(fileMap)) {
             // 文件集合为空
-            return new Response<>(HttpStatus.HTTP_BAD_REQUEST, MessageConsts.FILE_UNAVAILABLE_ZH);
+            return new Response<>(HttpStatus.BAD_REQUEST.value(), MessageConsts.FILE_UNAVAILABLE_ZH);
         } else {
             ArrayList<Response<T>> list = new ArrayList<>();
             Collection<MultipartFile> set = fileMap.values();
@@ -549,7 +549,7 @@ public class HttpUtils {
                 fileBean.setMd5(DigestUtil.md5Hex(file.getBytes()));
             } catch (Exception e) {
                 LOGGER.error("get md5 of file[{}] failed, message -> {}", ofn, e.getMessage());
-                return response.error(HttpStatus.HTTP_UNAVAILABLE, ofn + " upload failed");
+                return response.error(HttpStatus.SERVICE_UNAVAILABLE.value(), ofn + " upload failed");
             }
             fileBean.setFilename(fileBean.getMd5() + StrUtil.DOT + FileUtil.extName(ofn));
         } else {
@@ -577,7 +577,7 @@ public class HttpUtils {
                 file.transferTo(new File(fileBean.getStoragePath() + fileBean.getFilename()));
             } catch (Exception e) {
                 LOGGER.error("upload file failed, message -> {}", e.getMessage());
-                return response.error(HttpStatus.HTTP_UNAVAILABLE, ofn + " upload failed");
+                return response.error(HttpStatus.SERVICE_UNAVAILABLE.value(), ofn + " upload failed");
             }
             // 将数据写入数据库
             t = service.save(fileBean, t);
@@ -720,7 +720,7 @@ public class HttpUtils {
                 fileBean.setMd5(DigestUtil.md5Hex(bytes));
             } catch (Exception e) {
                 LOGGER.error("get md5 of file[{}] failed, message -> {}", name, e.getMessage());
-                return response.error(HttpStatus.HTTP_UNAVAILABLE, name + " upload failed");
+                return response.error(HttpStatus.SERVICE_UNAVAILABLE.value(), name + " upload failed");
             }
             fileBean.setFilename(fileBean.getMd5() + StrUtil.DOT + FileUtil.extName(name));
         } else {
@@ -743,7 +743,7 @@ public class HttpUtils {
                 FileUtil.writeBytes(bytes, fileBean.getStoragePath() + fileBean.getFilename());
             } catch (Exception e) {
                 LOGGER.error("upload file failed, message -> {}", e.getMessage());
-                return response.error(HttpStatus.HTTP_UNAVAILABLE, name + " upload failed");
+                return response.error(HttpStatus.SERVICE_UNAVAILABLE.value(), name + " upload failed");
             }
             // 将数据写入数据库
             t = service.save(fileBean, t);
