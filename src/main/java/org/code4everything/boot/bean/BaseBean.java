@@ -3,6 +3,7 @@ package org.code4everything.boot.bean;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
+import com.alibaba.fastjson.JSONObject;
 
 import java.lang.reflect.Field;
 import java.util.Objects;
@@ -14,6 +15,17 @@ import java.util.Objects;
  * @since 2019/1/11
  **/
 public interface BaseBean {
+
+    /**
+     * 转换成JSON字符串
+     *
+     * @return JSON字符串
+     *
+     * @since 1.1.1
+     */
+    default String toJsonString() {
+        return JSONObject.toJSONString(this);
+    }
 
     /**
      * 检测是否有NULL字段，如果有则抛出异常
