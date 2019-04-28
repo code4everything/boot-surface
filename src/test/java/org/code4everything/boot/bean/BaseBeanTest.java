@@ -18,6 +18,10 @@ public class BaseBeanTest implements BaseBean {
         UserVO userVO = new UserVO();
         System.out.println(userVO);
         System.out.println(user.copyInto(userVO));
+
+        user.requireNonNullProperty();
+        user.setPassword(null);
+        user.requireNonNullProperty();
     }
 }
 

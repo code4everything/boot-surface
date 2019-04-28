@@ -258,10 +258,9 @@ public class Response<T> implements Serializable {
             return println();
         }
         // 构建时间、IP地址
-        StringBuilder builder =
-                new StringBuilder(formatDateAndClass()).append(" [").append(req.getRemoteAddr()).append(" ");
+        StringBuilder builder = new StringBuilder(formatDateAndClass()).append(" [").append(req.getRemoteAddr());
         // 构建请求方法、接口地址
-        builder.append(req.getMethod()).append(" ").append(req.getServletPath());
+        builder.append(" ").append(req.getMethod()).append(" ").append(req.getServletPath());
         String queryString = req.getQueryString();
         if (StrUtil.isNotEmpty(queryString)) {
             // 构建QueryString
@@ -274,6 +273,17 @@ public class Response<T> implements Serializable {
     }
 
     /**
+     * 是否拥有数据
+     *
+     * @return 是否拥有数据
+     *
+     * @since 1.1.1
+     */
+    public boolean hasData() {
+        return ObjectUtil.isNotNull(data);
+    }
+
+    /**
      * 格式化响应消息
      *
      * @return 格式化的响应消息
@@ -281,7 +291,7 @@ public class Response<T> implements Serializable {
      * @since 1.1.0
      */
     private String formatResponse() {
-        return code + " " + msg + " " + data;
+        return code + " " + msg + (Objects.isNull(data) ? "" : " " + data);
     }
 
     /**
