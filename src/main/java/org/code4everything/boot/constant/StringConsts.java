@@ -117,6 +117,8 @@ public class StringConsts {
 
         public static final String QUESTION = "?";
 
+        public static final String SPACE = " ";
+
         private Sign() {}
     }
 }

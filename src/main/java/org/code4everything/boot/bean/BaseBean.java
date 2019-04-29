@@ -23,6 +23,17 @@ public interface BaseBean {
      *
      * @since 1.1.1
      */
+    default String toPrettyJsonString() {
+        return JSONObject.toJSONString(this, true);
+    }
+
+    /**
+     * 转换成JSON字符串
+     *
+     * @return JSON字符串
+     *
+     * @since 1.1.1
+     */
     default String toJsonString() {
         return JSONObject.toJSONString(this);
     }
@@ -35,7 +46,7 @@ public interface BaseBean {
     default void requireNonNullProperty() {
         Field[] fields = ReflectUtil.getFields(this.getClass());
         for (Field field : fields) {
-            if (Objects.isNull(ReflectUtil.getFieldValue(this, field))) {
+            if (ObjectUtil.isNotNull(field) && Objects.isNull(ReflectUtil.getFieldValue(this, field))) {
                 throw new NullPointerException("the value of field '" + field.getName() + "' at class '" + this.getClass().getName() + "' must not be null");
             }
         }
