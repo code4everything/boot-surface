@@ -71,6 +71,66 @@ public class HttpUtils {
     }
 
     /**
+     * 获取整型
+     *
+     * @param request {@link HttpServletRequest}
+     * @param key 键
+     *
+     * @return 整型
+     *
+     * @since 1.1.1
+     */
+    public static int getIntegerValue(HttpServletRequest request, String key, int defaultValue) {
+        String value = request.getParameter(key);
+        return Objects.isNull(value) ? defaultValue : Integer.parseInt(value);
+    }
+
+    /**
+     * 获取整型
+     *
+     * @param request {@link HttpServletRequest}
+     * @param key 键
+     *
+     * @return 整型
+     *
+     * @since 1.1.1
+     */
+    public static int getIntegerValue(HttpServletRequest request, String key) {
+        String value = request.getParameter(key);
+        return Objects.isNull(value) ? 0 : Integer.parseInt(value);
+    }
+
+    /**
+     * 获取整型
+     *
+     * @param request {@link HttpServletRequest}
+     * @param key 键
+     *
+     * @return 整型
+     *
+     * @since 1.1.1
+     */
+    public static Integer getInteger(HttpServletRequest request, String key) {
+        String value = request.getParameter(key);
+        return Objects.isNull(value) ? null : Integer.parseInt(value);
+    }
+
+    /**
+     * 获取整型
+     *
+     * @param request {@link HttpServletRequest}
+     * @param key 键
+     *
+     * @return 整型
+     *
+     * @since 1.1.1
+     */
+    public static Integer getInteger(HttpServletRequest request, String key, Integer defaultValue) {
+        String value = request.getParameter(key);
+        return Objects.isNull(value) ? defaultValue : Integer.parseInt(value);
+    }
+
+    /**
      * 获取布尔值
      *
      * @param request {@link HttpServletRequest}
