@@ -1,4 +1,6 @@
-package org.code4everything.boot.bean;
+package org.code4everything.boot.web.cors;
+
+import org.code4everything.boot.bean.BaseBean;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -10,7 +12,7 @@ import java.util.List;
  * @author pantao
  * @since 2018/10/30
  **/
-public class CorsBean implements BaseBean, Serializable {
+public class CorsLane implements BaseBean, Serializable {
 
     private static final long serialVersionUID = -8878074589278671551L;
 
@@ -49,6 +51,10 @@ public class CorsBean implements BaseBean, Serializable {
      */
     private Boolean credential;
 
+    public static CorsLane create() {
+        return new CorsLane();
+    }
+
     /**
      * 获取路径模式
      *
@@ -65,11 +71,11 @@ public class CorsBean implements BaseBean, Serializable {
      *
      * @param path 路径模式
      *
-     * @return {@link CorsBean}
+     * @return {@link CorsLane}
      *
      * @since 1.0.0
      */
-    public CorsBean setPath(String path) {
+    public CorsLane setPath(String path) {
         this.path = path;
         return this;
     }
@@ -90,11 +96,11 @@ public class CorsBean implements BaseBean, Serializable {
      *
      * @param origins 请求源
      *
-     * @return {@link CorsBean}
+     * @return {@link CorsLane}
      *
      * @since 1.0.0
      */
-    public CorsBean setOrigins(List<String> origins) {
+    public CorsLane setOrigins(List<String> origins) {
         this.origins = origins;
         return this;
     }
@@ -104,11 +110,11 @@ public class CorsBean implements BaseBean, Serializable {
      *
      * @param origins 请求源
      *
-     * @return {@link CorsBean}
+     * @return {@link CorsLane}
      *
      * @since 1.0.0
      */
-    public CorsBean setOrigins(String... origins) {
+    public CorsLane setOrigins(String... origins) {
         this.origins = Arrays.asList(origins);
         return this;
     }
@@ -129,11 +135,11 @@ public class CorsBean implements BaseBean, Serializable {
      *
      * @param headers 请求头
      *
-     * @return {@link CorsBean}
+     * @return {@link CorsLane}
      *
      * @since 1.0.0
      */
-    public CorsBean setHeaders(List<String> headers) {
+    public CorsLane setHeaders(List<String> headers) {
         this.headers = headers;
         return this;
     }
@@ -143,11 +149,11 @@ public class CorsBean implements BaseBean, Serializable {
      *
      * @param headers 请求头
      *
-     * @return {@link CorsBean}
+     * @return {@link CorsLane}
      *
      * @since 1.0.0
      */
-    public CorsBean setHeaders(String... headers) {
+    public CorsLane setHeaders(String... headers) {
         this.headers = Arrays.asList(headers);
         return this;
     }
@@ -168,11 +174,11 @@ public class CorsBean implements BaseBean, Serializable {
      *
      * @param methods 方法
      *
-     * @return {@link CorsBean}
+     * @return {@link CorsLane}
      *
      * @since 1.0.0
      */
-    public CorsBean setMethods(List<String> methods) {
+    public CorsLane setMethods(List<String> methods) {
         this.methods = methods;
         return this;
     }
@@ -182,11 +188,11 @@ public class CorsBean implements BaseBean, Serializable {
      *
      * @param methods 请求方法
      *
-     * @return {@link CorsBean}
+     * @return {@link CorsLane}
      *
      * @since 1.0.0
      */
-    public CorsBean setMethods(String... methods) {
+    public CorsLane setMethods(String... methods) {
         this.methods = Arrays.asList(methods);
         return this;
     }
@@ -207,17 +213,17 @@ public class CorsBean implements BaseBean, Serializable {
      *
      * @param credential 证书
      *
-     * @return {@link CorsBean}
+     * @return {@link CorsLane}
      *
      * @since 1.0.0
      */
-    public CorsBean setCredential(Boolean credential) {
+    public CorsLane setCredential(Boolean credential) {
         this.credential = credential;
         return this;
     }
 
     @Override
     public String toString() {
-        return "CorsBean{" + "path='" + path + '\'' + ", origins=" + origins + ", headers=" + headers + ", methods=" + methods + ", credential=" + credential + '}';
+        return "CorsLane{" + "path='" + path + '\'' + ", origins=" + origins + ", headers=" + headers + ", methods=" + methods + ", credential=" + credential + '}';
     }
 }

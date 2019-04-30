@@ -1,6 +1,5 @@
-package org.code4everything.boot.web;
+package org.code4everything.boot.web.cors;
 
-import org.code4everything.boot.bean.CorsBean;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -36,27 +35,27 @@ public class CorsUtils {
      * @since 1.0.0
      */
     public static CorsFilter newCorsFilter(String path) {
-        return newCorsFilter(new CorsBean().setPath(path).setCredential(true).setHeaders("*").setMethods("*").setOrigins("*"));
+        return newCorsFilter(CorsLane.create().setPath(path).setCredential(true).setHeaders("*").setMethods("*").setOrigins("*"));
     }
 
     /**
      * 新建过滤器，默认允许所有请求和路径
      *
-     * @param corsBean 过滤器配置
+     * @param corsLane 过滤器配置
      *
      * @return {@link CorsFilter}
      *
      * @since 1.0.0
      */
-    public static CorsFilter newCorsFilter(CorsBean corsBean) {
+    public static CorsFilter newCorsFilter(CorsLane corsLane) {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         // 跨域设置
-        corsConfiguration.setAllowedOrigins(corsBean.getOrigins());
-        corsConfiguration.setAllowedHeaders(corsBean.getHeaders());
-        corsConfiguration.setAllowedMethods(corsBean.getMethods());
-        corsConfiguration.setAllowCredentials(corsBean.getCredential());
-        source.registerCorsConfiguration(corsBean.getPath(), corsConfiguration);
+        corsConfiguration.setAllowedOrigins(corsLane.getOrigins());
+        corsConfiguration.setAllowedHeaders(corsLane.getHeaders());
+        corsConfiguration.setAllowedMethods(corsLane.getMethods());
+        corsConfiguration.setAllowCredentials(corsLane.getCredential());
+        source.registerCorsConfiguration(corsLane.getPath(), corsConfiguration);
         return new CorsFilter(source);
     }
 }

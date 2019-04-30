@@ -126,7 +126,7 @@ public class DefaultExceptionHandler implements HandlerExceptionResolver {
      *
      * @since 1.1.0
      */
-    public <T extends Exception> void addException(int code, String msg, Class<T> e) {
+    public final <T extends Exception> void addException(int code, String msg, Class<T> e) {
         addException(code, msg, HttpStatus.valueOf(code), e);
     }
 
@@ -141,7 +141,7 @@ public class DefaultExceptionHandler implements HandlerExceptionResolver {
      *
      * @since 1.0.0
      */
-    public <T extends Exception> void addException(int code, String msg, HttpStatus status, Class<T> e) {
+    public final <T extends Exception> void addException(int code, String msg, HttpStatus status, Class<T> e) {
         Objects.requireNonNull(e);
         exceptionMap.put(e.getName(), new ExceptionBean().setCode(code).setMsg(msg).setStatus(status));
     }
@@ -159,7 +159,7 @@ public class DefaultExceptionHandler implements HandlerExceptionResolver {
      * @since 1.0.0
      */
     @Override
-    public ModelAndView resolveException(HttpServletRequest req, HttpServletResponse res, Object o, Exception e) {
+    public final ModelAndView resolveException(HttpServletRequest req, HttpServletResponse res, Object o, Exception e) {
         if (BootConfig.isDebug()) {
             LOGGER.error("url -> {}, ip -> {}, exception -> {}, message -> {}", req.getServletPath(),
                          req.getRemoteAddr(), e.getClass().getName(), e.getMessage());

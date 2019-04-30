@@ -16,24 +16,24 @@ import java.util.Collection;
  * @author pantao
  * @since 2019/3/20
  **/
-public class WePage<T> implements BaseBean, Serializable {
+public class WeePage<T> implements BaseBean, Serializable {
 
     private static final long serialVersionUID = -7558939772837583007L;
 
-    private Integer currPage;
+    private int currPage = 1;
 
-    private Integer pageSize;
+    private int pageSize = 1;
 
-    private Integer totalPages;
+    private int totalPages = 0;
 
-    private Long totalElements;
+    private long totalElements = 0;
 
     private transient Collection<T> content;
 
     /**
      * 无参构造
      */
-    public WePage() {}
+    public WeePage() {}
 
     /**
      * 构造方法
@@ -43,7 +43,7 @@ public class WePage<T> implements BaseBean, Serializable {
      *
      * @since 1.0.9
      */
-    public WePage(Integer currPage, Integer pageSize) {
+    public WeePage(int currPage, int pageSize) {
         this(currPage, pageSize, new ArrayList<>());
     }
 
@@ -56,7 +56,7 @@ public class WePage<T> implements BaseBean, Serializable {
      *
      * @since 1.0.9
      */
-    public WePage(Integer currPage, Integer pageSize, Integer totalPages) {
+    public WeePage(int currPage, int pageSize, int totalPages) {
         this(currPage, pageSize, new ArrayList<>());
         this.totalPages = totalPages;
     }
@@ -70,7 +70,7 @@ public class WePage<T> implements BaseBean, Serializable {
      *
      * @since 1.0.9
      */
-    public WePage(Integer currPage, Integer pageSize, Long totalElements) {
+    public WeePage(int currPage, int pageSize, long totalElements) {
         this(currPage, pageSize, totalElements, new ArrayList<>());
     }
 
@@ -79,25 +79,11 @@ public class WePage<T> implements BaseBean, Serializable {
      *
      * @param currPage 当前页
      * @param pageSize 页大小
-     * @param totalElements 总元素数量
      * @param content 元素列表
      *
      * @since 1.0.9
      */
-    public WePage(Integer currPage, Integer pageSize, Integer totalElements, Collection<T> content) {
-        this(currPage, pageSize, Long.valueOf(totalElements), content);
-    }
-
-    /**
-     * 构造方法
-     *
-     * @param currPage 当前页
-     * @param pageSize 页大小
-     * @param content 元素列表
-     *
-     * @since 1.0.9
-     */
-    public WePage(Integer currPage, Integer pageSize, Collection<T> content) {
+    public WeePage(int currPage, int pageSize, Collection<T> content) {
         this.currPage = currPage;
         this.pageSize = pageSize;
         this.content = content;
@@ -113,7 +99,7 @@ public class WePage<T> implements BaseBean, Serializable {
      *
      * @since 1.0.9
      */
-    public WePage(Integer currPage, Integer pageSize, Long totalElements, Collection<T> content) {
+    public WeePage(int currPage, int pageSize, long totalElements, Collection<T> content) {
         this.currPage = currPage;
         this.pageSize = pageSize;
         this.totalElements = totalElements;
@@ -128,7 +114,7 @@ public class WePage<T> implements BaseBean, Serializable {
      *
      * @since 1.0.9
      */
-    public Integer getElementSize() {
+    public int getElementSize() {
         return CollUtil.isEmpty(content) ? 0 : content.size();
     }
 
@@ -139,7 +125,7 @@ public class WePage<T> implements BaseBean, Serializable {
      *
      * @since 1.0.9
      */
-    public Long getTotalElements() {
+    public long getTotalElements() {
         return totalElements;
     }
 
@@ -148,31 +134,15 @@ public class WePage<T> implements BaseBean, Serializable {
      *
      * @param totalElements 总元素数量
      *
-     * @return {@link WePage}
+     * @return {@link WeePage}
      *
      * @since 1.0.9
      */
-    public WePage<T> setTotalElements(Long totalElements) {
+    public WeePage<T> setTotalElements(long totalElements) {
         this.totalElements = totalElements;
         computeTotalPage();
         return this;
     }
-
-    /**
-     * 设置总元素数量，总页数会发生响应的变化
-     *
-     * @param totalElements 总元素数量
-     *
-     * @return {@link WePage}
-     *
-     * @since 1.0.9
-     */
-    public WePage<T> setTotalElements2(Integer totalElements) {
-        this.totalElements = Long.valueOf(totalElements);
-        computeTotalPage();
-        return this;
-    }
-
 
     /**
      * 计算总页数
@@ -192,7 +162,7 @@ public class WePage<T> implements BaseBean, Serializable {
      *
      * @since 1.0.9
      */
-    public Integer getCurrPage() {
+    public int getCurrPage() {
         return currPage;
     }
 
@@ -201,11 +171,11 @@ public class WePage<T> implements BaseBean, Serializable {
      *
      * @param currPage 当前页
      *
-     * @return {@link WePage}
+     * @return {@link WeePage}
      *
      * @since 1.0.9
      */
-    public WePage<T> setCurrPage(Integer currPage) {
+    public WeePage<T> setCurrPage(int currPage) {
         this.currPage = currPage;
         return this;
     }
@@ -217,7 +187,7 @@ public class WePage<T> implements BaseBean, Serializable {
      *
      * @since 1.0.9
      */
-    public Integer getPageSize() {
+    public int getPageSize() {
         return pageSize;
     }
 
@@ -226,11 +196,11 @@ public class WePage<T> implements BaseBean, Serializable {
      *
      * @param pageSize 页大小
      *
-     * @return {@link WePage}
+     * @return {@link WeePage}
      *
      * @since 1.0.9
      */
-    public WePage<T> setPageSize(Integer pageSize) {
+    public WeePage<T> setPageSize(int pageSize) {
         this.pageSize = pageSize;
         computeTotalPage();
         return this;
@@ -243,7 +213,7 @@ public class WePage<T> implements BaseBean, Serializable {
      *
      * @since 1.0.9
      */
-    public Integer getTotalPages() {
+    public int getTotalPages() {
         return totalPages;
     }
 
@@ -256,7 +226,7 @@ public class WePage<T> implements BaseBean, Serializable {
      *
      * @since 1.0.9
      */
-    public WePage<T> setTotalPages(Integer totalPages) {
+    public WeePage<T> setTotalPages(int totalPages) {
         this.totalPages = totalPages;
         return this;
     }
@@ -277,11 +247,11 @@ public class WePage<T> implements BaseBean, Serializable {
      *
      * @param content 数据集
      *
-     * @return {@link WePage}
+     * @return {@link WeePage}
      *
      * @since 1.0.9
      */
-    public WePage<T> setContent(Collection<T> content) {
+    public WeePage<T> setContent(Collection<T> content) {
         this.content = content;
         return this;
     }
@@ -291,19 +261,18 @@ public class WePage<T> implements BaseBean, Serializable {
      *
      * @param data 数据
      *
-     * @return {@link WePage}
+     * @return {@link WeePage}
      *
      * @since 1.0.9
      */
-    public WePage<T> add(T data) {
+    public WeePage<T> add(T data) {
         content.add(data);
         return this;
     }
 
     @Override
     public String toString() {
-        return "WePage{" + "currPage=" + currPage + ", pageSize=" + pageSize + ", totalPages=" + totalPages + ", " +
-                "totalElements=" + totalElements + ", content=" + content + '}';
+        return "WeePage{" + "currPage=" + currPage + ", pageSize=" + pageSize + ", totalPages=" + totalPages + ", " + "totalElements=" + totalElements + ", content=" + content + '}';
     }
 
     private void writeObject(ObjectOutputStream outputStream) throws IOException {
