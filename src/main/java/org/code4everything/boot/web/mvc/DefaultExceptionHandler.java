@@ -4,12 +4,12 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.support.spring.FastJsonJsonView;
-import org.code4everything.boot.bean.ExceptionBean;
-import org.code4everything.boot.bean.ExceptionBiscuit;
 import org.code4everything.boot.config.BootConfig;
 import org.code4everything.boot.constant.IntegerConsts;
 import org.code4everything.boot.constant.StringConsts;
 import org.code4everything.boot.exception.BootException;
+import org.code4everything.boot.exception.ExceptionBiscuit;
+import org.code4everything.boot.exception.ExceptionBread;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -40,14 +40,14 @@ public class DefaultExceptionHandler implements HandlerExceptionResolver {
      *
      * @since 1.0.0
      */
-    private final ExceptionBean bean = new ExceptionBean().setCode(500).setStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+    private final ExceptionBread bread = new ExceptionBread().setCode(500).setStatus(HttpStatus.INTERNAL_SERVER_ERROR);
 
     /**
      * 异常信息在项目启动时就应该配置好了，所以无需考虑并发情况
      *
      * @since 1.0.0
      */
-    private Map<String, ExceptionBean> exceptionMap = new HashMap<>(16);
+    private Map<String, ExceptionBiscuit> exceptionMap = new HashMap<>(16);
 
     /**
      * 获取默认的异常信息
@@ -101,7 +101,7 @@ public class DefaultExceptionHandler implements HandlerExceptionResolver {
      *
      * @since 1.0.0
      */
-    public final Map<String, ExceptionBean> getExceptionMap() {
+    public final Map<String, ExceptionBiscuit> getExceptionMap() {
         return exceptionMap;
     }
 
@@ -112,7 +112,7 @@ public class DefaultExceptionHandler implements HandlerExceptionResolver {
      *
      * @since 1.0.0
      */
-    public final void setExceptionMap(Map<String, ExceptionBean> exceptionMap) {
+    public final void setExceptionMap(Map<String, ExceptionBiscuit> exceptionMap) {
         this.exceptionMap = exceptionMap;
     }
 
@@ -143,7 +143,7 @@ public class DefaultExceptionHandler implements HandlerExceptionResolver {
      */
     public final <T extends Exception> void addException(int code, String msg, HttpStatus status, Class<T> e) {
         Objects.requireNonNull(e);
-        exceptionMap.put(e.getName(), new ExceptionBean().setCode(code).setMsg(msg).setStatus(status));
+        exceptionMap.put(e.getName(), ExceptionBread.create().setCode(code).setMsg(msg).setStatus(status));
     }
 
     /**
@@ -164,7 +164,6 @@ public class DefaultExceptionHandler implements HandlerExceptionResolver {
             LOGGER.error("url -> {}, ip -> {}, exception -> {}, message -> {}", req.getServletPath(),
                          req.getRemoteAddr(), e.getClass().getName(), e.getMessage());
         }
-        // 判断异常是否可以转换成ExceptionBean
         ExceptionBiscuit biscuit;
         if (e instanceof BootException) {
             biscuit = (BootException) e;
@@ -178,7 +177,7 @@ public class DefaultExceptionHandler implements HandlerExceptionResolver {
             String exception = stringWriter.toString();
             Console.error(exception);
             LOGGER.error(exception);
-            return parseModelAndView(req, e, bean);
+            return parseModelAndView(req, e, bread);
         }
         return parseModelAndView(req, e, biscuit);
     }

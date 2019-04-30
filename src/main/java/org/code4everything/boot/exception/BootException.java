@@ -1,8 +1,6 @@
 package org.code4everything.boot.exception;
 
 import org.code4everything.boot.base.bean.BaseBean;
-import org.code4everything.boot.bean.ExceptionBean;
-import org.code4everything.boot.bean.ExceptionBiscuit;
 import org.code4everything.boot.constant.MessageConsts;
 import org.springframework.http.HttpStatus;
 
@@ -269,16 +267,5 @@ public class BootException extends RuntimeException implements ExceptionBiscuit,
     public BootException setStatus(HttpStatus status) {
         this.status = status;
         return this;
-    }
-
-    /**
-     * 转换成 {@link ExceptionBean}
-     *
-     * @return {@link ExceptionBean}
-     *
-     * @since 1.0.4
-     */
-    public ExceptionBean asExceptionBean() {
-        return new ExceptionBean().setCode(code).setMsg(msg).setStatus(status);
     }
 }

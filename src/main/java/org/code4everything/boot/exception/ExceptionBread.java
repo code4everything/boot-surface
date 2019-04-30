@@ -1,4 +1,4 @@
-package org.code4everything.boot.bean;
+package org.code4everything.boot.exception;
 
 import org.code4everything.boot.base.bean.BaseBean;
 import org.springframework.http.HttpStatus;
@@ -11,7 +11,7 @@ import java.io.Serializable;
  * @author pantao
  * @since 2018/11/15
  **/
-public class ExceptionBean implements ExceptionBiscuit, BaseBean, Serializable {
+public class ExceptionBread implements ExceptionBiscuit, BaseBean, Serializable {
 
     private static final long serialVersionUID = 1349750625515704986L;
 
@@ -37,6 +37,17 @@ public class ExceptionBean implements ExceptionBiscuit, BaseBean, Serializable {
     private HttpStatus status;
 
     /**
+     * 创建 {@link ExceptionBread}
+     *
+     * @return {@link ExceptionBread}
+     *
+     * @since 1.1.1
+     */
+    public static ExceptionBread create() {
+        return new ExceptionBread();
+    }
+
+    /**
      * 获取错误码
      *
      * @return 错误码
@@ -53,11 +64,11 @@ public class ExceptionBean implements ExceptionBiscuit, BaseBean, Serializable {
      *
      * @param code 错误码
      *
-     * @return {@link ExceptionBean}
+     * @return {@link ExceptionBread}
      *
      * @since 1.0.0
      */
-    public ExceptionBean setCode(int code) {
+    public ExceptionBread setCode(int code) {
         this.code = code;
         return this;
     }
@@ -79,11 +90,11 @@ public class ExceptionBean implements ExceptionBiscuit, BaseBean, Serializable {
      *
      * @param msg 消息
      *
-     * @return {@link ExceptionBean}
+     * @return {@link ExceptionBread}
      *
      * @since 1.0.0
      */
-    public ExceptionBean setMsg(String msg) {
+    public ExceptionBread setMsg(String msg) {
         this.msg = msg;
         return this;
     }
@@ -105,17 +116,17 @@ public class ExceptionBean implements ExceptionBiscuit, BaseBean, Serializable {
      *
      * @param status {@link HttpStatus} 状态
      *
-     * @return {@link ExceptionBean}
+     * @return {@link ExceptionBread}
      *
      * @since 1.0.0
      */
-    public ExceptionBean setStatus(HttpStatus status) {
+    public ExceptionBread setStatus(HttpStatus status) {
         this.status = status;
         return this;
     }
 
     @Override
     public String toString() {
-        return "ExceptionBean{" + "code=" + code + ", msg='" + msg + '\'' + ", status=" + status + '}';
+        return "ExceptionBread{" + "code=" + code + ", msg='" + msg + '\'' + ", status=" + status + '}';
     }
 }

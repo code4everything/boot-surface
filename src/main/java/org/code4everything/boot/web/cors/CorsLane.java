@@ -51,6 +51,13 @@ public class CorsLane implements BaseBean, Serializable {
      */
     private Boolean credential;
 
+    /**
+     * 创建 {@link CorsLane}
+     *
+     * @return {@link CorsLane}
+     *
+     * @since 1.1.1
+     */
     public static CorsLane create() {
         return new CorsLane();
     }

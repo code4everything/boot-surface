@@ -1,4 +1,4 @@
-package org.code4everything.boot.bean;
+package org.code4everything.boot.exception;
 
 import org.springframework.http.HttpStatus;
 
