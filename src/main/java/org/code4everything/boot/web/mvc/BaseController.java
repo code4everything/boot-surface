@@ -11,7 +11,7 @@ import org.code4everything.boot.config.BootConfig;
 import org.code4everything.boot.constant.MessageConsts;
 import org.code4everything.boot.exception.ExceptionThrower;
 import org.code4everything.boot.service.BootUserService;
-import org.code4everything.boot.web.HttpUtils;
+import org.code4everything.boot.web.http.HttpUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 

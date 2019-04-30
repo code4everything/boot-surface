@@ -1,4 +1,4 @@
-package org.code4everything.boot.bean;
+package org.code4everything.boot.web.http;
 
 import org.code4everything.boot.base.bean.BaseBean;
 import org.springframework.web.multipart.MultipartFile;
@@ -11,7 +11,7 @@ import java.util.Map;
  * @author pantao
  * @since 2018/11/2
  **/
-public class MultipartFileBean implements BaseBean {
+public class DustFile implements BaseBean {
 
     /**
      * MD5文件名
@@ -39,7 +39,7 @@ public class MultipartFileBean implements BaseBean {
      *
      * @since 1.0.0
      */
-    private Long size;
+    private long size;
 
     /**
      * 自定义参数
@@ -100,11 +100,11 @@ public class MultipartFileBean implements BaseBean {
      *
      * @param multipartFile 表单文件
      *
-     * @return {@link MultipartFileBean}
+     * @return {@link DustFile}
      *
      * @since 1.0.6
      */
-    public MultipartFileBean setMultipartFile(MultipartFile multipartFile) {
+    public DustFile setMultipartFile(MultipartFile multipartFile) {
         this.multipartFile = multipartFile;
         return this;
     }
@@ -125,11 +125,11 @@ public class MultipartFileBean implements BaseBean {
      *
      * @param params 自定义参数
      *
-     * @return {@link MultipartFileBean}
+     * @return {@link DustFile}
      *
      * @since 1.0.0
      */
-    public MultipartFileBean setParams(Map<String, Object> params) {
+    public DustFile setParams(Map<String, Object> params) {
         this.params = params;
         return this;
     }
@@ -150,11 +150,11 @@ public class MultipartFileBean implements BaseBean {
      *
      * @param filename MD5文件名
      *
-     * @return {@link MultipartFileBean}
+     * @return {@link DustFile}
      *
      * @since 1.0.0
      */
-    public MultipartFileBean setFilename(String filename) {
+    public DustFile setFilename(String filename) {
         this.filename = filename;
         return this;
     }
@@ -175,11 +175,11 @@ public class MultipartFileBean implements BaseBean {
      *
      * @param originalFilename 原始文件名
      *
-     * @return {@link MultipartFileBean}
+     * @return {@link DustFile}
      *
      * @since 1.0.0
      */
-    public MultipartFileBean setOriginalFilename(String originalFilename) {
+    public DustFile setOriginalFilename(String originalFilename) {
         this.originalFilename = originalFilename;
         return this;
     }
@@ -200,11 +200,11 @@ public class MultipartFileBean implements BaseBean {
      *
      * @param md5 MD5码
      *
-     * @return {@link MultipartFileBean}
+     * @return {@link DustFile}
      *
      * @since 1.0.0
      */
-    public MultipartFileBean setMd5(String md5) {
+    public DustFile setMd5(String md5) {
         this.md5 = md5;
         return this;
     }
@@ -214,7 +214,7 @@ public class MultipartFileBean implements BaseBean {
      *
      * @return 文件大小
      */
-    public Long getSize() {
+    public long getSize() {
         return size;
     }
 
@@ -223,17 +223,17 @@ public class MultipartFileBean implements BaseBean {
      *
      * @param size 文件大小
      *
-     * @return {@link MultipartFileBean}
+     * @return {@link DustFile}
      *
      * @since 1.0.0
      */
-    public MultipartFileBean setSize(Long size) {
+    public DustFile setSize(long size) {
         this.size = size;
         return this;
     }
 
     @Override
     public String toString() {
-        return "MultipartFileBean{" + "filename='" + filename + '\'' + ", originalFilename='" + originalFilename + '\'' + ", md5='" + md5 + '\'' + ", size=" + size + ", params=" + params + ", multipartFile=" + multipartFile + ", storagePath='" + storagePath + '\'' + '}';
+        return "DustFile{" + "filename='" + filename + '\'' + ", originalFilename='" + originalFilename + '\'' + ", " + "md5='" + md5 + '\'' + ", size=" + size + ", params=" + params + ", multipartFile=" + multipartFile + ", storagePath='" + storagePath + '\'' + '}';
     }
 }

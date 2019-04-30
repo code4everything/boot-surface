@@ -61,21 +61,21 @@ public class DemoFileServiceImpl implements DemoFileService {
     }
 
     @Override
-    public FileInfo getBy(MultipartFileBean fileBean) {
-        String localPath = "/your-storage-path/" + fileBean.getFilename();
-        String accessUrl = "/your-controller-mapping/" + fileBean.getFilename();
+    public FileInfo getBy(DustFile dustFile) {
+        String localPath = "/your-storage-path/" + dustFile.getFilename();
+        String accessUrl = "/your-controller-mapping/" + dustFile.getFilename();
         return fileDAO.getByLocalPathOrAccessUrl(localPath, accessUrl);
     }
 
     @Override
-    public FileInfo save(MultipartFileBean fileBean) {
+    public FileInfo save(DustFile dustFile) {
         FileInfo fileInfo = new FileInfo();
-        fileInfo.setAccessUrl("/you-controller-mapping/" + fileBean.getFilename());
+        fileInfo.setAccessUrl("/you-controller-mapping/" + dustFile.getFilename());
         fileInfo.setCreateTime(System.currentTimeMillis());
         fileInfo.setId(IdUtil.randomUUID());
-        fileInfo.setLocalPath("/your-storage-path" + fileBean.getFilename());
-        fileInfo.setSize(fileBean.getSize());
-        fileInfo.setSuffix(FileUtil.extName(fileBean.getOriginalFilename()));
+        fileInfo.setLocalPath("/your-storage-path" + dustFile.getFilename());
+        fileInfo.setSize(dustFile.getSize());
+        fileInfo.setSuffix(FileUtil.extName(dustFile.getOriginalFilename()));
         return fileDAO.save(fileInfo);
     }
 }

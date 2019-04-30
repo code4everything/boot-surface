@@ -1,4 +1,4 @@
-package org.code4everything.boot.web;
+package org.code4everything.boot.web.http;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.io.FileUtil;
@@ -6,7 +6,6 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.digest.DigestUtil;
 import org.code4everything.boot.base.AssertUtils;
-import org.code4everything.boot.bean.MultipartFileBean;
 import org.code4everything.boot.base.bean.Response;
 import org.code4everything.boot.config.BootConfig;
 import org.code4everything.boot.constant.MessageConsts;
@@ -599,30 +598,30 @@ public class HttpUtils {
             return response.error("file size must less than " + BootConfig.getMaxUploadFileSize());
         }
         // 格式化存储路径
-        MultipartFileBean fileBean = new MultipartFileBean();
-        fileBean.setStoragePath(storage + (storage.endsWith(File.separator) ? "" : File.separator));
+        DustFile dustFile = new DustFile();
+        dustFile.setStoragePath(storage + (storage.endsWith(File.separator) ? "" : File.separator));
         // 设置文件信息
         String ofn = file.getOriginalFilename();
         if (md5) {
             try {
                 // 设置MD5
-                fileBean.setMd5(DigestUtil.md5Hex(file.getBytes()));
+                dustFile.setMd5(DigestUtil.md5Hex(file.getBytes()));
             } catch (Exception e) {
                 LOGGER.error("get md5 of file[{}] failed, message -> {}", ofn, e.getMessage());
                 return response.error(HttpStatus.SERVICE_UNAVAILABLE.value(), ofn + " upload failed");
             }
-            fileBean.setFilename(fileBean.getMd5() + StrUtil.DOT + FileUtil.extName(ofn));
+            dustFile.setFilename(dustFile.getMd5() + StrUtil.DOT + FileUtil.extName(ofn));
         } else {
-            fileBean.setFilename(ofn);
+            dustFile.setFilename(ofn);
         }
-        fileBean.setOriginalFilename(ofn).setSize(file.getSize()).setParams(params);
+        dustFile.setOriginalFilename(ofn).setSize(file.getSize()).setParams(params);
         // 检测文件是否存在
-        Boolean exists = service.exists(fileBean);
+        Boolean exists = service.exists(dustFile);
         boolean shouldWrite = false;
         T t = null;
         if (Objects.isNull(exists)) {
             // 如果进入这里，表示用户没有实现exists方法
-            t = service.getBy(fileBean);
+            t = service.getBy(dustFile);
             if (Objects.isNull(t)) {
                 // 不存在时则可以写入磁盘
                 shouldWrite = true;
@@ -634,15 +633,15 @@ public class HttpUtils {
         if (shouldWrite || force) {
             try {
                 // 写入磁盘
-                file.transferTo(new File(fileBean.getStoragePath() + fileBean.getFilename()));
+                file.transferTo(new File(dustFile.getStoragePath() + dustFile.getFilename()));
             } catch (Exception e) {
                 LOGGER.error("upload file failed, message -> {}", e.getMessage());
                 return response.error(HttpStatus.SERVICE_UNAVAILABLE.value(), ofn + " upload failed");
             }
             // 将数据写入数据库
-            t = service.save(fileBean, t);
+            t = service.save(dustFile, t);
         }
-        return Objects.isNull(t) ? response.setMsg(fileBean.getFilename()) : response.setData(t);
+        return Objects.isNull(t) ? response.setMsg(dustFile.getFilename()) : response.setData(t);
     }
 
     // ------------------------------------------------字节数组-----------------------------------------
@@ -771,28 +770,28 @@ public class HttpUtils {
             return response.error("file size must less than " + BootConfig.getMaxUploadFileSize());
         }
         // 格式化存储路径
-        MultipartFileBean fileBean = new MultipartFileBean();
-        fileBean.setStoragePath(storage + (storage.endsWith(File.separator) ? "" : File.separator));
+        DustFile dustFile = new DustFile();
+        dustFile.setStoragePath(storage + (storage.endsWith(File.separator) ? "" : File.separator));
         // 设置文件信息
         if (md5) {
             try {
                 // 设置MD5
-                fileBean.setMd5(DigestUtil.md5Hex(bytes));
+                dustFile.setMd5(DigestUtil.md5Hex(bytes));
             } catch (Exception e) {
                 LOGGER.error("get md5 of file[{}] failed, message -> {}", name, e.getMessage());
                 return response.error(HttpStatus.SERVICE_UNAVAILABLE.value(), name + " upload failed");
             }
-            fileBean.setFilename(fileBean.getMd5() + StrUtil.DOT + FileUtil.extName(name));
+            dustFile.setFilename(dustFile.getMd5() + StrUtil.DOT + FileUtil.extName(name));
         } else {
-            fileBean.setFilename(name);
+            dustFile.setFilename(name);
         }
-        fileBean.setOriginalFilename(name).setSize((long) bytes.length).setParams(params);
+        dustFile.setOriginalFilename(name).setSize((long) bytes.length).setParams(params);
         // 检测文件是否存在
-        Boolean exists = service.exists(fileBean);
+        Boolean exists = service.exists(dustFile);
         boolean shouldWrite;
         T t = null;
         if (Objects.isNull(exists)) {
-            t = service.getBy(fileBean);
+            t = service.getBy(dustFile);
             shouldWrite = Objects.isNull(t);
         } else {
             shouldWrite = !exists;
@@ -800,14 +799,14 @@ public class HttpUtils {
         if (shouldWrite || force) {
             try {
                 // 写入磁盘
-                FileUtil.writeBytes(bytes, fileBean.getStoragePath() + fileBean.getFilename());
+                FileUtil.writeBytes(bytes, dustFile.getStoragePath() + dustFile.getFilename());
             } catch (Exception e) {
                 LOGGER.error("upload file failed, message -> {}", e.getMessage());
                 return response.error(HttpStatus.SERVICE_UNAVAILABLE.value(), name + " upload failed");
             }
             // 将数据写入数据库
-            t = service.save(fileBean, t);
+            t = service.save(dustFile, t);
         }
-        return Objects.isNull(t) ? response.setMsg(fileBean.getFilename()) : response.setData(t);
+        return Objects.isNull(t) ? response.setMsg(dustFile.getFilename()) : response.setData(t);
     }
 }

@@ -1,8 +1,6 @@
-package org.code4everything.boot.annotation;
+package org.code4everything.boot.encoder;
 
 import com.alibaba.fastjson.JSONObject;
-import org.code4everything.boot.encoder.DefaultFieldEncoder;
-import org.code4everything.boot.encoder.FieldEncoder;
 
 import java.lang.annotation.*;
 import java.lang.reflect.Field;
