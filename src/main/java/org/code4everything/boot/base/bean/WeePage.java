@@ -1,4 +1,4 @@
-package org.code4everything.boot.bean;
+package org.code4everything.boot.base.bean;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;

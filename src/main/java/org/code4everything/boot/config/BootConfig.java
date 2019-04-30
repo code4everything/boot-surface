@@ -8,7 +8,7 @@ import com.google.common.cache.Cache;
 import org.code4everything.boot.base.FileUtils;
 import org.code4everything.boot.base.FileWatcher;
 import org.code4everything.boot.bean.InterceptorBean;
-import org.code4everything.boot.bean.Response;
+import org.code4everything.boot.base.bean.Response;
 import org.code4everything.boot.constant.StringConsts;
 import org.code4everything.boot.encoder.DefaultFieldEncoder;
 import org.code4everything.boot.encoder.FieldEncoder;

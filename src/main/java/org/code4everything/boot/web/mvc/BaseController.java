@@ -6,7 +6,7 @@ import com.google.common.base.Strings;
 import org.code4everything.boot.base.AssertUtils;
 import org.code4everything.boot.base.function.BooleanFunction;
 import org.code4everything.boot.base.function.ResponseFunction;
-import org.code4everything.boot.bean.Response;
+import org.code4everything.boot.base.bean.Response;
 import org.code4everything.boot.config.BootConfig;
 import org.code4everything.boot.constant.MessageConsts;
 import org.code4everything.boot.exception.ExceptionThrower;

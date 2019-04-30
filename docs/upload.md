@@ -5,11 +5,6 @@
 #### 新建一个文件实体类
 
 ``` java
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document
-
-import java.io.Serializable;
-
 @Document
 public class FileInfo implements Serializable {
 
@@ -31,9 +26,6 @@ public class FileInfo implements Serializable {
 ### 新建文件访问对象
 
 ``` java
-import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.stereotype.Repository;
-
 @Repository
 public interface FileDAO extends MongoRepository<FileInfo, String> {
 
@@ -54,14 +46,6 @@ public interface DemoFileService extends BootFileService<FileInfo> {}
 #### 实现文件服务接口
 
 ``` java
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.lang.Validator;
-import cn.hutool.core.util.IdUtil;
-import org.code4everything.boot.annotation.AopLog;
-import org.code4everything.boot.bean.MultipartFileBean;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 @Service
 public class DemoFileServiceImpl implements DemoFileService {
 
@@ -100,17 +84,6 @@ public class DemoFileServiceImpl implements DemoFileService {
 #### 新建文件控制器，实现上传下载
 
 ``` java
-import org.code4everything.boot.bean.Response;
-import org.code4everything.boot.web.HttpUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.InputStreamSource;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-
 @RestController
 @RequestMapping("/api/file")
 public class FileController {

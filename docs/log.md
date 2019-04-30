@@ -5,11 +5,6 @@
 #### 新建一个日志实体类
 
 ``` java
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-import java.io.Serializable;
-
 @Document
 public class Log implements Serializable {
 
@@ -41,9 +36,6 @@ public class Log implements Serializable {
 #### 新建一个数据访问对象
 
 ``` java
-import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.stereotype.Repository;
-
 @Repository
 public interface LogDAO extends MongoRepository<Log, String> {}
 ```
@@ -51,16 +43,6 @@ public interface LogDAO extends MongoRepository<Log, String> {}
 #### 实现日志服务接口
 
 ``` java
-import cn.hutool.core.util.IdUtil;
-import cn.hutool.core.util.ObjectUtil;
-import org.code4everything.boot.bean.LogBean;
-import org.code4everything.boot.service.BootLogService;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import javax.servlet.http.HttpServletRequest;
-
 @Service
 public class LogServiceImpl implements BootLogService<Log> {
 
@@ -104,19 +86,6 @@ public class LogServiceImpl implements BootLogService<Log> {
 #### 创建切面类或直接在 `Spring Boot` 应用的主类上使用注解 `@EnableSurfaceAutoLog`
 
 ``` java
-import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.AfterThrowing;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
-import org.aspectj.lang.annotation.Pointcut;
-import org.code4everything.boot.constant.StringConsts;
-import org.code4everything.boot.log.AopLogUtils;
-import org.code4everything.boot.service.BootLogService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import javax.servlet.http.HttpServletRequest;
-
 @Aspect
 @Component
 public class LogAspect {

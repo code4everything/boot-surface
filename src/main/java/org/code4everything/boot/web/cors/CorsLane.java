@@ -1,6 +1,6 @@
 package org.code4everything.boot.web.cors;
 
-import org.code4everything.boot.bean.BaseBean;
+import org.code4everything.boot.base.bean.BaseBean;
 
 import java.io.Serializable;
 import java.util.Arrays;

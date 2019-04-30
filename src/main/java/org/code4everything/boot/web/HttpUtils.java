@@ -7,7 +7,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.digest.DigestUtil;
 import org.code4everything.boot.base.AssertUtils;
 import org.code4everything.boot.bean.MultipartFileBean;
-import org.code4everything.boot.bean.Response;
+import org.code4everything.boot.base.bean.Response;
 import org.code4everything.boot.config.BootConfig;
 import org.code4everything.boot.constant.MessageConsts;
 import org.code4everything.boot.constant.StringConsts;

@@ -1,6 +1,6 @@
 package org.code4everything.boot.exception;
 
-import org.code4everything.boot.bean.BaseBean;
+import org.code4everything.boot.base.bean.BaseBean;
 import org.code4everything.boot.bean.ExceptionBean;
 import org.code4everything.boot.bean.ExceptionBiscuit;
 import org.code4everything.boot.constant.MessageConsts;

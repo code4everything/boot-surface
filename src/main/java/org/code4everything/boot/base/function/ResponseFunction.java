@@ -1,6 +1,6 @@
 package org.code4everything.boot.base.function;
 
-import org.code4everything.boot.bean.Response;
+import org.code4everything.boot.base.bean.Response;
 
 /**
  * 结果响应函数

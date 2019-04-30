@@ -1,5 +1,6 @@
 package org.code4everything.boot.bean;
 
+import org.code4everything.boot.base.bean.BaseBean;
 import org.junit.Test;
 
 /**

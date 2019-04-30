@@ -1,6 +1,7 @@
 package org.code4everything.boot.bean;
 
 import cn.hutool.core.util.ObjectUtil;
+import org.code4everything.boot.base.bean.Response;
 import org.junit.Test;
 
 public class ResponseTest {

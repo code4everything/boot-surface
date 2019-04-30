@@ -23,6 +23,6 @@ public CorsFilter corsFilter() {
 ``` java
 @Bean
 public CorsFilter corsFilter() {
-    return CorsUtils.newCorsFilter(new CorsLane().setPath("/**").setCredential(true).setHeaders("*").setMethods("GET", "POST", "DELETE", "PUT", "OPTIONS").setOrigins("yourdomain.com"));
+    return CorsUtils.newCorsFilter(CorsLane.create().setPath("/**").setCredential(true).setHeaders("*").setMethods("GET", "POST", "DELETE", "PUT", "OPTIONS").setOrigins("yourdomain.com"));
 }
 ```

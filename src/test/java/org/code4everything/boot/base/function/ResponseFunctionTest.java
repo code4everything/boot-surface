@@ -2,7 +2,7 @@ package org.code4everything.boot.base.function;
 
 import cn.hutool.core.lang.Console;
 import org.code4everything.boot.bean.LogBean;
-import org.code4everything.boot.bean.Response;
+import org.code4everything.boot.base.bean.Response;
 import org.junit.Test;
 
 public class ResponseFunctionTest {

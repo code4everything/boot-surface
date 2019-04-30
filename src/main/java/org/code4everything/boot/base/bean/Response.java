@@ -1,4 +1,4 @@
-package org.code4everything.boot.bean;
+package org.code4everything.boot.base.bean;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Console;
@@ -63,7 +63,7 @@ public class Response<T> implements Serializable {
      *
      * @since 1.0.0
      */
-    private Long timestamp = System.currentTimeMillis();
+    private long timestamp = System.currentTimeMillis();
 
     /**
      * 时间
@@ -355,7 +355,7 @@ public class Response<T> implements Serializable {
      *
      * @since 1.0.0
      */
-    public Long getTimestamp() {
+    public long getTimestamp() {
         return timestamp;
     }
 
@@ -368,7 +368,7 @@ public class Response<T> implements Serializable {
      *
      * @since 1.0.0
      */
-    public Response<T> setTimestamp(Long timestamp) {
+    public Response<T> setTimestamp(long timestamp) {
         this.timestamp = timestamp;
         return this;
     }

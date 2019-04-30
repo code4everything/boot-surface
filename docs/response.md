@@ -7,10 +7,6 @@
 #### 假设有一个视图对象
 
 ``` java
-import org.code4everything.boot.annotation.Sealed;
-
-import java.io.Serializable;
-
 public class DemoVO implements Serializable {
 
     /**
@@ -42,12 +38,6 @@ public class DemoVO implements Serializable {
 #### 控制器示例代码
 
 ``` java
-import org.code4everything.boot.bean.Response;
-import org.code4everything.boot.web.mvc.BaseController;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 @RestController
 @RequestMapping("/demo")
 public class DemoController extends BaseController {

@@ -1,5 +1,7 @@
 package org.code4everything.boot.bean;
 
+import org.code4everything.boot.base.bean.BaseBean;
+
 /**
  * 日志信息临时存储类
  *

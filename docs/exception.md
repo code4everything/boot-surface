@@ -5,9 +5,6 @@
 #### 首先我们需要一个实现了 `WebMvcConfigurer` 接口的配置类
 
 ``` java
-import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
 @Configuration
 public class WebMvcConfiguration implements WebMvcConfigurer {}
 ```
@@ -41,15 +38,6 @@ public void configureHandlerExceptionResolvers(List<HandlerExceptionResolver> re
 #### 完整的示例代码参考
 
 ``` java
-import org.code4everything.boot.web.mvc.DefaultExceptionHandler;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.servlet.HandlerExceptionResolver;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
-import java.util.List;
-
 @Configuration
 public class WebMvcConfiguration implements WebMvcConfigurer {
 

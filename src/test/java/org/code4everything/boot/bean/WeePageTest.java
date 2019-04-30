@@ -3,6 +3,7 @@ package org.code4everything.boot.bean;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.ObjectUtil;
 import com.google.common.collect.Lists;
+import org.code4everything.boot.base.bean.WeePage;
 import org.junit.Test;
 
 public class WeePageTest {

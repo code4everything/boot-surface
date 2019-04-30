@@ -1,5 +1,6 @@
 package org.code4everything.boot.bean;
 
+import org.code4everything.boot.base.bean.BaseBean;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;

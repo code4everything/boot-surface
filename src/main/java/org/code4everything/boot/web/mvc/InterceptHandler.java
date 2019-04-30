@@ -1,7 +1,7 @@
 package org.code4everything.boot.web.mvc;
 
 import cn.hutool.core.util.StrUtil;
-import org.code4everything.boot.bean.Response;
+import org.code4everything.boot.base.bean.Response;
 import org.code4everything.boot.constant.IntegerConsts;
 import org.code4everything.boot.constant.MessageConsts;
 import org.springframework.http.HttpHeaders;
