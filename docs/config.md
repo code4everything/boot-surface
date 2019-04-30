@@ -32,9 +32,9 @@ BootConfig.setLogCache(CacheBuilder.newBuilder().expireAfterWrite(5, TimeUnit.SE
 ### 设置拦截器名单
 
 ``` java
-setInterceptorBean(org.code4everything.boot.bean.InterceptorBean)
+setFilterPath(org.code4everything.boot.web.mvc.FilterPath)
 // 例如：
-BootConfit.setInterceptorBean(new InterceptorBean().setInterceptPrefixes(new String[]{"/user", "/custom"}));
+BootConfit.setFilterPath(new FilterPath().setInterceptPrefixes(new String[]{"/user", "/custom"}));
 ```
 
 ### 设置缓存连接

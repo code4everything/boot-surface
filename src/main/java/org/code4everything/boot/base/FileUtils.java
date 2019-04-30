@@ -8,10 +8,10 @@ import cn.hutool.core.io.watch.Watcher;
 import cn.hutool.core.io.watch.watchers.DelayWatcher;
 import cn.hutool.core.util.CharsetUtil;
 import com.alibaba.fastjson.JSONObject;
-import org.code4everything.boot.bean.InterceptorBean;
 import org.code4everything.boot.config.BootConfig;
 import org.code4everything.boot.config.BootConfigProperties;
 import org.code4everything.boot.constant.StringConsts;
+import org.code4everything.boot.web.mvc.FilterPath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -89,7 +89,7 @@ public class FileUtils {
         watchFile(jsonFile, new FileWatcher() {
 
             // 是否设置访问拦截名单
-            private boolean notSet = config instanceof InterceptorBean;
+            private boolean notSet = config instanceof FilterPath;
 
             @Override
             public void doSomething() {
@@ -103,7 +103,7 @@ public class FileUtils {
                 }
                 // 自动设置拦截名单
                 if (notSet) {
-                    BootConfig.setInterceptorBean((InterceptorBean) config);
+                    BootConfig.setFilterPath((FilterPath) config);
                     notSet = false;
                 }
                 fileWatcher.doSomething();

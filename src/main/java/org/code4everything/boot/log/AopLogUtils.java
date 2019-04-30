@@ -72,7 +72,7 @@ public class AopLogUtils {
      * @since 1.0.4
      */
     public static <T> ReturnedLog<T> saveLog(BootLogService<T> service, ProceedingJoinPoint point, boolean shouldSave) {
-        return proceedAround(service, point, shouldSave);
+        return doAround(service, point, shouldSave);
     }
 
     /**
@@ -106,7 +106,7 @@ public class AopLogUtils {
      */
     public static <T> ReturnedLog<T> saveLogWithThrowable(BootLogService<T> service, ProceedingJoinPoint point,
                                                           boolean shouldSave) throws Throwable {
-        ReturnedLog<T> returnedLog = proceedAround(service, point, shouldSave);
+        ReturnedLog<T> returnedLog = doAround(service, point, shouldSave);
         if (Objects.isNull(returnedLog.getThrowable())) {
             return returnedLog;
         }
@@ -205,8 +205,7 @@ public class AopLogUtils {
      *
      * @since 1.0.4
      */
-    private static <T> ReturnedLog<T> proceedAround(BootLogService<T> service, ProceedingJoinPoint point,
-                                                    boolean saveLog) {
+    private static <T> ReturnedLog<T> doAround(BootLogService<T> service, ProceedingJoinPoint point, boolean saveLog) {
         // 获取日志信息
         MethodLog methodLog = parse(point);
         Throwable t = null;

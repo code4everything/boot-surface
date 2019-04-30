@@ -1,4 +1,4 @@
-package org.code4everything.boot.bean;
+package org.code4everything.boot.web.mvc;
 
 import org.code4everything.boot.base.bean.BaseBean;
 
@@ -6,12 +6,12 @@ import java.io.Serializable;
 import java.util.Arrays;
 
 /**
- * 配置信息
+ * 访问过滤配置
  *
  * @author pantao
  * @since 2018/11/4
  */
-public class InterceptorBean implements BaseBean, Serializable {
+public class FilterPath implements BaseBean, Serializable {
 
     private static final long serialVersionUID = -7136966024637207548L;
 
@@ -44,6 +44,17 @@ public class InterceptorBean implements BaseBean, Serializable {
     private String[] visitIgnorePrefixes;
 
     /**
+     * 创建 {@link FilterPath}
+     *
+     * @return {@link FilterPath}
+     *
+     * @since 1.1.1
+     */
+    public static FilterPath create() {
+        return new FilterPath();
+    }
+
+    /**
      * 获取忽略统计访问的名单前缀
      *
      * @return 忽略统计访问的名单前缀
@@ -59,11 +70,11 @@ public class InterceptorBean implements BaseBean, Serializable {
      *
      * @param visitIgnorePrefixes 忽略统计访问的名单前缀
      *
-     * @return {@link InterceptorBean}
+     * @return {@link FilterPath}
      *
      * @since 1.1.0
      */
-    public InterceptorBean setVisitIgnorePrefixes(String[] visitIgnorePrefixes) {
+    public FilterPath setVisitIgnorePrefixes(String[] visitIgnorePrefixes) {
         this.visitIgnorePrefixes = visitIgnorePrefixes;
         return this;
     }
@@ -82,11 +93,11 @@ public class InterceptorBean implements BaseBean, Serializable {
      *
      * @param blackPrefixes 黑名单前缀
      *
-     * @return {@link InterceptorBean}
+     * @return {@link FilterPath}
      *
      * @since 1.0.0
      */
-    public InterceptorBean setBlackPrefixes(String[] blackPrefixes) {
+    public FilterPath setBlackPrefixes(String[] blackPrefixes) {
         this.blackPrefixes = blackPrefixes;
         return this;
     }
@@ -107,11 +118,11 @@ public class InterceptorBean implements BaseBean, Serializable {
      *
      * @param whitePrefixes 白名单前缀
      *
-     * @return {@link InterceptorBean}
+     * @return {@link FilterPath}
      *
      * @since 1.0.0
      */
-    public InterceptorBean setWhitePrefixes(String[] whitePrefixes) {
+    public FilterPath setWhitePrefixes(String[] whitePrefixes) {
         this.whitePrefixes = whitePrefixes;
         return this;
     }
@@ -132,17 +143,17 @@ public class InterceptorBean implements BaseBean, Serializable {
      *
      * @param interceptPrefixes 拦截名单前缀
      *
-     * @return {@link InterceptorBean}
+     * @return {@link FilterPath}
      *
      * @since 1.0.0
      */
-    public InterceptorBean setInterceptPrefixes(String[] interceptPrefixes) {
+    public FilterPath setInterceptPrefixes(String[] interceptPrefixes) {
         this.interceptPrefixes = interceptPrefixes;
         return this;
     }
 
     @Override
     public String toString() {
-        return "InterceptorBean{" + "blackPrefixes=" + Arrays.toString(blackPrefixes) + ", whitePrefixes=" + Arrays.toString(whitePrefixes) + ", interceptPrefixes=" + Arrays.toString(interceptPrefixes) + ", visitIgnorePrefixes=" + Arrays.toString(visitIgnorePrefixes) + '}';
+        return "FilterPath{" + "blackPrefixes=" + Arrays.toString(blackPrefixes) + ", whitePrefixes=" + Arrays.toString(whitePrefixes) + ", interceptPrefixes=" + Arrays.toString(interceptPrefixes) + ", visitIgnorePrefixes=" + Arrays.toString(visitIgnorePrefixes) + '}';
     }
 }

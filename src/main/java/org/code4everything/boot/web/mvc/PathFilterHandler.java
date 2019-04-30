@@ -23,7 +23,7 @@ import java.util.concurrent.BlockingQueue;
  * @author pantao
  * @since 2018/11/4
  */
-public interface InterceptHandler {
+public interface PathFilterHandler {
 
     /**
      * 创建访问统计的生产队列，如果当前的队列大小超过了设置的队列边界时，将发生阻塞，所以请选择合适的队列并设置一个合适的大小

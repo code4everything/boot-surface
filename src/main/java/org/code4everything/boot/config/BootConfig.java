@@ -7,7 +7,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.cache.Cache;
 import org.code4everything.boot.base.FileUtils;
 import org.code4everything.boot.base.FileWatcher;
-import org.code4everything.boot.bean.InterceptorBean;
 import org.code4everything.boot.base.bean.Response;
 import org.code4everything.boot.constant.StringConsts;
 import org.code4everything.boot.encoder.DefaultFieldEncoder;
@@ -16,6 +15,7 @@ import org.code4everything.boot.log.AopLogUtils;
 import org.code4everything.boot.message.MailUtils;
 import org.code4everything.boot.module.redis.RedisTemplateUtils;
 import org.code4everything.boot.web.mvc.DefaultWebInterceptor;
+import org.code4everything.boot.web.mvc.FilterPath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -176,12 +176,12 @@ public class BootConfig {
     /**
      * 设置配置类
      *
-     * @param interceptorBean {@link InterceptorBean}
+     * @param filterPath {@link FilterPath}
      *
      * @since 1.0.2
      */
-    public static void setInterceptorBean(InterceptorBean interceptorBean) {
-        DefaultWebInterceptor.setInterceptorBean(interceptorBean);
+    public static void setFilterPath(FilterPath filterPath) {
+        DefaultWebInterceptor.setFilterPath(filterPath);
     }
 
     /**

@@ -5,10 +5,10 @@
 #### 首先我们需要在主类的 `main` 方法中设置名单
 
 ``` java
-InterceptorBean bean = new InterceptorBean();
-bean.setInterceptPrefixes(new String[]{"/user", "/custom"});
-bean.setInterceptPrefixes(new String[]{"/common"});
-DefaultWebInterceptor.setInterceptorBean(bean);
+FilterPath path = new FilterPath();
+path.setInterceptPrefixes(new String[]{"/user", "/custom"});
+path.setInterceptPrefixes(new String[]{"/common"});
+DefaultWebInterceptor.setFilterPath(path);
 ```
 
 #### 然后准备一个实现了 `WebMvcConfigurer` 接口的配置类
@@ -23,7 +23,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer {}
 ``` java
 @Override
 public void addInterceptors(InterceptorRegistry registry) {
-    registry.addInterceptor(new DefaultWebInterceptor(new InterceptHandler() {
+    registry.addInterceptor(new DefaultWebInterceptor(new PathFilterHandler() {
         @Override
         public void handleBlackList(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
             // 处理黑名单，可不重写此方法
@@ -54,7 +54,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new DefaultWebInterceptor(new InterceptHandler() {
+        registry.addInterceptor(new DefaultWebInterceptor(new PathFilterHandler() {
             @Override
             public void handleBlackList(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
                 // 处理黑名单，可不重写此方法

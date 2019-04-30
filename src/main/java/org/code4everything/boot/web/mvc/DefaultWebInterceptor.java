@@ -8,7 +8,6 @@ import com.google.common.cache.CacheBuilder;
 import org.code4everything.boot.base.DateUtils;
 import org.code4everything.boot.base.MapUtils;
 import org.code4everything.boot.base.ObjectUtils;
-import org.code4everything.boot.bean.InterceptorBean;
 import org.code4everything.boot.config.BootConfig;
 import org.code4everything.boot.constant.IntegerConsts;
 import org.code4everything.boot.exception.ExceptionFactory;
@@ -50,7 +49,7 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
      *
      * @since 1.0.0
      */
-    private static InterceptorBean interceptorBean = null;
+    private static FilterPath filterPath = null;
 
     private static Map<String, Long> userVisitMap = null;
 
@@ -63,7 +62,7 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
      *
      * @since 1.0.0
      */
-    private final InterceptHandler interceptHandler;
+    private final PathFilterHandler filterHandler;
 
     private final ThreadFactory factory = ThreadFactoryBuilder.create().setDaemon(true).build();
 
@@ -79,18 +78,18 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
      * @since 1.0.0
      */
     public DefaultWebInterceptor() {
-        this(new InterceptHandler() {});
+        this(new PathFilterHandler() {});
     }
 
     /**
      * 构造函数
      *
-     * @param interceptHandler 拦截处理器
+     * @param filterHandler 拦截处理器
      *
      * @since 1.0.0
      */
-    public DefaultWebInterceptor(InterceptHandler interceptHandler) {
-        this.interceptHandler = interceptHandler;
+    public DefaultWebInterceptor(PathFilterHandler filterHandler) {
+        this.filterHandler = filterHandler;
     }
 
     /**
@@ -214,12 +213,12 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
     /**
      * 设置配置类
      *
-     * @param interceptorBean {@link InterceptorBean}
+     * @param filterPath {@link FilterPath}
      *
      * @since 1.0.0
      */
-    public static void setInterceptorBean(InterceptorBean interceptorBean) {
-        DefaultWebInterceptor.interceptorBean = interceptorBean;
+    public static void setFilterPath(FilterPath filterPath) {
+        DefaultWebInterceptor.filterPath = filterPath;
     }
 
     private static void incrementVisit() {
@@ -242,12 +241,12 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
         checkFrequency(request);
         // 统计请求数据
         if (visitLog && ObjectUtils.isNotNull(userVisitMap, urlVisitMap)) {
-            countVisit(interceptHandler.buildUserKey(request), request.getRequestURI());
+            countVisit(filterHandler.buildUserKey(request), request.getRequestURI());
         }
 
         if (BootConfig.isDebug()) {
             // 打印请求的详细信息
-            String logStr = interceptHandler.buildVisitLog(request);
+            String logStr = filterHandler.buildVisitLog(request);
             LOGGER.info(logStr);
         }
 
@@ -255,17 +254,17 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
 
         // 黑名单
         if (StrUtil.startWithAny(url, getBlackList())) {
-            interceptHandler.handleBlackList(request, response, handler);
+            filterHandler.handleBlackList(request, response, handler);
             return false;
         }
         // 白名单
         if (StrUtil.startWithAny(url, getWhiteList())) {
-            interceptHandler.handleWhiteList(request, response, handler);
+            filterHandler.handleWhiteList(request, response, handler);
             return true;
         }
         // 拦截名单
         if (StrUtil.startWithAny(url, getInterceptList())) {
-            return interceptHandler.handleInterceptList(request, response, handler);
+            return filterHandler.handleInterceptList(request, response, handler);
         }
         return true;
     }
@@ -278,7 +277,7 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
      * @since 1.1.0
      */
     private void checkFrequency(HttpServletRequest request) {
-        String key = interceptHandler.buildCacheKey(request);
+        String key = filterHandler.buildCacheKey(request);
         if (StrUtil.isNotEmpty(key) && Objects.isNull(cache)) {
             // 创建频率检测缓存
             synchronized (DefaultExceptionHandler.class) {
@@ -311,7 +310,7 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
                            ModelAndView modelAndView) throws Exception {
-        interceptHandler.postHandle(request, response, handler, modelAndView);
+        filterHandler.postHandle(request, response, handler, modelAndView);
     }
 
     /**
@@ -328,7 +327,7 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler,
                                 Exception ex) throws Exception {
-        interceptHandler.afterCompletion(request, response, handler, ex);
+        filterHandler.afterCompletion(request, response, handler, ex);
     }
 
     private void countVisit(final String userKey, final String urlKey) {
@@ -337,7 +336,7 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
             synchronized (DefaultWebInterceptor.class) {
                 if (Objects.isNull(executor)) {
                     // 初始化统计线程
-                    BlockingQueue<Runnable> queue = interceptHandler.createWorkQueue();
+                    BlockingQueue<Runnable> queue = filterHandler.createWorkQueue();
                     executor = new ThreadPoolExecutor(1, 1, 0, TimeUnit.SECONDS, queue, factory);
                 }
                 if (Objects.isNull(scheduledExecutor)) {
@@ -350,7 +349,7 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
                         if (BootConfig.isDebug()) {
                             LOGGER.info("call method 'handleVisitLog' to save and reset today's http request data");
                         }
-                        interceptHandler.handleVisitLog(date, getUserVisitMap(), getUrlVisitMap(), totalVisit);
+                        filterHandler.handleVisitLog(date, getUserVisitMap(), getUrlVisitMap(), totalVisit);
                         // 重置统计数据
                         resetVisitObjects(userVisitMap.size(), urlVisitMap.size());
                     }, initialDelay, IntegerConsts.ONE_DAY_MILLIS, TimeUnit.MILLISECONDS);
@@ -374,22 +373,22 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
     }
 
     private String[] getVisitIgnorePrefixes() {
-        return isNull() ? null : DefaultWebInterceptor.interceptorBean.getVisitIgnorePrefixes();
+        return isNull() ? null : DefaultWebInterceptor.filterPath.getVisitIgnorePrefixes();
     }
 
     private String[] getBlackList() {
-        return isNull() ? null : DefaultWebInterceptor.interceptorBean.getBlackPrefixes();
+        return isNull() ? null : DefaultWebInterceptor.filterPath.getBlackPrefixes();
     }
 
     private String[] getWhiteList() {
-        return isNull() ? null : DefaultWebInterceptor.interceptorBean.getWhitePrefixes();
+        return isNull() ? null : DefaultWebInterceptor.filterPath.getWhitePrefixes();
     }
 
     private String[] getInterceptList() {
-        return isNull() ? null : DefaultWebInterceptor.interceptorBean.getInterceptPrefixes();
+        return isNull() ? null : DefaultWebInterceptor.filterPath.getInterceptPrefixes();
     }
 
     private boolean isNull() {
-        return Objects.isNull(DefaultWebInterceptor.interceptorBean);
+        return Objects.isNull(DefaultWebInterceptor.filterPath);
     }
 }

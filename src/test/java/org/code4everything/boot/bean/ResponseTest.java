@@ -2,6 +2,7 @@ package org.code4everything.boot.bean;
 
 import cn.hutool.core.util.ObjectUtil;
 import org.code4everything.boot.base.bean.Response;
+import org.code4everything.boot.web.mvc.FilterPath;
 import org.junit.Test;
 
 public class ResponseTest {
@@ -13,12 +14,12 @@ public class ResponseTest {
 
     @Test
     public void serialize() {
-        Response<InterceptorBean> response = new Response<>();
+        Response<FilterPath> response = new Response<>();
         System.out.println(response);
         response.setCode(404);
         response.setMsg("test");
         response.setTimestamp();
-        InterceptorBean bean = new InterceptorBean();
+        FilterPath bean = new FilterPath();
         bean.setWhitePrefixes(new String[]{"white"});
         bean.setBlackPrefixes(new String[]{"black"});
         bean.setInterceptPrefixes(new String[]{"intercept"});
