@@ -10,7 +10,7 @@ import java.io.Serializable;
  * @author pantao
  * @since 2018/11/15
  **/
-public class ExceptionBean implements BaseBean, Serializable {
+public class ExceptionBean implements ExceptionBiscuit, BaseBean, Serializable {
 
     private static final long serialVersionUID = 1349750625515704986L;
 
@@ -19,7 +19,7 @@ public class ExceptionBean implements BaseBean, Serializable {
      *
      * @since 1.0.0
      */
-    private Integer code;
+    private int code;
 
     /**
      * 消息
@@ -42,7 +42,8 @@ public class ExceptionBean implements BaseBean, Serializable {
      *
      * @since 1.0.0
      */
-    public Integer getCode() {
+    @Override
+    public int getCode() {
         return code;
     }
 
@@ -55,7 +56,7 @@ public class ExceptionBean implements BaseBean, Serializable {
      *
      * @since 1.0.0
      */
-    public ExceptionBean setCode(Integer code) {
+    public ExceptionBean setCode(int code) {
         this.code = code;
         return this;
     }
@@ -67,6 +68,7 @@ public class ExceptionBean implements BaseBean, Serializable {
      *
      * @since 1.0.0
      */
+    @Override
     public String getMsg() {
         return msg;
     }
@@ -92,6 +94,7 @@ public class ExceptionBean implements BaseBean, Serializable {
      *
      * @since 1.0.0
      */
+    @Override
     public HttpStatus getStatus() {
         return status;
     }

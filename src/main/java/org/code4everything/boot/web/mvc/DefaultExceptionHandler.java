@@ -5,6 +5,7 @@ import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.support.spring.FastJsonJsonView;
 import org.code4everything.boot.bean.ExceptionBean;
+import org.code4everything.boot.bean.ExceptionBiscuit;
 import org.code4everything.boot.config.BootConfig;
 import org.code4everything.boot.constant.IntegerConsts;
 import org.code4everything.boot.constant.StringConsts;
@@ -53,22 +54,22 @@ public class DefaultExceptionHandler implements HandlerExceptionResolver {
      *
      * @param request {@link HttpServletRequest}
      * @param exception {@link Exception}
-     * @param bean {@link ExceptionBean}
+     * @param biscuit {@link ExceptionBiscuit}
      *
      * @return {@link ModelAndView}
      *
      * @since 1.0.0
      */
-    private ModelAndView parseModelAndView(HttpServletRequest request, Exception exception, ExceptionBean bean) {
-        Objects.requireNonNull(bean);
+    private ModelAndView parseModelAndView(HttpServletRequest request, Exception exception, ExceptionBiscuit biscuit) {
+        Objects.requireNonNull(biscuit);
         ModelAndView modelAndView = new ModelAndView();
         FastJsonJsonView view = new FastJsonJsonView();
         Map<String, Object> attributes = new HashMap<>(IntegerConsts.EIGHT);
         // 包装数据
-        wrapAttributes(attributes, request, exception, bean);
+        wrapAttributes(attributes, request, exception, biscuit);
         view.setAttributesMap(attributes);
         modelAndView.setView(view);
-        modelAndView.setStatus(bean.getStatus());
+        modelAndView.setStatus(biscuit.getStatus());
         return modelAndView;
     }
 
@@ -78,13 +79,14 @@ public class DefaultExceptionHandler implements HandlerExceptionResolver {
      * @param attr {@link Map}
      * @param req {@link HttpServletRequest}
      * @param ex {@link Exception}
-     * @param bean {@link ExceptionBean}
+     * @param bis {@link ExceptionBiscuit}
      *
      * @since 1.0.4
      */
-    protected void wrapAttributes(Map<String, Object> attr, HttpServletRequest req, Exception ex, ExceptionBean bean) {
-        attr.put("code", bean.getCode());
-        attr.put("msg", StrUtil.isEmpty(bean.getMsg()) ? ex.getMessage() : bean.getMsg());
+    protected void wrapAttributes(Map<String, Object> attr, HttpServletRequest req, Exception ex,
+                                  ExceptionBiscuit bis) {
+        attr.put("code", bis.getCode());
+        attr.put("msg", StrUtil.isEmpty(bis.getMsg()) ? ex.getMessage() : bis.getMsg());
         attr.put("timestamp", System.currentTimeMillis());
         attr.put("dateTime", DateUtil.format(new Date(), StringConsts.DateFormat.DATE_TIME_MILLIS));
         String queryString = req.getQueryString();
@@ -125,9 +127,7 @@ public class DefaultExceptionHandler implements HandlerExceptionResolver {
      * @since 1.1.0
      */
     public <T extends Exception> void addException(int code, String msg, Class<T> e) {
-        Objects.requireNonNull(e);
-        HttpStatus status = HttpStatus.valueOf(code);
-        exceptionMap.put(e.getName(), new ExceptionBean().setCode(code).setMsg(msg).setStatus(status));
+        addException(code, msg, HttpStatus.valueOf(code), e);
     }
 
     /**
@@ -162,16 +162,16 @@ public class DefaultExceptionHandler implements HandlerExceptionResolver {
     public ModelAndView resolveException(HttpServletRequest req, HttpServletResponse res, Object o, Exception e) {
         if (BootConfig.isDebug()) {
             LOGGER.error("url -> {}, ip -> {}, exception -> {}, message -> {}", req.getServletPath(),
-                    req.getRemoteAddr(), e.getClass().getName(), e.getMessage());
+                         req.getRemoteAddr(), e.getClass().getName(), e.getMessage());
         }
         // 判断异常是否可以转换成ExceptionBean
-        ExceptionBean exceptionBean;
+        ExceptionBiscuit biscuit;
         if (e instanceof BootException) {
-            exceptionBean = ((BootException) e).asExceptionBean();
+            biscuit = (BootException) e;
         } else {
-            exceptionBean = exceptionMap.get(e.getClass().getName());
+            biscuit = exceptionMap.get(e.getClass().getName());
         }
-        if (Objects.isNull(exceptionBean)) {
+        if (Objects.isNull(biscuit)) {
             // 输出未处理的异常信息
             StringWriter stringWriter = new StringWriter();
             e.printStackTrace(new PrintWriter(stringWriter));
@@ -180,6 +180,6 @@ public class DefaultExceptionHandler implements HandlerExceptionResolver {
             LOGGER.error(exception);
             return parseModelAndView(req, e, bean);
         }
-        return parseModelAndView(req, e, exceptionBean);
+        return parseModelAndView(req, e, biscuit);
     }
 }

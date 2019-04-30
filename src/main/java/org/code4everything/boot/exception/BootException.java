@@ -1,6 +1,8 @@
 package org.code4everything.boot.exception;
 
+import org.code4everything.boot.bean.BaseBean;
 import org.code4everything.boot.bean.ExceptionBean;
+import org.code4everything.boot.bean.ExceptionBiscuit;
 import org.code4everything.boot.constant.MessageConsts;
 import org.springframework.http.HttpStatus;
 
@@ -10,14 +12,14 @@ import org.springframework.http.HttpStatus;
  * @author pantao
  * @since 2018/11/30
  **/
-public class BootException extends RuntimeException {
+public class BootException extends RuntimeException implements ExceptionBiscuit, BaseBean {
 
     /**
      * 错误码
      *
      * @since 1.0.4
      */
-    private Integer code = HttpStatus.INTERNAL_SERVER_ERROR.value();
+    private int code = HttpStatus.INTERNAL_SERVER_ERROR.value();
 
     /**
      * 消息
@@ -198,7 +200,8 @@ public class BootException extends RuntimeException {
      *
      * @since 1.0.4
      */
-    public Integer getCode() {
+    @Override
+    public int getCode() {
         return code;
     }
 
@@ -223,6 +226,7 @@ public class BootException extends RuntimeException {
      *
      * @since 1.0.4
      */
+    @Override
     public String getMsg() {
         return msg;
     }
@@ -248,6 +252,7 @@ public class BootException extends RuntimeException {
      *
      * @since 1.0.4
      */
+    @Override
     public HttpStatus getStatus() {
         return status;
     }
