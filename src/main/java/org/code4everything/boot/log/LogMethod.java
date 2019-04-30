@@ -1,4 +1,4 @@
-package org.code4everything.boot.annotation;
+package org.code4everything.boot.log;
 
 import java.lang.annotation.*;
 
@@ -11,7 +11,7 @@ import java.lang.annotation.*;
 @Documented
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface AopLog {
+public @interface LogMethod {
 
     /**
      * 方法的描述

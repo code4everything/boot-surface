@@ -72,9 +72,9 @@ public class LogServiceImpl implements BootLogService<Log> {
     }
 
     @Override
-    public Log getLog(LogBean logBean) {
+    public Log getLog(MethodLog methodLog) {
         Log log = new Log();
-        BeanUtils.copyProperties(logBean, log);
+        BeanUtils.copyProperties(methodLog, log);
         log.setId(IdUtil.simpleUUID());
         log.setCreateTime(System.currentTimeMillis());
         log.setIp(request.getRemoteAddr());
@@ -100,7 +100,7 @@ public class LogAspect {
         this.request = request;
     }
 
-    @Pointcut("@annotation(org.code4everything.boot.annotation.AopLog)")
+    @Pointcut("@annotation(org.code4everything.boot.log.LogMethod)")
     public void serviceAspect() {}
 
     @Before("serviceAspect()")
@@ -124,11 +124,11 @@ public class LogAspect {
 }
 ```
 
-在需要日志记录的方法上面使用 `@AopLog` 注解，例如：
+在需要日志记录的方法上面使用 `@LogMethod` 注解，例如：
 
 ``` java
 @Override
-@AopLog("日志记录")
+@LogMethod("日志记录")
 public void foo(String msg) {}
 ```
 

@@ -1,4 +1,4 @@
-package org.code4everything.boot.bean;
+package org.code4everything.boot.log;
 
 import org.code4everything.boot.base.bean.BaseBean;
 
@@ -10,7 +10,7 @@ import org.code4everything.boot.base.bean.BaseBean;
  * @author pantao
  * @since 2018/12/03
  */
-public class LogTempBean<T> implements BaseBean {
+public class ReturnedLog<T> implements BaseBean {
 
     /**
      * 可能抛出的异常
@@ -42,7 +42,7 @@ public class LogTempBean<T> implements BaseBean {
      *
      * @since 1.0.4
      */
-    public LogTempBean(T log, Throwable throwable, Object result) {
+    public ReturnedLog(T log, Throwable throwable, Object result) {
         this.log = log;
         this.throwable = throwable;
         this.result = result;
@@ -83,6 +83,6 @@ public class LogTempBean<T> implements BaseBean {
 
     @Override
     public String toString() {
-        return "LogTempBean{" + "throwable=" + throwable + ", log=" + log + ", result=" + result + '}';
+        return "ReturnedLog{" + "throwable=" + throwable + ", log=" + log + ", result=" + result + '}';
     }
 }

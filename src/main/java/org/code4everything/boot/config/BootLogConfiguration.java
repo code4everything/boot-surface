@@ -4,8 +4,8 @@ import cn.hutool.core.util.ObjectUtil;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.code4everything.boot.bean.LogTempBean;
 import org.code4everything.boot.log.AopLogUtils;
+import org.code4everything.boot.log.ReturnedLog;
 import org.code4everything.boot.service.BootLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -27,9 +27,9 @@ public class BootLogConfiguration {
         this.logService = logService;
     }
 
-    @Around("@annotation(org.code4everything.boot.annotation.AopLog)")
+    @Around("@annotation(org.code4everything.boot.log.LogMethod)")
     public Object doAround(ProceedingJoinPoint point) throws Throwable {
-        LogTempBean<?> bean = AopLogUtils.saveLog(logService, point);
+        ReturnedLog<?> bean = AopLogUtils.saveLog(logService, point);
         if (ObjectUtil.isNotNull(bean.getThrowable())) {
             throw bean.getThrowable();
         }

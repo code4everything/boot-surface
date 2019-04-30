@@ -1,4 +1,4 @@
-package org.code4everything.boot.bean;
+package org.code4everything.boot.log;
 
 import org.code4everything.boot.base.bean.BaseBean;
 
@@ -10,7 +10,7 @@ import java.io.Serializable;
  * @author pantao
  * @since 2018/11/3
  */
-public class LogBean implements BaseBean, Serializable {
+public class MethodLog implements BaseBean, Serializable {
 
     private static final long serialVersionUID = -5160585058519076100L;
 
@@ -65,11 +65,11 @@ public class LogBean implements BaseBean, Serializable {
      *
      * @param executedTime 发放执行时长
      *
-     * @return {@link LogBean}
+     * @return {@link MethodLog}
      *
      * @since 1.0.4
      */
-    public LogBean setExecutedTime(Long executedTime) {
+    public MethodLog setExecutedTime(Long executedTime) {
         this.executedTime = executedTime;
         return this;
     }
@@ -90,11 +90,11 @@ public class LogBean implements BaseBean, Serializable {
      *
      * @param className 类名
      *
-     * @return {@link LogBean}
+     * @return {@link MethodLog}
      *
      * @since 1.0.0
      */
-    public LogBean setClassName(String className) {
+    public MethodLog setClassName(String className) {
         this.className = className;
         return this;
     }
@@ -115,11 +115,11 @@ public class LogBean implements BaseBean, Serializable {
      *
      * @param methodName 方法名
      *
-     * @return {@link LogBean}
+     * @return {@link MethodLog}
      *
      * @since 1.0.0
      */
-    public LogBean setMethodName(String methodName) {
+    public MethodLog setMethodName(String methodName) {
         this.methodName = methodName;
         return this;
     }
@@ -140,11 +140,11 @@ public class LogBean implements BaseBean, Serializable {
      *
      * @param args 参数
      *
-     * @return {@link LogBean}
+     * @return {@link MethodLog}
      *
      * @since 1.0.0
      */
-    public LogBean setArgs(String args) {
+    public MethodLog setArgs(String args) {
         this.args = args;
         return this;
     }
@@ -165,17 +165,17 @@ public class LogBean implements BaseBean, Serializable {
      *
      * @param description 方法描述
      *
-     * @return {@link LogBean}
+     * @return {@link MethodLog}
      *
      * @since 1.0.0
      */
-    public LogBean setDescription(String description) {
+    public MethodLog setDescription(String description) {
         this.description = description;
         return this;
     }
 
     @Override
     public String toString() {
-        return "LogBean{" + "className='" + className + '\'' + ", methodName='" + methodName + '\'' + ", args='" + args + '\'' + ", description='" + description + '\'' + ", executedTime=" + executedTime + '}';
+        return "MethodLog{" + "className='" + className + '\'' + ", methodName='" + methodName + '\'' + ", args='" + args + '\'' + ", description='" + description + '\'' + ", executedTime=" + executedTime + '}';
     }
 }

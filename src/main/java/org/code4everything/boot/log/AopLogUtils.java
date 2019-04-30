@@ -8,9 +8,6 @@ import com.google.common.cache.CacheBuilder;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
-import org.code4everything.boot.annotation.AopLog;
-import org.code4everything.boot.bean.LogBean;
-import org.code4everything.boot.bean.LogTempBean;
 import org.code4everything.boot.config.BootConfig;
 import org.code4everything.boot.service.BootLogService;
 
@@ -58,7 +55,7 @@ public class AopLogUtils {
      *
      * @since 1.0.4
      */
-    public static <T> LogTempBean<T> saveLog(BootLogService<T> service, ProceedingJoinPoint point) {
+    public static <T> ReturnedLog<T> saveLog(BootLogService<T> service, ProceedingJoinPoint point) {
         return saveLog(service, point, true);
     }
 
@@ -74,7 +71,7 @@ public class AopLogUtils {
      *
      * @since 1.0.4
      */
-    public static <T> LogTempBean<T> saveLog(BootLogService<T> service, ProceedingJoinPoint point, boolean shouldSave) {
+    public static <T> ReturnedLog<T> saveLog(BootLogService<T> service, ProceedingJoinPoint point, boolean shouldSave) {
         return proceedAround(service, point, shouldSave);
     }
 
@@ -90,7 +87,7 @@ public class AopLogUtils {
      * @throws Throwable 可能发生的异常
      * @since 1.0.4
      */
-    public static <T> LogTempBean<T> saveLogWithThrowable(BootLogService<T> service, ProceedingJoinPoint point) throws Throwable {
+    public static <T> ReturnedLog<T> saveLogWithThrowable(BootLogService<T> service, ProceedingJoinPoint point) throws Throwable {
         return saveLogWithThrowable(service, point, true);
     }
 
@@ -107,13 +104,13 @@ public class AopLogUtils {
      * @throws Throwable 可能发生的异常
      * @since 1.0.4
      */
-    public static <T> LogTempBean<T> saveLogWithThrowable(BootLogService<T> service, ProceedingJoinPoint point,
+    public static <T> ReturnedLog<T> saveLogWithThrowable(BootLogService<T> service, ProceedingJoinPoint point,
                                                           boolean shouldSave) throws Throwable {
-        LogTempBean<T> tempBean = proceedAround(service, point, shouldSave);
-        if (Objects.isNull(tempBean.getThrowable())) {
-            return tempBean;
+        ReturnedLog<T> returnedLog = proceedAround(service, point, shouldSave);
+        if (Objects.isNull(returnedLog.getThrowable())) {
+            return returnedLog;
         }
-        throw tempBean.getThrowable();
+        throw returnedLog.getThrowable();
     }
 
     /**
@@ -170,30 +167,30 @@ public class AopLogUtils {
     }
 
     /**
-     * 解析切面信息，需要方法名注有注解 {@link AopLog}
+     * 解析切面信息，需要方法名注有注解 {@link LogMethod}
      *
      * @param joinPoint 切面 {@link JoinPoint}
      *
-     * @return {@link LogBean}
+     * @return {@link MethodLog}
      *
      * @since 1.0.0
      */
-    public static LogBean parse(JoinPoint joinPoint) {
-        LogBean logBean = new LogBean().setArgs(JSONArray.toJSONString(joinPoint.getArgs()));
+    public static MethodLog parse(JoinPoint joinPoint) {
+        MethodLog log = new MethodLog().setArgs(JSONArray.toJSONString(joinPoint.getArgs()));
         Class<?> targetClass = joinPoint.getTarget().getClass();
         // 设置类名和方法名
-        logBean.setClassName(targetClass.getName()).setMethodName(joinPoint.getSignature().getName());
+        log.setClassName(targetClass.getName()).setMethodName(joinPoint.getSignature().getName());
         for (Method method : targetClass.getMethods()) {
             // 找到对应的方法名（目前只判断了方法名和参数个数是否一致）
-            if (method.getName().equals(logBean.getMethodName()) && method.getParameterTypes().length == joinPoint.getArgs().length) {
-                AopLog aopLog = method.getAnnotation(AopLog.class);
+            if (method.getName().equals(log.getMethodName()) && method.getParameterTypes().length == joinPoint.getArgs().length) {
+                LogMethod aopLog = method.getAnnotation(LogMethod.class);
                 if (ObjectUtil.isNotNull(aopLog)) {
                     // 设置描述信息
-                    return logBean.setDescription(aopLog.value());
+                    return log.setDescription(aopLog.value());
                 }
             }
         }
-        return logBean;
+        return log;
     }
 
     /**
@@ -204,14 +201,14 @@ public class AopLogUtils {
      * @param saveLog 是否保存日志
      * @param <T> 日志表
      *
-     * @return {@link LogTempBean}
+     * @return {@link ReturnedLog}
      *
      * @since 1.0.4
      */
-    private static <T> LogTempBean<T> proceedAround(BootLogService<T> service, ProceedingJoinPoint point,
+    private static <T> ReturnedLog<T> proceedAround(BootLogService<T> service, ProceedingJoinPoint point,
                                                     boolean saveLog) {
         // 获取日志信息
-        LogBean logBean = parse(point);
+        MethodLog methodLog = parse(point);
         Throwable t = null;
         long beginTime = System.currentTimeMillis();
         Object result = null;
@@ -221,8 +218,8 @@ public class AopLogUtils {
         } catch (Throwable e) {
             t = e;
         }
-        logBean.setExecutedTime(System.currentTimeMillis() - beginTime);
-        T log = service.getLog(logBean);
+        methodLog.setExecutedTime(System.currentTimeMillis() - beginTime);
+        T log = service.getLog(methodLog);
         if (saveLog && ObjectUtil.isNotNull(log)) {
             // 保存日志
             if (Objects.isNull(t)) {
@@ -231,7 +228,7 @@ public class AopLogUtils {
                 service.saveException(log, t);
             }
         }
-        return new LogTempBean<>(log, t, result);
+        return new ReturnedLog<>(log, t, result);
     }
 }
 

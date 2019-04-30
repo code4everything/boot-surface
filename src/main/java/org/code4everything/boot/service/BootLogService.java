@@ -1,6 +1,6 @@
 package org.code4everything.boot.service;
 
-import org.code4everything.boot.bean.LogBean;
+import org.code4everything.boot.log.MethodLog;
 
 /**
  * 日志服务
@@ -36,11 +36,11 @@ public interface BootLogService<T> {
     /**
      * 获取日志信息
      *
-     * @param logBean {@link LogBean}
+     * @param methodLog {@link MethodLog}
      *
      * @return 日志信息
      *
      * @since 1.0.0
      */
-    T getLog(LogBean logBean);
+    T getLog(MethodLog methodLog);
 }

@@ -46,7 +46,7 @@ public class MessageConsts {
 
     public static final String REQUEST_FREQUENTLY_ZH = "请勿频繁发送请求";
 
-    public static final String REQUEST_FREQUENTLY_EN = "sorry, request frequently not support";
+    public static final String REQUEST_FREQUENTLY_EN = "sorry, frequently request not support";
 
     private MessageConsts() {}
 }
