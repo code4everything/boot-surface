@@ -1,6 +1,5 @@
-package org.code4everything.boot.annotation;
+package org.code4everything.boot.config;
 
-import org.code4everything.boot.config.BootConfiguration;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.*;
@@ -13,5 +12,5 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
-@Import({BootConfiguration.class})
-public @interface EnableSurfaceConfiguration {}
+@Import({BootRedisConfiguration.class})
+public @interface EnableSurfaceRedis {}
