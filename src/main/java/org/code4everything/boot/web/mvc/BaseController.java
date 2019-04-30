@@ -587,7 +587,7 @@ public class BaseController {
             if (data instanceof Boolean && !(Boolean) data) {
                 isError = true;
             } else if (sealed) {
-                BootConfig.getFieldEncoder().encode(data);
+                BootConfig.getFieldEncoder().encodeField(data);
             }
         }
         return isError ? errorResult(errCode, errMsg) : successResult(okMsg, data);
@@ -727,7 +727,7 @@ public class BaseController {
             return errorResult(errCode, errMsg);
         } else {
             if (sealed) {
-                BootConfig.getFieldEncoder().encode(data);
+                BootConfig.getFieldEncoder().encodeField(data);
             }
             return printAndReturn(new Response<>(okMsg, data));
         }

@@ -6,7 +6,7 @@ import java.lang.annotation.*;
 import java.lang.reflect.Field;
 
 /**
- * 加密字段
+ * 加密字符串字段
  *
  * @author pantao
  * @since 2018/11/11

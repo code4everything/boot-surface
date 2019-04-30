@@ -342,7 +342,7 @@ public class Response<T> implements Serializable {
      */
     public Response<T> setData(T data) {
         if (sealed) {
-            BootConfig.getFieldEncoder().encode(data);
+            BootConfig.getFieldEncoder().encodeField(data);
         }
         this.data = data;
         return this;
@@ -437,7 +437,7 @@ public class Response<T> implements Serializable {
      * @since 1.0.0
      */
     public Response<T> encode() {
-        BootConfig.getFieldEncoder().encode(this.getData());
+        BootConfig.getFieldEncoder().encodeField(this.getData());
         sealed = true;
         return this;
     }

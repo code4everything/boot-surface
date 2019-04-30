@@ -18,5 +18,5 @@ public interface FieldEncoder {
      *
      * @since 1.1.0
      */
-    boolean encode(Object data);
+    boolean encodeField(Object data);
 }

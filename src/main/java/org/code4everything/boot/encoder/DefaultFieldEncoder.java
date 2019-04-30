@@ -1,6 +1,5 @@
 package org.code4everything.boot.encoder;
 
-import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.crypto.digest.DigestUtil;
 import org.slf4j.Logger;
@@ -25,88 +24,80 @@ public class DefaultFieldEncoder implements FieldEncoder {
      * 加密字段
      *
      * @param field 字段
-     * @param object 对象
+     * @param data 对象
      * @param sealed 加密方法
      *
      * @since 1.0.0
      */
-    protected void encodeField(Field field, Object object, Sealed sealed) {
-        if (Objects.isNull(field) || Objects.isNull(object) || Objects.isNull(sealed)) {
-            return;
+    protected boolean encodeField(Field field, Object data, Sealed sealed) {
+        if (Objects.isNull(field) || Objects.isNull(data) || Objects.isNull(sealed)) {
+            return false;
         }
+        Class<?> type = field.getType();
         try {
-            String value = String.valueOf(field.get(object));
+            Object object = field.get(data);
+            if (type != String.class) {
+                // 不是字符串类型的继续遍历
+                return encodeField(object);
+            }
+            String value = String.valueOf(object);
             switch (sealed.value()) {
                 case "md5":
-                    field.set(object, DigestUtil.md5Hex(value));
+                    field.set(data, DigestUtil.md5Hex(value));
                     break;
                 case "sha1":
-                    field.set(object, DigestUtil.sha1Hex(value));
+                    field.set(data, DigestUtil.sha1Hex(value));
                     break;
                 case "sha256":
-                    field.set(object, DigestUtil.sha256Hex(value));
+                    field.set(data, DigestUtil.sha256Hex(value));
                     break;
                 default:
-                    field.set(object, sealed.value());
+                    field.set(data, sealed.value());
                     break;
             }
+            return true;
         } catch (IllegalAccessException e) {
             LOGGER.error("encrypt field {} failed, message -> {}", field.getName(), e.getMessage());
         }
+        return false;
     }
 
     @Override
-    public boolean encode(Object data) {
+    public final boolean encodeField(Object data) {
         if (Objects.isNull(data) || data instanceof CharSequence || ObjectUtil.isBasicType(data)) {
             return false;
         }
         if (data instanceof Collection) {
-            // 遍历集合
-            for (Object datum : ((Collection) data)) {
-                if (!encode(datum)) {
-                    // 集合内对象无加密的字段
-                    return false;
-                }
-            }
-            return true;
-        } else if (data instanceof Map) {
-            // 遍历字典
-            for (Object value : ((Map) data).values()) {
-                if (!encode(value)) {
-                    // 字典内对象无加密的字段
-                    return false;
-                }
-            }
-            return true;
-        } else {
-            boolean encoded = false;
-            // 遍历属性字段
-            Field[] fields = data.getClass().getDeclaredFields();
-            for (Field field : fields) {
-                Sealed sealed = field.getAnnotation(Sealed.class);
-                if (ObjectUtil.isNotNull(sealed)) {
-                    encoded = true;
-                    // 对字段属性加密
-                    encode(field, data, sealed);
-                }
-            }
-            return encoded;
+            return arrayEncodeHelper(((Collection) data).toArray());
         }
+        if (data instanceof Map) {
+            return arrayEncodeHelper(((Map) data).values().toArray());
+        }
+        if (data.getClass().isArray()) {
+            return arrayEncodeHelper((Object[]) data);
+        }
+        boolean encoded = false;
+        // 遍历属性字段
+        Field[] fields = data.getClass().getDeclaredFields();
+        for (Field field : fields) {
+            Sealed sealed = field.getAnnotation(Sealed.class);
+            if (ObjectUtil.isNotNull(sealed)) {
+                field.setAccessible(true);
+                if (encodeField(field, data, sealed)) {
+                    encoded = true;
+                }
+            }
+        }
+        return encoded;
     }
 
-    private void encode(Field field, Object object, Sealed sealed) {
-        Class<?> type = field.getType();
-        if (type == String.class || ClassUtil.isPrimitiveWrapper(type)) {
-            // 对基本类型直接加密
-            field.setAccessible(true);
-            encodeField(field, object, sealed);
-        } else {
-            try {
-                // 不是基本类型的继续遍历
-                encode(field.get(object));
-            } catch (IllegalAccessException e) {
-                LOGGER.error("encrypt field {} failed, message -> {}", field.getName(), e.getMessage());
+    private boolean arrayEncodeHelper(Object[] data) {
+        for (Object datum : data) {
+            if (!encodeField(datum)) {
+                // 集合内对象无加密的字段
+                return false;
             }
         }
+        return true;
     }
 }
