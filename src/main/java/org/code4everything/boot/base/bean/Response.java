@@ -8,7 +8,6 @@ import org.code4everything.boot.config.BootConfig;
 import org.code4everything.boot.constant.IntegerConsts;
 import org.code4everything.boot.constant.MessageConsts;
 import org.code4everything.boot.constant.StringConsts;
-import org.springframework.http.HttpStatus;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -412,7 +411,7 @@ public class Response<T> implements Serializable {
      * @since 1.0.0
      */
     public Response<T> error(String errMsg) {
-        return this.error(HttpStatus.BAD_REQUEST.value(), errMsg);
+        return this.error(400, errMsg);
     }
 
     /**

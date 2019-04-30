@@ -47,13 +47,6 @@ public class ExceptionBread implements ExceptionBiscuit, BaseBean, Serializable 
         return new ExceptionBread();
     }
 
-    /**
-     * 获取错误码
-     *
-     * @return 错误码
-     *
-     * @since 1.0.0
-     */
     @Override
     public int getCode() {
         return code;
@@ -73,13 +66,6 @@ public class ExceptionBread implements ExceptionBiscuit, BaseBean, Serializable 
         return this;
     }
 
-    /**
-     * 获取消息
-     *
-     * @return 消息
-     *
-     * @since 1.0.0
-     */
     @Override
     public String getMsg() {
         return msg;
@@ -99,13 +85,6 @@ public class ExceptionBread implements ExceptionBiscuit, BaseBean, Serializable 
         return this;
     }
 
-    /**
-     * 获取状态
-     *
-     * @return 状态
-     *
-     * @since 1.0.0
-     */
     @Override
     public HttpStatus getStatus() {
         return status;

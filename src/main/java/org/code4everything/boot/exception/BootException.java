@@ -191,13 +191,6 @@ public class BootException extends RuntimeException implements ExceptionBiscuit,
         }
     }
 
-    /**
-     * 获取错误码
-     *
-     * @return 错误码
-     *
-     * @since 1.0.4
-     */
     @Override
     public int getCode() {
         return code;
@@ -217,13 +210,6 @@ public class BootException extends RuntimeException implements ExceptionBiscuit,
         return this;
     }
 
-    /**
-     * 获取消息
-     *
-     * @return 消息
-     *
-     * @since 1.0.4
-     */
     @Override
     public String getMsg() {
         return msg;
@@ -243,13 +229,6 @@ public class BootException extends RuntimeException implements ExceptionBiscuit,
         return this;
     }
 
-    /**
-     * 获取HTTP状态
-     *
-     * @return HTTP状态
-     *
-     * @since 1.0.4
-     */
     @Override
     public HttpStatus getStatus() {
         return status;
