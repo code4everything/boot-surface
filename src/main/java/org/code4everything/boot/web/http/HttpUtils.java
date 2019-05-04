@@ -74,6 +74,7 @@ public class HttpUtils {
      *
      * @param request {@link HttpServletRequest}
      * @param key 键
+     * @param defaultValue 默认值
      *
      * @return 整型
      *
@@ -119,6 +120,7 @@ public class HttpUtils {
      *
      * @param request {@link HttpServletRequest}
      * @param key 键
+     * @param defaultValue 默认值
      *
      * @return 整型
      *

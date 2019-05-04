@@ -27,6 +27,8 @@ public class DefaultFieldEncoder implements FieldEncoder {
      * @param data 对象
      * @param sealed 加密方法
      *
+     * @return 该字段是否加了密
+     *
      * @since 1.0.0
      */
     protected boolean encodeField(Field field, Object data, Sealed sealed) {
