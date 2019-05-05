@@ -17,6 +17,17 @@ import java.util.Objects;
 public interface BaseBean {
 
     /**
+     * 对象内是否有必要的属性值，大多数情况下都需要重写此方法
+     *
+     * @return 是否有必要的属性值
+     *
+     * @since 1.1.2
+     */
+    default boolean hasValue() {
+        return false;
+    }
+
+    /**
      * 转换成JSON字符串
      *
      * @return JSON字符串
