@@ -4,7 +4,7 @@ import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import org.apache.ibatis.jdbc.SQL;
-import org.code4everything.boot.constant.StringConsts;
+import org.code4everything.boot.base.constant.StringConsts;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Objects;

@@ -1,9 +1,9 @@
-package org.code4everything.boot.base;
+package org.code4everything.boot.web.mvc;
 
 import cn.hutool.core.util.StrUtil;
 import org.code4everything.boot.base.function.BooleanFunction;
-import org.code4everything.boot.exception.ExceptionFactory;
-import org.code4everything.boot.exception.ExceptionThrower;
+import org.code4everything.boot.web.mvc.exception.ExceptionFactory;
+import org.code4everything.boot.web.mvc.exception.ExceptionThrower;
 
 import java.util.Objects;
 

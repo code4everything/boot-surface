@@ -8,8 +8,8 @@ import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import org.code4everything.boot.base.constant.StringConsts;
 import org.code4everything.boot.config.BootConfig;
-import org.code4everything.boot.constant.StringConsts;
 
 import javax.mail.MessagingException;
 import java.util.Date;

@@ -65,5 +65,5 @@ public class DemoController extends BaseController {
 }
 ```
 
-> 默认的字段加密器仅支持 `md5` `sha1` `sha256` 三个加密方法，如果有使用其他加密方法的需求请继承 [`FieldEncoder`](../src/main/java/org/code4everything/boot/encoder/FieldEncoder.java) 类并重写
+> 默认的字段加密器仅支持 `md5` `sha1` `sha256` 三个加密方法，如果有使用其他加密方法的需求请继承 [`FieldEncoder`](../src/main/java/org/code4everything/boot/base/encoder/FieldEncoder.java) 类并重写
 `encodeField` 方法，然后在主类的 `main` 方法中调用 `BootConfig.setFieldEncoder`

@@ -1,7 +1,7 @@
 package org.code4everything.boot.bean;
 
 import cn.hutool.core.bean.BeanUtil;
-import org.code4everything.boot.base.bean.Response;
+import org.code4everything.boot.web.mvc.Response;
 import org.junit.Test;
 
 /**

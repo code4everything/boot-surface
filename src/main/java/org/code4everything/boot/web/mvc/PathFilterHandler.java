@@ -1,9 +1,8 @@
 package org.code4everything.boot.web.mvc;
 
 import cn.hutool.core.util.StrUtil;
-import org.code4everything.boot.base.bean.Response;
-import org.code4everything.boot.constant.IntegerConsts;
-import org.code4everything.boot.constant.MessageConsts;
+import org.code4everything.boot.base.constant.IntegerConsts;
+import org.code4everything.boot.base.constant.MessageConsts;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

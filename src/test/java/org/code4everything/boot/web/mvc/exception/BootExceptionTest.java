@@ -1,4 +1,4 @@
-package org.code4everything.boot.exception;
+package org.code4everything.boot.web.mvc.exception;
 
 import org.junit.Test;
 

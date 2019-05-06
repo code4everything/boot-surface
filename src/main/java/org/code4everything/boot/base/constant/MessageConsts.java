@@ -1,4 +1,4 @@
-package org.code4everything.boot.constant;
+package org.code4everything.boot.base.constant;
 
 /**
  * 字符常量类

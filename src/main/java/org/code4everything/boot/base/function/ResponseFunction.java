@@ -1,6 +1,6 @@
 package org.code4everything.boot.base.function;
 
-import org.code4everything.boot.base.bean.Response;
+import org.code4everything.boot.web.mvc.Response;
 
 /**
  * 结果响应函数

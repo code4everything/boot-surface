@@ -1,11 +1,11 @@
-package org.code4everything.boot.exception;
+package org.code4everything.boot.web.mvc.exception;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import org.code4everything.boot.exception.template.EntityNotFoundException;
-import org.code4everything.boot.exception.template.RequestFrequentlyException;
-import org.code4everything.boot.exception.template.TokenBlankException;
-import org.code4everything.boot.exception.template.UserNotLoggedInException;
+import org.code4everything.boot.web.mvc.exception.template.EntityNotFoundException;
+import org.code4everything.boot.web.mvc.exception.template.RequestFrequentlyException;
+import org.code4everything.boot.web.mvc.exception.template.TokenBlankException;
+import org.code4everything.boot.web.mvc.exception.template.UserNotLoggedInException;
 import org.springframework.http.HttpStatus;
 
 import java.util.Objects;

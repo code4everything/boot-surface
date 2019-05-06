@@ -1,4 +1,4 @@
-package org.code4everything.boot.encoder;
+package org.code4everything.boot.base.encoder;
 
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.crypto.digest.DigestUtil;

@@ -1,7 +1,7 @@
 package org.code4everything.boot.bean;
 
 import cn.hutool.core.util.ObjectUtil;
-import org.code4everything.boot.base.bean.Response;
+import org.code4everything.boot.web.mvc.Response;
 import org.code4everything.boot.web.mvc.FilterPath;
 import org.junit.Test;
 

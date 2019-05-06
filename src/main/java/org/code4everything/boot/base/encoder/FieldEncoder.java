@@ -1,4 +1,4 @@
-package org.code4everything.boot.encoder;
+package org.code4everything.boot.base.encoder;
 
 /**
  * 字段加密

@@ -73,7 +73,7 @@ setDebug(boolean)
 // 是否对响应字段加密
 setSealed(boolean)
 // 加密方法
-setFieldEncoder(org.code4everything.boot.encoder.DefaultFieldEncoder)
+setFieldEncoder(org.code4everything.boot.base.encoder.DefaultFieldEncoder)
 ```
 
 > [用法参考](response.md)

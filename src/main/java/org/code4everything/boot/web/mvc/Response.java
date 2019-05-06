@@ -1,13 +1,13 @@
-package org.code4everything.boot.base.bean;
+package org.code4everything.boot.web.mvc;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import org.code4everything.boot.base.constant.IntegerConsts;
+import org.code4everything.boot.base.constant.MessageConsts;
+import org.code4everything.boot.base.constant.StringConsts;
 import org.code4everything.boot.config.BootConfig;
-import org.code4everything.boot.constant.IntegerConsts;
-import org.code4everything.boot.constant.MessageConsts;
-import org.code4everything.boot.constant.StringConsts;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;

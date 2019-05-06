@@ -1,6 +1,6 @@
-package org.code4everything.boot.exception.template;
+package org.code4everything.boot.web.mvc.exception.template;
 
-import org.code4everything.boot.exception.BootException;
+import org.code4everything.boot.web.mvc.exception.BootException;
 import org.springframework.http.HttpStatus;
 
 /**

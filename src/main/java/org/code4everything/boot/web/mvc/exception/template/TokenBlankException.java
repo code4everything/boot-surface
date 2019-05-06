@@ -1,6 +1,6 @@
-package org.code4everything.boot.exception.template;
+package org.code4everything.boot.web.mvc.exception.template;
 
-import org.code4everything.boot.constant.MessageConsts;
+import org.code4everything.boot.base.constant.MessageConsts;
 
 /**
  * Token 为空异常
