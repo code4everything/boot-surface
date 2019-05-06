@@ -98,10 +98,11 @@ public final class ConcurrentSortedList<E, T extends List<E>> extends SortedList
     }
 
     @Override
-    public void add(E e) {
+    public int add(E e) {
         reentrantLock.lock();
-        super.add(e);
+        int i = super.add(e);
         reentrantLock.unlock();
+        return i;
     }
 
     @Override
@@ -151,10 +152,11 @@ public final class ConcurrentSortedList<E, T extends List<E>> extends SortedList
     }
 
     @Override
-    public void addIgnoreNull(E e) {
+    public int addIgnoreNull(E e) {
         reentrantLock.lock();
-        super.addIgnoreNull(e);
+        int i = super.addIgnoreNull(e);
         reentrantLock.unlock();
+        return i;
     }
 
     /**

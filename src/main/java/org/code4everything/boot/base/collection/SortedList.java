@@ -143,11 +143,13 @@ public class SortedList<E, T extends List<E>> {
      *
      * @param e 数据
      *
+     * @return 添加后元素的索引位置
+     *
      * @since 1.0.6
      */
-    public void add(E e) {
+    public int add(E e) {
         Objects.requireNonNull(e);
-        addIgnoreNull(e);
+        return addIgnoreNull(e);
     }
 
     /**
@@ -216,13 +218,27 @@ public class SortedList<E, T extends List<E>> {
      *
      * @param e 数据
      *
+     * @return 添加后元素的索引位置
+     *
      * @since 1.0.6
      */
-    public void addIgnoreNull(E e) {
+    public int addIgnoreNull(E e) {
         if (ObjectUtil.isNotNull(e)) {
             throwComparatorExceptionIfNull();
-            add(e, 0);
+            return add(e, 0);
         }
+        return -1;
+    }
+
+    /**
+     * 列表大小
+     *
+     * @return 列表大小
+     *
+     * @since 1.1.2
+     */
+    public int size() {
+        return list.size();
     }
 
     /**
