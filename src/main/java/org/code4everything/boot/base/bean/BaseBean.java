@@ -30,12 +30,14 @@ public interface BaseBean {
     /**
      * 转换成JSON字符串
      *
+     * @param pretty 是否进行格式化输出
+     *
      * @return JSON字符串
      *
-     * @since 1.1.1
+     * @since 1.1.2
      */
-    default String toPrettyJsonString() {
-        return JSONObject.toJSONString(this, true);
+    default String toJsonString(boolean pretty) {
+        return JSONObject.toJSONString(this, pretty);
     }
 
     /**
@@ -46,7 +48,7 @@ public interface BaseBean {
      * @since 1.1.1
      */
     default String toJsonString() {
-        return JSONObject.toJSONString(this);
+        return toJsonString(false);
     }
 
     /**

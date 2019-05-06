@@ -4,6 +4,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import org.code4everything.boot.base.bean.BaseBean;
 import org.code4everything.boot.base.constant.IntegerConsts;
 import org.code4everything.boot.base.constant.MessageConsts;
 import org.code4everything.boot.base.constant.StringConsts;
@@ -23,7 +24,7 @@ import java.util.Objects;
  * @author pantao
  * @since 2018/10/30
  */
-public class Response<T> implements Serializable {
+public class Response<T> implements BaseBean, Serializable {
 
     private static final long serialVersionUID = -5763007029340547926L;
 
@@ -55,7 +56,7 @@ public class Response<T> implements Serializable {
      *
      * @since 1.0.0
      */
-    private transient T data = null;
+    private T data = null;
 
     /**
      * 时间戳
@@ -278,7 +279,8 @@ public class Response<T> implements Serializable {
      *
      * @since 1.1.1
      */
-    public boolean hasData() {
+    @Override
+    public boolean hasValue() {
         return ObjectUtil.isNotNull(data);
     }
 
@@ -411,7 +413,7 @@ public class Response<T> implements Serializable {
      * @since 1.0.0
      */
     public Response<T> error(String errMsg) {
-        return this.error(400, errMsg);
+        return error(400, errMsg);
     }
 
     /**
@@ -425,7 +427,7 @@ public class Response<T> implements Serializable {
      * @since 1.0.0
      */
     public Response<T> error(int errCode, String errMsg) {
-        return this.setCode(errCode).setMsg(errMsg).setData(null);
+        return setCode(errCode).setMsg(errMsg).setData(null);
     }
 
     /**
@@ -436,7 +438,7 @@ public class Response<T> implements Serializable {
      * @since 1.0.0
      */
     public Response<T> encode() {
-        BootConfig.getFieldEncoder().encodeField(this.getData());
+        BootConfig.getFieldEncoder().encodeField(getData());
         sealed = true;
         return this;
     }
@@ -479,9 +481,9 @@ public class Response<T> implements Serializable {
      */
     @SuppressWarnings("unchecked")
     public Response<T> copyFrom(Response<?> result) {
-        this.setMsg(result.getMsg()).setCode(result.getCode()).setTimestamp(result.getTimestamp());
+        setMsg(result.getMsg()).setCode(result.getCode()).setTimestamp(result.getTimestamp());
         if (ObjectUtil.isNotNull(result.data)) {
-            this.setData((T) result.getData());
+            setData((T) result.getData());
         }
         return this;
     }
@@ -572,17 +574,17 @@ public class Response<T> implements Serializable {
         outputStream.writeInt(code);
         outputStream.writeLong(timestamp);
         outputStream.writeBoolean(sealed);
-        outputStream.writeObject(msg);
+        outputStream.writeUTF(msg);
         outputStream.writeObject(data);
     }
 
     @SuppressWarnings("unchecked")
     private void readObject(ObjectInputStream inputStream) throws IOException, ClassNotFoundException {
         inputStream.defaultReadObject();
-        inputStream.readInt();
+        code = inputStream.readInt();
         timestamp = inputStream.readLong();
-        inputStream.readBoolean();
-        msg = (String) inputStream.readObject();
+        sealed = inputStream.readBoolean();
+        msg = inputStream.readUTF();
         data = (T) inputStream.readObject();
     }
 }

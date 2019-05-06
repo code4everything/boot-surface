@@ -1,8 +1,8 @@
 package org.code4everything.boot.bean;
 
 import cn.hutool.core.util.ObjectUtil;
-import org.code4everything.boot.web.mvc.Response;
 import org.code4everything.boot.web.mvc.FilterPath;
+import org.code4everything.boot.web.mvc.Response;
 import org.junit.Test;
 
 public class ResponseTest {
@@ -24,8 +24,8 @@ public class ResponseTest {
         bean.setBlackPrefixes(new String[]{"black"});
         bean.setInterceptPrefixes(new String[]{"intercept"});
         response.setData(bean);
-        System.out.println(response);
+        System.out.println(response.toJsonString());
         response = ObjectUtil.unserialize(ObjectUtil.serialize(response));
-        System.out.println(response);
+        System.out.println(response.toJsonString());
     }
 }

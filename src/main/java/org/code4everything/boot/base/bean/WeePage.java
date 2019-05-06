@@ -28,7 +28,7 @@ public class WeePage<T> implements BaseBean, Serializable {
 
     private long totalElements = 0;
 
-    private transient Collection<T> content;
+    private Collection<T> content;
 
     /**
      * 无参构造
@@ -150,7 +150,7 @@ public class WeePage<T> implements BaseBean, Serializable {
      * @since 1.0.9
      */
     private void computeTotalPage() {
-        if (ObjectUtil.isNotNull(pageSize) && pageSize > 0 && ObjectUtil.isNotNull(totalElements) && totalElements >= 0) {
+        if (pageSize > 0 && totalElements >= 0) {
             totalPages = (int) (totalElements / pageSize) + (totalElements % pageSize > 0 ? 1 : 0);
         }
     }
