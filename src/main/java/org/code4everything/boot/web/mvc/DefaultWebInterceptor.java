@@ -286,7 +286,7 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
                 }
             }
         }
-        if (StrUtil.isNotEmpty(key) && ObjectUtil.isNotNull(cache)) {
+        if (StrUtil.isNotEmpty(key) && ObjectUtil.isNotNull(cache) && frequency > 0) {
             // 频率检测
             if (cache.asMap().containsKey(key)) {
                 throw ExceptionFactory.requestFrequently();
