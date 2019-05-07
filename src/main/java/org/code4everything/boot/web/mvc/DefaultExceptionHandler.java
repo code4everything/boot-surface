@@ -162,7 +162,7 @@ public class DefaultExceptionHandler implements HandlerExceptionResolver {
     public final ModelAndView resolveException(HttpServletRequest req, HttpServletResponse res, Object o, Exception e) {
         if (BootConfig.isDebug()) {
             LOGGER.error("url -> {}, ip -> {}, exception -> {}, message -> {}", req.getServletPath(),
-                         req.getRemoteAddr(), e.getClass().getName(), e.getMessage());
+                         req.getRemoteAddr(), e.getClass().getSimpleName(), e.getMessage());
         }
         ExceptionBiscuit biscuit;
         if (e instanceof BootException) {

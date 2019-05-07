@@ -36,7 +36,9 @@ public class IntegerConsts {
 
     public static final int SIXTEEN = 16;
 
-    public static final int ONE_DAY_MILLIS = 24 * 60 * 60 * 1000;
+    public static final int ONE_DAY_SECONDS = 24 * 60 * 60;
+
+    public static final int ONE_DAY_MILLIS = ONE_DAY_SECONDS * 1000;
 
     private IntegerConsts() {}
 
