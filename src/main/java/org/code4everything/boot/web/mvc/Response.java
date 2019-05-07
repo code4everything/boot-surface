@@ -272,13 +272,6 @@ public class Response<T> implements BaseBean, Serializable {
         return this;
     }
 
-    /**
-     * 是否拥有数据
-     *
-     * @return 是否拥有数据
-     *
-     * @since 1.1.1
-     */
     @Override
     public boolean hasValue() {
         return ObjectUtil.isNotNull(data);

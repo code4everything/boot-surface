@@ -69,6 +69,13 @@ public final class ConcurrentSortedList<E, T extends List<E>> extends SortedList
     }
 
     @Override
+    public void resort() {
+        reentrantLock.lock();
+        super.resort();
+        reentrantLock.unlock();
+    }
+
+    @Override
     public void setList(T list, Comparator<E> comparator) {
         reentrantLock.lock();
         super.setList(list, comparator);

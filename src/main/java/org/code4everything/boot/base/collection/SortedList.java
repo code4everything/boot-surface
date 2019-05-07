@@ -125,6 +125,16 @@ public class SortedList<E, T extends List<E>> {
     }
 
     /**
+     * 重排序
+     *
+     * @since 1.1.2
+     */
+    public void resort() {
+        checkComparator();
+        list.sort(comparator);
+    }
+
+    /**
      * 添加所有数据，忽略空值
      *
      * @param iterable {@link Iterable}
@@ -224,7 +234,6 @@ public class SortedList<E, T extends List<E>> {
      */
     public int addIgnoreNull(E e) {
         if (ObjectUtil.isNotNull(e)) {
-            throwComparatorExceptionIfNull();
             return add(e, 0);
         }
         return -1;
@@ -252,6 +261,7 @@ public class SortedList<E, T extends List<E>> {
      * @since 1.0.6
      */
     private int add(E e, int start) {
+        checkComparator();
         // 使用二分策略查找元素应插入的位置
         int end = list.size() - 1;
         while (start <= end) {
@@ -319,9 +329,7 @@ public class SortedList<E, T extends List<E>> {
             throw new NullPointerException();
         }
         if (list.size() > 1) {
-            throwComparatorExceptionIfNull();
-            // 对List进行排序
-            list.sort(comparator);
+            resort();
         }
         this.list = list;
     }
@@ -344,9 +352,9 @@ public class SortedList<E, T extends List<E>> {
      *
      * @since 1.0.6
      */
-    private void throwComparatorExceptionIfNull() {
+    private void checkComparator() {
         if (Objects.isNull(comparator)) {
-            throw new ComparatorException("you must set a comparator");
+            throw new ComparatorException("comparator must not be null");
         }
     }
 }

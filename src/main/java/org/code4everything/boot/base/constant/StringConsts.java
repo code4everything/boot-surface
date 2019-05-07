@@ -20,13 +20,21 @@ public class StringConsts {
 
     public static final String BOOT = "boot";
 
-    public static final String SUCCESS_UPPER = SUCCESS.toUpperCase();
-
     private StringConsts() {}
 
     public class DateFormat {
 
         public static final String DATE_TIME_MILLIS = "yyyy-MM-dd HH:mm:ss.SSS";
+
+        public static final String DATE = "yyyy-MM-dd";
+
+        public static final String TIME = "HH:mm:ss";
+
+        public static final String SHORT_TIME = "HH:mm";
+
+        public static final String TIME_MILLIS = "HH:mm:ss.SSS";
+
+        public static final String DATE_TIME = "yyyy-MM-dd HH:mm:ss";
 
         private DateFormat() {}
     }
