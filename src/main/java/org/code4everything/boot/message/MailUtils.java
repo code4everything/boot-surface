@@ -14,7 +14,7 @@ import java.util.Objects;
  * @author pantao
  * @since 2019/3/18
  **/
-public class MailUtils {
+public final class MailUtils {
 
     /**
      * 邮件发送器

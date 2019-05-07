@@ -10,7 +10,7 @@ import java.util.Date;
  * @author pantao
  * @since 2019/3/22
  **/
-public class DateUtils {
+public final class DateUtils {
 
     private static Date startOfToday = new Date(0);
 

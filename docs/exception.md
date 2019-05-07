@@ -33,7 +33,7 @@ public void configureHandlerExceptionResolvers(List<HandlerExceptionResolver> re
 }
 ```
 
-> 你还可以直接在代码中抛出 `BootException` 异常或继承自 `BootException` 的异常
+> 你还可以直接在代码中抛出 `HttpException` 异常或任何继承自 `HttpException` 的异常，亦或者是任何实现了 `ExceptionBiscuit` 的异常
 
 #### 完整的示例代码参考
 

@@ -13,7 +13,7 @@ import java.util.Objects;
  * @author pantao
  * @since 2018-12-01
  */
-public class AssertUtils {
+public final class AssertUtils {
 
     private static final ExceptionThrower THROWER = ExceptionThrower.getInstance();
 

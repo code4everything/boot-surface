@@ -24,7 +24,7 @@ public class ExceptionFactory {
      *
      * @since 1.0.9
      */
-    private static Cache<String, BootException> cache = CacheBuilder.newBuilder()
+    private static Cache<String, HttpException> cache = CacheBuilder.newBuilder()
             // 一天后缓存失效
             .expireAfterWrite(24, TimeUnit.HOURS).build();
 
@@ -42,7 +42,7 @@ public class ExceptionFactory {
      */
     public static EntityNotFoundException entityNotFound(int code, String entityName) {
         Objects.requireNonNull(entityName, "entity name must not be null");
-        BootException exception = cache.getIfPresent(entityName);
+        HttpException exception = cache.getIfPresent(entityName);
         if (Objects.isNull(exception)) {
             // 此处不考虑并发，最坏也就创建多个相同对象，多余的让垃圾回收器收集吧
             exception = new EntityNotFoundException(code, entityName);
@@ -61,8 +61,8 @@ public class ExceptionFactory {
      *
      * @since 1.1.0
      */
-    public static BootException exception(int code, String msg) {
-        return exception(code, msg, HttpStatus.BAD_REQUEST, BootException.class);
+    public static HttpException exception(int code, String msg) {
+        return exception(code, msg, HttpStatus.BAD_REQUEST, HttpException.class);
     }
 
     /**
@@ -77,7 +77,7 @@ public class ExceptionFactory {
      *
      * @since 1.1.0
      */
-    public static <T extends BootException> T exception(int code, String msg, Class<T> clazz) {
+    public static <T extends HttpException> T exception(int code, String msg, Class<T> clazz) {
         return exception(code, msg, HttpStatus.BAD_REQUEST, clazz);
     }
 
@@ -91,8 +91,8 @@ public class ExceptionFactory {
      *
      * @since 1.1.0
      */
-    public static BootException exception(String msg, HttpStatus status) {
-        return exception(status.value(), msg, status, BootException.class);
+    public static HttpException exception(String msg, HttpStatus status) {
+        return exception(status.value(), msg, status, HttpException.class);
     }
 
     /**
@@ -107,7 +107,7 @@ public class ExceptionFactory {
      *
      * @since 1.1.0
      */
-    public static <T extends BootException> T exception(String msg, HttpStatus status, Class<T> clazz) {
+    public static <T extends HttpException> T exception(String msg, HttpStatus status, Class<T> clazz) {
         return exception(status.value(), msg, status, clazz);
     }
 
@@ -122,8 +122,8 @@ public class ExceptionFactory {
      *
      * @since 1.1.0
      */
-    public static BootException exception(int code, String msg, HttpStatus status) {
-        return exception(code, msg, status, BootException.class);
+    public static HttpException exception(int code, String msg, HttpStatus status) {
+        return exception(code, msg, status, HttpException.class);
     }
 
     /**
@@ -139,7 +139,7 @@ public class ExceptionFactory {
      *
      * @since 1.1.0
      */
-    public static <T extends BootException> T exception(int code, String msg, HttpStatus status, Class<T> clazz) {
+    public static <T extends HttpException> T exception(int code, String msg, HttpStatus status, Class<T> clazz) {
         String key = msg + status.toString() + code;
         if (!cache.asMap().containsKey(key)) {
             T exception = exception(key, clazz);
@@ -158,8 +158,8 @@ public class ExceptionFactory {
      *
      * @since 1.1.0
      */
-    public static BootException exception() {
-        return exception(BootException.class);
+    public static HttpException exception() {
+        return exception(HttpException.class);
     }
 
     /**
@@ -172,7 +172,7 @@ public class ExceptionFactory {
      *
      * @since 1.1.0
      */
-    public static <T extends BootException> T exception(Class<T> clazz) {
+    public static <T extends HttpException> T exception(Class<T> clazz) {
         return exception(clazz.getSimpleName(), clazz);
     }
 
@@ -188,14 +188,14 @@ public class ExceptionFactory {
      * @since 1.1.0
      */
     @SuppressWarnings("unchecked")
-    public static <T extends BootException> T exception(String key, Class<T> clazz) {
-        BootException exception = cache.getIfPresent(key);
+    public static <T extends HttpException> T exception(String key, Class<T> clazz) {
+        HttpException exception = cache.getIfPresent(key);
         if (Objects.isNull(exception)) {
             try {
                 exception = clazz.newInstance();
                 cache.put(key, exception);
             } catch (Exception e) {
-                throw new BootException("new class " + clazz.getName() + " error, must set a default constructor");
+                throw new HttpException("new class " + clazz.getName() + " error, must set a default constructor");
             }
         }
         return (T) exception;

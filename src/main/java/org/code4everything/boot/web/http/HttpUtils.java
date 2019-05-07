@@ -37,7 +37,7 @@ import java.util.Objects;
  * @author pantao
  * @since 2018/11/2
  **/
-public class HttpUtils {
+public final class HttpUtils {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HttpUtils.class);
 

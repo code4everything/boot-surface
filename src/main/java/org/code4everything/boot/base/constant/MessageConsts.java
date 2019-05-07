@@ -6,7 +6,7 @@ package org.code4everything.boot.base.constant;
  * @author pantao
  * @since 2018/10/30
  */
-public class MessageConsts {
+public final class MessageConsts {
 
     public static final String REQUEST_OK_ZH = "请求成功";
 

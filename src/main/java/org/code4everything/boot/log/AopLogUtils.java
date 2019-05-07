@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
  * @author pantao
  * @since 2018/11/3
  */
-public class AopLogUtils {
+public final class AopLogUtils {
 
     /**
      * 日志缓存

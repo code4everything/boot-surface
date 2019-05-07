@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
  * @author pantao
  * @since 2019/3/19
  **/
-public class VerifyCodeUtils {
+public final class VerifyCodeUtils {
 
     private static final int DEFAULT_CODE_LENGTH = 6;
 

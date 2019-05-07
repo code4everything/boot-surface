@@ -2,13 +2,13 @@ package org.code4everything.boot.web.mvc.exception;
 
 import org.junit.Test;
 
-public class BootExceptionTest {
+public class HttpExceptionTest {
 
     @Test
     public void testSetter() {
-        CustomBootException exception = new CustomBootException();
+        CustomHttpException exception = new CustomHttpException();
         exception.setCode(400).setMsg("exception");
     }
 }
 
-class CustomBootException extends BootException {}
+class CustomHttpException extends HttpException {}

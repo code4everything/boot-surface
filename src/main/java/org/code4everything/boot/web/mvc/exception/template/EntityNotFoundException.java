@@ -1,13 +1,13 @@
 package org.code4everything.boot.web.mvc.exception.template;
 
-import org.code4everything.boot.web.mvc.exception.BootException;
+import org.code4everything.boot.web.mvc.exception.HttpException;
 import org.springframework.http.HttpStatus;
 
 /**
  * @author pantao
  * @since 2019/3/20
  **/
-public class EntityNotFoundException extends BootException {
+public final class EntityNotFoundException extends HttpException {
 
     public EntityNotFoundException() {}
 
@@ -21,13 +21,7 @@ public class EntityNotFoundException extends BootException {
      * @since 1.0.9
      */
     public EntityNotFoundException(int code, String msg, boolean responseOk) {
-        super.setCode(code);
-        super.setMsg(msg);
-        if (responseOk) {
-            super.setStatus(HttpStatus.OK);
-        } else {
-            super.setStatus(HttpStatus.BAD_REQUEST);
-        }
+        super(code, responseOk ? HttpStatus.OK : HttpStatus.BAD_REQUEST, msg);
     }
 
     /**

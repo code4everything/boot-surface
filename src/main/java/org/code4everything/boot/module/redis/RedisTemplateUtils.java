@@ -21,7 +21,7 @@ import java.util.Objects;
  * @author pantao
  * @since 2018/11/16
  **/
-public class RedisTemplateUtils {
+public final class RedisTemplateUtils {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RedisTemplateUtils.class);
 

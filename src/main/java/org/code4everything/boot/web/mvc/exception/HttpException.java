@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus;
  * @author pantao
  * @since 2018/11/30
  **/
-public class BootException extends RuntimeException implements ExceptionBiscuit, BaseBean {
+public class HttpException extends RuntimeException implements ExceptionBiscuit, BaseBean {
 
     /**
      * 错误码
@@ -38,7 +38,7 @@ public class BootException extends RuntimeException implements ExceptionBiscuit,
      *
      * @since 1.0.4
      */
-    public BootException() {}
+    public HttpException() {}
 
     /**
      * 设置消息
@@ -47,7 +47,7 @@ public class BootException extends RuntimeException implements ExceptionBiscuit,
      *
      * @since 1.0.4
      */
-    public BootException(String msg) {
+    public HttpException(String msg) {
         super(msg);
         this.msg = msg;
     }
@@ -60,7 +60,7 @@ public class BootException extends RuntimeException implements ExceptionBiscuit,
      *
      * @since 1.0.4
      */
-    public BootException(String msg, Throwable throwable) {
+    public HttpException(String msg, Throwable throwable) {
         super(msg, throwable);
         this.msg = msg;
     }
@@ -73,7 +73,7 @@ public class BootException extends RuntimeException implements ExceptionBiscuit,
      *
      * @since 1.0.4
      */
-    public BootException(int code, String msg) {
+    public HttpException(int code, String msg) {
         super(msg);
         this.code = code;
         this.msg = msg;
@@ -88,7 +88,7 @@ public class BootException extends RuntimeException implements ExceptionBiscuit,
      *
      * @since 1.0.4
      */
-    public BootException(int code, String msg, Throwable throwable) {
+    public HttpException(int code, String msg, Throwable throwable) {
         super(msg, throwable);
         this.code = code;
         this.msg = msg;
@@ -102,7 +102,7 @@ public class BootException extends RuntimeException implements ExceptionBiscuit,
      *
      * @since 1.0.4
      */
-    public BootException(int code, HttpStatus status) {
+    public HttpException(int code, HttpStatus status) {
         this.code = code;
         this.status = status;
     }
@@ -116,7 +116,7 @@ public class BootException extends RuntimeException implements ExceptionBiscuit,
      *
      * @since 1.0.4
      */
-    public BootException(int code, HttpStatus status, Throwable throwable) {
+    public HttpException(int code, HttpStatus status, Throwable throwable) {
         super(throwable);
         this.code = code;
         this.status = status;
@@ -131,7 +131,7 @@ public class BootException extends RuntimeException implements ExceptionBiscuit,
      *
      * @since 1.0.4
      */
-    public BootException(int code, HttpStatus status, String msg) {
+    public HttpException(int code, HttpStatus status, String msg) {
         super(msg);
         this.msg = msg;
         this.code = code;
@@ -148,7 +148,7 @@ public class BootException extends RuntimeException implements ExceptionBiscuit,
      *
      * @since 1.0.4
      */
-    public BootException(int code, HttpStatus status, String msg, Throwable throwable) {
+    public HttpException(int code, HttpStatus status, String msg, Throwable throwable) {
         super(msg, throwable);
         this.msg = msg;
         this.code = code;
@@ -164,7 +164,7 @@ public class BootException extends RuntimeException implements ExceptionBiscuit,
      *
      * @since 1.0.8
      */
-    public BootException(int code, String msg, boolean responseOk) {
+    public HttpException(int code, String msg, boolean responseOk) {
         this.code = code;
         this.msg = msg;
         if (responseOk) {
@@ -182,13 +182,27 @@ public class BootException extends RuntimeException implements ExceptionBiscuit,
      *
      * @since 1.0.8
      */
-    public BootException(int code, String msg, boolean responseOk, Throwable throwable) {
+    public HttpException(int code, String msg, boolean responseOk, Throwable throwable) {
         super(msg, throwable);
         this.code = code;
         this.msg = msg;
         if (responseOk) {
             this.status = HttpStatus.OK;
         }
+    }
+
+    /**
+     * 响应成功状态码的异常
+     *
+     * @param code 错误码
+     * @param msg 消息
+     *
+     * @return 响应成功状态码的异常
+     *
+     * @since 1.1.2
+     */
+    public static HttpException responseOk(int code, String msg) {
+        return new HttpException(code, msg, true);
     }
 
     @Override
@@ -201,11 +215,11 @@ public class BootException extends RuntimeException implements ExceptionBiscuit,
      *
      * @param code 错误码
      *
-     * @return {@link BootException}
+     * @return {@link HttpException}
      *
      * @since 1.0.4
      */
-    public BootException setCode(Integer code) {
+    public HttpException setCode(Integer code) {
         this.code = code;
         return this;
     }
@@ -220,11 +234,11 @@ public class BootException extends RuntimeException implements ExceptionBiscuit,
      *
      * @param msg 消息
      *
-     * @return {@link BootException}
+     * @return {@link HttpException}
      *
      * @since 1.0.4
      */
-    public BootException setMsg(String msg) {
+    public HttpException setMsg(String msg) {
         this.msg = msg;
         return this;
     }
@@ -239,11 +253,11 @@ public class BootException extends RuntimeException implements ExceptionBiscuit,
      *
      * @param status HTTP状态
      *
-     * @return {@link BootException}
+     * @return {@link HttpException}
      *
      * @since 1.0.4
      */
-    public BootException setStatus(HttpStatus status) {
+    public HttpException setStatus(HttpStatus status) {
         this.status = status;
         return this;
     }

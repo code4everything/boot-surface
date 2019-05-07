@@ -10,7 +10,7 @@ import java.util.Objects;
  * @author pantao
  * @since 2019/4/17
  **/
-public class ObjectUtils {
+public final class ObjectUtils {
 
     private ObjectUtils() {}
 

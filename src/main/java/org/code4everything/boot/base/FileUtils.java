@@ -26,7 +26,7 @@ import java.util.Objects;
  * @author pantao
  * @since 2018/11/2
  **/
-public class FileUtils {
+public final class FileUtils {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FileUtils.class);
 

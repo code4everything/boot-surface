@@ -7,7 +7,6 @@ import com.alibaba.fastjson.support.spring.FastJsonJsonView;
 import org.code4everything.boot.base.constant.IntegerConsts;
 import org.code4everything.boot.base.constant.StringConsts;
 import org.code4everything.boot.config.BootConfig;
-import org.code4everything.boot.web.mvc.exception.BootException;
 import org.code4everything.boot.web.mvc.exception.ExceptionBiscuit;
 import org.code4everything.boot.web.mvc.exception.ExceptionBread;
 import org.slf4j.Logger;
@@ -91,7 +90,9 @@ public class DefaultExceptionHandler implements HandlerExceptionResolver {
         attr.put("dateTime", DateUtil.format(new Date(), StringConsts.DateFormat.DATE_TIME_MILLIS));
         String queryString = req.getQueryString();
         attr.put("path", req.getRequestURI() + (StrUtil.isEmpty(queryString) ? "" : "?" + queryString));
-        attr.put("data", ex.getMessage());
+        attr.put("data", null);
+        attr.put("ok", false);
+        attr.put("error", true);
     }
 
     /**
@@ -162,11 +163,11 @@ public class DefaultExceptionHandler implements HandlerExceptionResolver {
     public final ModelAndView resolveException(HttpServletRequest req, HttpServletResponse res, Object o, Exception e) {
         if (BootConfig.isDebug()) {
             LOGGER.error("url -> {}, ip -> {}, exception -> {}, message -> {}", req.getServletPath(),
-                         req.getRemoteAddr(), e.getClass().getSimpleName(), e.getMessage());
+                    req.getRemoteAddr(), e.getClass().getSimpleName(), e.getMessage());
         }
         ExceptionBiscuit biscuit;
-        if (e instanceof BootException) {
-            biscuit = (BootException) e;
+        if (e instanceof ExceptionBiscuit) {
+            biscuit = (ExceptionBiscuit) e;
         } else {
             biscuit = exceptionMap.get(e.getClass().getName());
         }

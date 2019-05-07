@@ -6,7 +6,7 @@ package org.code4everything.boot.base.constant;
  * @author pantao
  * @since 2018/10/31
  **/
-public class StringConsts {
+public final class StringConsts {
 
     public static final String TOKEN = "token";
 
@@ -22,7 +22,7 @@ public class StringConsts {
 
     private StringConsts() {}
 
-    public class DateFormat {
+    public final class DateFormat {
 
         public static final String DATE_TIME_MILLIS = "yyyy-MM-dd HH:mm:ss.SSS";
 
@@ -39,7 +39,7 @@ public class StringConsts {
         private DateFormat() {}
     }
 
-    public class Sign {
+    public final class Sign {
 
         public static final String ZERO = "0";
 
