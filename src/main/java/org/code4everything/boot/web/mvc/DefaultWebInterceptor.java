@@ -108,74 +108,64 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
     /**
      * 获取用户访问统计
      *
-     * @return 用户访问统计
-     *
-     * @since 1.1.0
-     */
-    public static Map<String, Long> getUserVisitMap() {
-        return MapUtils.sortByValue(userVisitMap, Comparator.reverseOrder());
-    }
-
-    /**
-     * 获取用户访问统计并清空
+     * @param clear 是否清除已有访问日志
      *
      * @return 用户访问统计
      *
      * @since 1.1.0
      */
-    public static Map<String, Long> getUserVisitMapAndClear() {
-        Map<String, Long> tmp = getUserVisitMap();
-        userVisitMap.clear();
-        return tmp;
+    public static Map<String, Long> getUserVisitMap(boolean clear) {
+        return visitMapHelper(userVisitMap, clear);
     }
-
 
     /**
      * 获取URL访问统计
      *
+     * @param clear 是否清除已有访问日志
+     *
      * @return URL访问统计
      *
      * @since 1.1.0
      */
-    public static Map<String, Long> getUrlVisitMap() {
-        return MapUtils.sortByValue(urlVisitMap, Comparator.reverseOrder());
+    public static Map<String, Long> getUrlVisitMap(boolean clear) {
+        return visitMapHelper(urlVisitMap, clear);
     }
 
     /**
-     * 获取URL访问统计并清空
+     * 操作访问日志
      *
-     * @return URL访问统计
+     * @param map 集合
+     * @param clear 是否清除
      *
-     * @since 1.1.0
+     * @return 访问日志
+     *
+     * @since 1.1.2
      */
-    public static Map<String, Long> getUrlVisitMapAndClear() {
-        Map<String, Long> tmp = getUrlVisitMap();
-        urlVisitMap.clear();
+    private static Map<String, Long> visitMapHelper(Map<String, Long> map, boolean clear) {
+        if (Objects.isNull(map)) {
+            return null;
+        }
+        Map<String, Long> tmp = MapUtils.sortByValue(map, Comparator.reverseOrder());
+        if (clear) {
+            map.clear();
+        }
         return tmp;
     }
-
 
     /**
      * 获取总访问次数
      *
-     * @return 总访问次数
-     *
-     * @since 1.1.0
-     */
-    public static long getTotalVisit() {
-        return totalVisit;
-    }
-
-    /**
-     * 获取总访问次数并清空
+     * @param clear 是否清除已有访问日志
      *
      * @return 总访问次数
      *
      * @since 1.1.0
      */
-    public static long getTotalVisitAndClear() {
+    public static long getTotalVisit(boolean clear) {
         long tmp = totalVisit;
-        totalVisit = 0;
+        if (clear) {
+            totalVisit = 0;
+        }
         return tmp;
     }
 
@@ -192,22 +182,15 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
         }
         if (visitLog) {
             // 第一次初始化
-            resetVisitObjects(1024, 128);
+            userVisitMap = new HashMap<>(1024);
+            urlVisitMap = new HashMap<>(128);
+            totalVisit = 0;
         } else {
             userVisitMap = null;
             urlVisitMap = null;
             totalVisit = 0;
         }
         DefaultWebInterceptor.visitLog = visitLog;
-    }
-
-    /**
-     * 初始化请求统计的对象
-     */
-    private static void resetVisitObjects(int userCapacity, int urlCapacity) {
-        userVisitMap = new HashMap<>(userCapacity);
-        urlVisitMap = new HashMap<>(urlCapacity);
-        totalVisit = 0;
     }
 
     /**
@@ -349,9 +332,7 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
                         if (BootConfig.isDebug()) {
                             LOGGER.info("call method 'handleVisitLog' to save and reset today's http request data");
                         }
-                        filterHandler.handleVisitLog(date, getUserVisitMap(), getUrlVisitMap(), totalVisit);
-                        // 重置统计数据
-                        resetVisitObjects(userVisitMap.size(), urlVisitMap.size());
+                        filterHandler.handleVisitLog(date, getUserVisitMap(true), getUrlVisitMap(true), totalVisit);
                     }, initialDelay, IntegerConsts.ONE_DAY_MILLIS, TimeUnit.MILLISECONDS);
                 }
             }
