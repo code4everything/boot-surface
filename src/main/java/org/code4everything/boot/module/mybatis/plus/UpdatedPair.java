@@ -1,5 +1,6 @@
 package org.code4everything.boot.module.mybatis.plus;
 
+import com.alibaba.fastjson.JSON;
 import org.code4everything.boot.base.bean.BaseBean;
 
 /**
@@ -39,5 +40,27 @@ public class UpdatedPair<T> implements BaseBean {
      */
     public T getNewValue() {
         return newValue;
+    }
+
+    /**
+     * 将旧值转换成 JSON
+     *
+     * @return JSON
+     *
+     * @since 1.1.2
+     */
+    public String old2JsonString() {
+        return JSON.toJSONString(oldValue);
+    }
+
+    /**
+     * 将新值转换成 JSON
+     *
+     * @return JSON
+     *
+     * @since 1.1.2
+     */
+    public String new2JsonString() {
+        return JSON.toJSONString(newValue);
     }
 }
