@@ -30,11 +30,11 @@
         <slf4j.version>1.7.26</slf4j.version>
         <!--Optional Dependency-->
         <javax.servlet.version>4.0.1</javax.servlet.version>
-        <spring.version>5.0.8.RELEASE</spring.version>
+        <spring.version>5.1.6.RELEASE</spring.version>
         <aspectj.version>1.9.2</aspectj.version>
-        <spring.redis.version>2.1.2.RELEASE</spring.redis.version>
+        <spring.redis.version>2.1.6.RELEASE</spring.redis.version>
         <redis.version>2.9.0</redis.version>
-        <mybatis.version>3.5.0</mybatis.version>
+        <mybatis.version>3.5.1</mybatis.version>
         <java.mail.version>1.6.2</java.mail.version>
         <spring.boot.version>2.1.4.RELEASE</spring.boot.version>
         <mybatis.plus.version>3.1.1</mybatis.plus.version>
@@ -84,6 +84,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
             <version>${spring.boot.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>slf4j-api</artifactId>
+                    <groupId>org.slf4j</groupId>
+                </exclusion>
+            </exclusions>
             <optional>true</optional>
             <scope>provided</scope>
         </dependency>
@@ -133,20 +139,8 @@
             <scope>provided</scope>
             <exclusions>
                 <exclusion>
-                    <artifactId>spring-aop</artifactId>
-                    <groupId>org.springframework</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>spring-beans</artifactId>
-                    <groupId>org.springframework</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>spring-context</artifactId>
-                    <groupId>org.springframework</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>spring-core</artifactId>
-                    <groupId>org.springframework</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                    <groupId>org.slf4j</groupId>
                 </exclusion>
             </exclusions>
             <optional>true</optional>
