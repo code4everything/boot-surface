@@ -22,13 +22,13 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <!--强依赖-->
         <junit.version>4.12</junit.version>
+        <!--Necessary Dependency-->
         <fastjson.version>1.2.56</fastjson.version>
         <hutool.version>4.5.3</hutool.version>
         <guava.version>27.1-jre</guava.version>
         <slf4j.version>1.7.26</slf4j.version>
-        <!--弱依赖-->
+        <!--Optional Dependency-->
         <javax.servlet.version>4.0.1</javax.servlet.version>
         <spring.version>5.0.8.RELEASE</spring.version>
         <aspectj.version>1.9.2</aspectj.version>
@@ -37,48 +37,49 @@
         <mybatis.version>3.5.0</mybatis.version>
         <java.mail.version>1.6.2</java.mail.version>
         <spring.boot.version>2.1.4.RELEASE</spring.boot.version>
+        <mybatis.plus.version>3.1.1</mybatis.plus.version>
     </properties>
 
     <dependencies>
-        <!--测试工具包-->
+        <!--Test-->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
-        <!--日志工具包-->
+        <!--Logger Api-->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>${slf4j.version}</version>
         </dependency>
-        <!--JSON工具包-->
+        <!--Alibaba Fast Json-->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
             <version>${fastjson.version}</version>
         </dependency>
-        <!--基础工具包-->
+        <!--Hutool Core-->
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-core</artifactId>
             <version>${hutool.version}</version>
         </dependency>
-        <!--加密解密工具包-->
+        <!--Hutool Crypto-->
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-crypto</artifactId>
             <version>${hutool.version}</version>
         </dependency>
-        <!--GOOGLE工具包-->
+        <!--Google Guava-->
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>${guava.version}</version>
         </dependency>
 
-        <!--Spring Boot依赖包-->
+        <!--Spring Boot-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
@@ -87,7 +88,7 @@
             <scope>provided</scope>
         </dependency>
 
-        <!--WEB开发依赖包-->
+        <!--Spring Web-->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
@@ -124,7 +125,7 @@
             <optional>true</optional>
         </dependency>
 
-        <!--REDIS缓存-->
+        <!--Redis-->
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-redis</artifactId>
@@ -172,6 +173,15 @@
             <groupId>com.sun.mail</groupId>
             <artifactId>javax.mail</artifactId>
             <version>${java.mail.version}</version>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
+
+        <!--MyBatis Plus-->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus</artifactId>
+            <version>${mybatis.plus.version}</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>

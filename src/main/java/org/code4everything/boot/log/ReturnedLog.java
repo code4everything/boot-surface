@@ -42,7 +42,7 @@ public class ReturnedLog<T> implements BaseBean {
      *
      * @since 1.0.4
      */
-    public ReturnedLog(T log, Throwable throwable, Object result) {
+    ReturnedLog(T log, Throwable throwable, Object result) {
         this.log = log;
         this.throwable = throwable;
         this.result = result;

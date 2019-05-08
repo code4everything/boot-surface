@@ -62,6 +62,8 @@ public class DustFile implements BaseBean {
      */
     private String storagePath;
 
+    DustFile() {}
+
     /**
      * 获取文件保存路径
      *

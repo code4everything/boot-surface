@@ -5,6 +5,7 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
 import com.alibaba.fastjson.JSONObject;
 
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.Objects;
 
@@ -15,6 +16,15 @@ import java.util.Objects;
  * @since 2019/1/11
  **/
 public interface BaseBean {
+
+    /**
+     * 获取主键编号，如需用到时应重写此方法
+     *
+     * @return 主键编号
+     *
+     * @since 1.1.2
+     */
+    default Serializable getId() {return null;}
 
     /**
      * 对象内是否有必要的属性值，大多数情况下都需要重写此方法
