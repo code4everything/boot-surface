@@ -332,7 +332,13 @@ public final class DefaultWebInterceptor implements HandlerInterceptor {
                         if (BootConfig.isDebug()) {
                             LOGGER.info("call method 'handleVisitLog' to save and reset today's http request data");
                         }
-                        filterHandler.handleVisitLog(date, getUserVisitMap(true), getUrlVisitMap(true), totalVisit);
+                        Map<String, Long> userMap = getUserVisitMap(false);
+                        Map<String, Long> urlMap = getUrlVisitMap(false);
+                        boolean saved = filterHandler.handleVisitLog(date, userMap, urlMap, totalVisit);
+                        if (saved) {
+                            userVisitMap.clear();
+                            urlVisitMap.clear();
+                        }
                     }, initialDelay, IntegerConsts.ONE_DAY_MILLIS, TimeUnit.MILLISECONDS);
                 }
             }

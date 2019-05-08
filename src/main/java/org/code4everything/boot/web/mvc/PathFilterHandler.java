@@ -43,9 +43,14 @@ public interface PathFilterHandler {
      * @param urlVisit URL访问统计
      * @param totalVisit 总访问次数
      *
+     * @return 是否已保存（成功保存后将清空访问日志）
+     *
      * @since 1.1.0
      */
-    default void handleVisitLog(Date date, Map<String, Long> userVisit, Map<String, Long> urlVisit, long totalVisit) {}
+    default boolean handleVisitLog(Date date, Map<String, Long> userVisit, Map<String, Long> urlVisit,
+                                   long totalVisit) {
+        return false;
+    }
 
     /**
      * 构建统计用户访问次数的键，返回NULL时不统计
