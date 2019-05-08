@@ -158,14 +158,13 @@ public final class HttpUtils {
      */
     public static boolean getBooleanValue(HttpServletRequest request, String key, boolean defaultValue) {
         String value = getString(request, key);
-        if (Boolean.TRUE.toString().equalsIgnoreCase(value)) {
+        if (isTrue(value)) {
             return true;
         }
-        if (Boolean.FALSE.toString().equalsIgnoreCase(value)) {
+        if (isFalse(value)) {
             return false;
         }
         return defaultValue;
-
     }
 
     /**
@@ -195,13 +194,51 @@ public final class HttpUtils {
      */
     public static Boolean getBoolean(HttpServletRequest request, String key, boolean defaultValue) {
         String value = getString(request, key);
-        if (Boolean.TRUE.toString().equalsIgnoreCase(value)) {
+        if (isTrue(value)) {
             return Boolean.TRUE;
         }
-        if (Boolean.FALSE.toString().equalsIgnoreCase(value)) {
+        if (isFalse(value)) {
             return Boolean.FALSE;
         }
         return defaultValue;
+    }
+
+    /**
+     * 值是否等于 true, 1
+     *
+     * @param value 值
+     *
+     * @return 是否是true
+     *
+     * @since 1.1.2
+     */
+    private static boolean isTrue(String value) {
+        if (Boolean.TRUE.toString().equalsIgnoreCase(value)) {
+            return true;
+        }
+        if (StringConsts.Sign.ONE.equals(value)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 值是否等于 false, 0
+     *
+     * @param value 值
+     *
+     * @return 是否是false
+     *
+     * @since 1.1.2
+     */
+    private static boolean isFalse(String value) {
+        if (Boolean.FALSE.toString().equalsIgnoreCase(value)) {
+            return true;
+        }
+        if (StringConsts.Sign.ZERO.equals(value)) {
+            return true;
+        }
+        return false;
     }
 
     /**
