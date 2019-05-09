@@ -13,6 +13,58 @@ public final class MapUtils {
     private MapUtils() {}
 
     /**
+     * 值替换
+     *
+     * @param map 集合
+     * @param regex 正则匹配
+     * @param replacement 替换内容
+     *
+     * @since 1.1.2
+     */
+    public static void valueReplaceByRegex(Map<?, String> map, String regex, String replacement) {
+        map.values().forEach(v -> v = v.replaceAll(regex, replacement));
+    }
+
+    /**
+     * 值替换
+     *
+     * @param map 集合
+     * @param target 目标内容
+     * @param replacement 替换内容
+     *
+     * @since 1.1.2
+     */
+    public static void valueReplace(Map<?, String> map, CharSequence target, CharSequence replacement) {
+        map.values().forEach(v -> v = v.replace(target, replacement));
+    }
+
+    /**
+     * 键替换
+     *
+     * @param map 集合
+     * @param regex 正则匹配
+     * @param replacement 替换内容
+     *
+     * @since 1.1.2
+     */
+    public static void keyReplaceByRegex(Map<String, ?> map, String regex, String replacement) {
+        map.keySet().forEach(k -> k = k.replaceAll(regex, replacement));
+    }
+
+    /**
+     * 键替换
+     *
+     * @param map 集合
+     * @param target 目标内容
+     * @param replacement 替换内容
+     *
+     * @since 1.1.2
+     */
+    public static void keyReplace(Map<String, ?> map, CharSequence target, CharSequence replacement) {
+        map.keySet().forEach(k -> k = k.replace(target, replacement));
+    }
+
+    /**
      * 通过值排序
      *
      * @param map 集合
