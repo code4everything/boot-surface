@@ -1,11 +1,12 @@
 package org.code4everything.boot.web.mvc;
 
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import org.code4everything.boot.base.function.BooleanFunction;
 import org.code4everything.boot.web.mvc.exception.ExceptionFactory;
-import org.code4everything.boot.web.mvc.exception.ExceptionThrower;
 
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * 断言封装类
@@ -14,8 +15,6 @@ import java.util.Objects;
  * @since 2018-12-01
  */
 public final class AssertUtils {
-
-    private static final ExceptionThrower THROWER = ExceptionThrower.getInstance();
 
     private AssertUtils() {}
 
@@ -29,7 +28,7 @@ public final class AssertUtils {
      * @since 1.0.4
      */
     public static String assertTokenNotBlank(String token) {
-        THROWER.throwIf(StrUtil.isBlank(token), ExceptionFactory.tokenBlank());
+        throwIf(StrUtil.isBlank(token), ExceptionFactory.tokenBlank());
         return token;
     }
 
@@ -44,7 +43,7 @@ public final class AssertUtils {
      * @since 1.0.4
      */
     public static <T> T assertUserLoggedIn(T user) {
-        THROWER.throwIf(Objects.isNull(user), ExceptionFactory.userNotLoggedIn());
+        throwIf(Objects.isNull(user), ExceptionFactory.userNotLoggedIn());
         return user;
     }
 
@@ -54,12 +53,24 @@ public final class AssertUtils {
      * @param shouldThrow 是否抛出异常
      * @param exception 想要抛出的异常
      *
-     * @return {@link ExceptionThrower}
-     *
      * @since 1.0.5
      */
-    public static ExceptionThrower throwIf(boolean shouldThrow, RuntimeException exception) {
-        return THROWER.throwIf(shouldThrow, exception);
+    public static void throwIf(boolean shouldThrow, RuntimeException exception) {
+        if (shouldThrow) {
+            throw exception;
+        }
+    }
+
+    /**
+     * 如果对象为空抛出异常
+     *
+     * @param optional {@link Optional}
+     * @param exception 想要抛出的异常
+     *
+     * @since 1.1.2
+     */
+    public static void throwIf(Optional<?> optional, RuntimeException exception) {
+        throwIf(!optional.isPresent(), exception);
     }
 
     /**
@@ -68,11 +79,33 @@ public final class AssertUtils {
      * @param function 布尔函数
      * @param exception 想要抛出的异常
      *
-     * @return {@link ExceptionThrower}
-     *
      * @since 1.0.5
      */
-    public static ExceptionThrower throwIf(BooleanFunction function, RuntimeException exception) {
-        return THROWER.throwIf(function, exception);
+    public static void throwIf(BooleanFunction function, RuntimeException exception) {
+        throwIf(function.call(), exception);
+    }
+
+    /**
+     * 如果对象空指针抛出异常
+     *
+     * @param object 对象
+     * @param exception 想要抛出的异常
+     *
+     * @since 1.1.2
+     */
+    public static void throwIfNull(Object object, RuntimeException exception) {
+        throwIf(Objects.isNull(object), exception);
+    }
+
+    /**
+     * 如果对象不为空抛出异常
+     *
+     * @param object 对象
+     * @param exception 想要抛出的异常
+     *
+     * @since 1.1.2
+     */
+    public static void throwIfNotNull(Object object, RuntimeException exception) {
+        throwIf(ObjectUtil.isNotNull(object), exception);
     }
 }

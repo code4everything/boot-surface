@@ -2,10 +2,7 @@ package org.code4everything.boot.web.mvc.exception;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import org.code4everything.boot.web.mvc.exception.template.EntityNotFoundException;
-import org.code4everything.boot.web.mvc.exception.template.RequestFrequentlyException;
-import org.code4everything.boot.web.mvc.exception.template.TokenBlankException;
-import org.code4everything.boot.web.mvc.exception.template.UserNotLoggedInException;
+import org.code4everything.boot.web.mvc.exception.template.*;
 import org.springframework.http.HttpStatus;
 
 import java.util.Objects;
@@ -232,5 +229,16 @@ public class ExceptionFactory {
      */
     public static RequestFrequentlyException requestFrequently() {
         return exception(RequestFrequentlyException.class);
+    }
+
+    /**
+     * 获取 {@link UrlForbadeException}
+     *
+     * @return {@link UrlForbadeException}
+     *
+     * @since 1.1.2
+     */
+    public static UrlForbadeException urlForbade() {
+        return exception(UrlForbadeException.class);
     }
 }

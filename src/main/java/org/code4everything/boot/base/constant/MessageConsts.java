@@ -48,5 +48,13 @@ public final class MessageConsts {
 
     public static final String REQUEST_FREQUENTLY_EN = "sorry, frequently request not support";
 
+    public static final String URL_FORBADE_ZH = "该路径已被禁止访问";
+
+    public static final String URL_FORBADE_EN = "url forbade";
+
+    public static final String USERNAME_PASSWORD_INCORRECT_ZH = "用户名或密码不正确";
+
+    public static final String USERNAME_PASSWORD_INCORRECT_EN = "username or password incorrect";
+
     private MessageConsts() {}
 }
