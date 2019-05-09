@@ -398,6 +398,19 @@ public class Response<T> implements BaseBean, Serializable {
     /**
      * 请求失败
      *
+     * @param errMsg 错误消息
+     *
+     * @return {@link Response}
+     *
+     * @since 1.0.0
+     */
+    public Response<T> error(String errMsg) {
+        return error(BootConfig.DEFAULT_ERROR_CODE, errMsg);
+    }
+
+    /**
+     * 请求失败
+     *
      * @param errCode 错误码
      * @param errMsg 错误消息
      *

@@ -31,6 +31,11 @@ import java.util.Objects;
  */
 public class BootConfig {
 
+    /**
+     * 默认响应错误码
+     */
+    public static final int DEFAULT_ERROR_CODE = -1;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(BootConfig.class);
 
     /**

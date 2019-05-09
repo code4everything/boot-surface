@@ -22,7 +22,7 @@ import java.util.Objects;
 @RestController
 public class BaseController {
 
-    private static final int DEFAULT_ERROR_CODE = -1;
+    private static final int DEFAULT_ERROR_CODE = BootConfig.DEFAULT_ERROR_CODE;
 
     private static final String DEFAULT_OK_MSG = MessageConsts.REQUEST_OK_ZH;
 
