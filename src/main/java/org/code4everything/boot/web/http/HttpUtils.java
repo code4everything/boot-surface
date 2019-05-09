@@ -1,6 +1,6 @@
 package org.code4everything.boot.web.http;
 
-import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
@@ -508,7 +508,7 @@ public final class HttpUtils {
                                                                    String storage, boolean md5,
                                                                    Map<String, Object> params, boolean force) {
         Map<String, MultipartFile> fileMap = request.getFileMap();
-        if (CollectionUtil.isEmpty(fileMap)) {
+        if (CollUtil.isEmpty(fileMap)) {
             // 文件集合为空
             return new Response<>(HttpStatus.BAD_REQUEST.value(), MessageConsts.FILE_UNAVAILABLE_ZH);
         } else {

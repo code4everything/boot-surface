@@ -395,20 +395,6 @@ public class Response<T> implements BaseBean, Serializable {
         return setTimestamp(System.currentTimeMillis());
     }
 
-
-    /**
-     * 请求失败
-     *
-     * @param errMsg 错误消息
-     *
-     * @return {@link Response}
-     *
-     * @since 1.0.0
-     */
-    public Response<T> error(String errMsg) {
-        return error(400, errMsg);
-    }
-
     /**
      * 请求失败
      *

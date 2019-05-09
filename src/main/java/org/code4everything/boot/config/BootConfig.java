@@ -174,7 +174,7 @@ public class BootConfig {
     }
 
     /**
-     * 设置配置类
+     * 设置访问路径过滤配置
      *
      * @param filterPath {@link FilterPath}
      *

@@ -1,15 +1,11 @@
 package org.code4everything.boot.web.mvc;
 
-import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.collection.CollUtil;
 import com.google.common.base.Strings;
 import org.code4everything.boot.base.constant.MessageConsts;
-import org.code4everything.boot.base.function.BooleanFunction;
-import org.code4everything.boot.base.function.ResponseFunction;
 import org.code4everything.boot.config.BootConfig;
 import org.code4everything.boot.service.BootUserService;
 import org.code4everything.boot.web.http.HttpUtils;
-import org.code4everything.boot.web.mvc.exception.ExceptionThrower;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -33,203 +29,12 @@ public class BaseController {
     @Autowired
     public HttpServletRequest request;
 
-    private ThreadLocal<Response<?>> resultThreadLocal = new ThreadLocal<>();
-
     /**
      * 只允许继承
      *
      * @since 1.0.9
      */
     protected BaseController() {}
-
-    /**
-     * 抛出异常
-     *
-     * @param function 布尔函数
-     * @param exception 想要抛出的异常
-     *
-     * @return {@link ExceptionThrower}
-     *
-     * @since 1.0.5
-     */
-    public static ExceptionThrower throwIf(BooleanFunction function, RuntimeException exception) {
-        return AssertUtils.throwIf(function, exception);
-    }
-
-    /**
-     * 是否有结果
-     *
-     * @return 是否有结果
-     *
-     * @since 1.0.5
-     */
-    public boolean hasResult() {
-        return ObjectUtil.isNotNull(resultThreadLocal.get());
-    }
-
-    /**
-     * 获取结果
-     *
-     * @param <T> 数据类型
-     *
-     * @return 结果
-     *
-     * @since 1.0.5
-     */
-    public <T> Response<T> getReturn() {
-        Response<?> response = resultThreadLocal.get();
-        if (Objects.isNull(response)) {
-            return null;
-        } else {
-            Response<T> result = printAndReturn(new Response<T>().copyFrom(response));
-            resultThreadLocal.remove();
-            return result;
-        }
-    }
-
-    /**
-     * 抛出异常
-     *
-     * @param shouldThrow 是否抛出异常
-     * @param exception 想要抛出的异常
-     *
-     * @return {@link ExceptionThrower}
-     *
-     * @since 1.0.5
-     */
-    public ExceptionThrower throwIf(boolean shouldThrow, RuntimeException exception) {
-        return AssertUtils.throwIf(shouldThrow, exception);
-    }
-
-    /**
-     * 如果条件为真时返回
-     *
-     * @param shouldReturn 是否返回结果
-     * @param result 响应结果
-     * @param <T> 数据类型
-     *
-     * @return {@link BaseController}
-     *
-     * @since 1.0.5
-     */
-    public <T> BaseController ifReturn(boolean shouldReturn, Response<T> result) {
-        if (!hasResult() && shouldReturn) {
-            resultThreadLocal.set(result);
-        }
-        return this;
-    }
-
-    /**
-     * 如果条件为真时返回
-     *
-     * @param shouldReturn 是否返回结果
-     * @param function 结果响应函数
-     *
-     * @return {@link BaseController}
-     *
-     * @since 1.0.5
-     */
-    public BaseController ifReturn(boolean shouldReturn, ResponseFunction function) {
-        if (!hasResult() && shouldReturn) {
-            resultThreadLocal.set(function.call());
-        }
-        return this;
-    }
-
-    /**
-     * 如果条件为真时返回
-     *
-     * @param function 布尔函数
-     * @param result 响应结果
-     *
-     * @return {@link BaseController}
-     *
-     * @since 1.0.5
-     */
-    public BaseController ifReturn(BooleanFunction function, Response result) {
-        if (!hasResult() && function.call()) {
-            resultThreadLocal.set(result);
-        }
-        return this;
-    }
-
-    /**
-     * 如果条件为真时返回
-     *
-     * @param booleanFunction 布尔函数
-     * @param responseFunction 结果响应函数
-     *
-     * @return {@link BaseController}
-     *
-     * @since 1.0.5
-     */
-    public BaseController ifReturn(BooleanFunction booleanFunction, ResponseFunction responseFunction) {
-        if (!hasResult()) {
-            boolean res = booleanFunction.call();
-            if (res) {
-                resultThreadLocal.set(responseFunction.call());
-            }
-        }
-        return this;
-    }
-
-    /**
-     * 没有结果时返回
-     *
-     * @param result 响应结果
-     * @param <T> 数据类型
-     *
-     * @return {@link BaseController}
-     *
-     * @since 1.0.5
-     */
-    public <T> BaseController elseReturn(Response<T> result) {
-        return ifReturn(true, result);
-    }
-
-    /**
-     * 没有结果时返回
-     *
-     * @param function 结果响应函数
-     *
-     * @return {@link BaseController}
-     *
-     * @since 1.0.5
-     */
-    public BaseController elseReturn(ResponseFunction function) {
-        if (!hasResult()) {
-            resultThreadLocal.set(function.call());
-        }
-        return this;
-    }
-
-    /**
-     * 返回结果
-     *
-     * @param result 响应结果
-     * @param <T> 数据类型
-     *
-     * @return {@link BaseController}
-     *
-     * @since 1.0.5
-     */
-    public <T> Response<T> getReturn(Response<T> result) {
-        return hasResult() ? getReturn() : result;
-    }
-
-    /**
-     * 返回结果
-     *
-     * @param function 结果响应函数
-     * @param <T> 数据类型
-     *
-     * @return {@link BaseController}
-     *
-     * @since 1.0.5
-     */
-    public <T> Response<T> getReturn(ResponseFunction<T> function) {
-        return hasResult() ? getReturn() : function.call();
-    }
 
     /**
      * 获取Token
@@ -318,7 +123,7 @@ public class BaseController {
      * @since 1.0.4
      */
     public <T> Response<T> successResult() {
-        return printAndReturn(new Response<>());
+        return successResult(DEFAULT_OK_MSG);
     }
 
     /**
@@ -332,7 +137,22 @@ public class BaseController {
      * @since 1.0.8
      */
     public <T> Response<T> successResult(T data) {
-        return printAndReturn(new Response<>(data));
+        return successResult(data, BootConfig.isSealed());
+    }
+
+    /**
+     * 请求成功
+     *
+     * @param <T> 数据类
+     * @param data 数据
+     * @param sealed 是否加密
+     *
+     * @return {@link Response}
+     *
+     * @since 1.1.2
+     */
+    public <T> Response<T> successResult(T data, boolean sealed) {
+        return successResult(DEFAULT_OK_MSG, data, sealed);
     }
 
     /**
@@ -346,7 +166,7 @@ public class BaseController {
      * @since 1.0.0
      */
     public <T> Response<T> successResult(String okMsg) {
-        return printAndReturn(new Response<T>().setMsg(okMsg));
+        return successResult(okMsg, null, false);
     }
 
     /**
@@ -361,23 +181,26 @@ public class BaseController {
      * @since 1.0.4
      */
     public <T> Response<T> successResult(String okMsg, T data) {
-        return printAndReturn(new Response<>(okMsg, data));
+        return successResult(okMsg, data, BootConfig.isSealed());
     }
 
     /**
      * 请求成功
      *
-     * @param okCode 成功码
      * @param okMsg 成功消息
      * @param data 数据
      * @param <T> 数据类
+     * @param sealed 是否加密
      *
      * @return {@link Response}
      *
-     * @since 1.0.5
+     * @since 1.0.4
      */
-    public <T> Response<T> successResult(int okCode, String okMsg, T data) {
-        return printAndReturn(new Response<>(okCode, okMsg, data));
+    public <T> Response<T> successResult(String okMsg, T data, boolean sealed) {
+        if (sealed) {
+            BootConfig.getFieldEncoder().encodeField(data);
+        }
+        return printAndReturn(new Response<>(okMsg, data));
     }
 
     /**
@@ -391,7 +214,7 @@ public class BaseController {
      * @since 1.0.0
      */
     public <T> Response<T> errorResult(String errMsg) {
-        return printAndReturn(new Response<T>().error(errMsg));
+        return errorResult(DEFAULT_ERROR_CODE, errMsg);
     }
 
     /**
@@ -448,7 +271,7 @@ public class BaseController {
      * @since 1.0.0
      */
     public Response<Boolean> parseBoolean(String okMsg, String errMsg, boolean isOk) {
-        return printAndReturn(new Response<Boolean>().setMsg(isOk ? okMsg : errMsg).setData(isOk));
+        return successResult(isOk ? okMsg : errMsg, isOk, false);
     }
 
     /**
@@ -580,15 +403,7 @@ public class BaseController {
      * @since 1.0.0
      */
     public <T> Response<T> parseResult(String okMsg, String errMsg, int errCode, T data, boolean sealed) {
-        boolean isError = ObjectUtil.isNull(data);
-        if (!isError) {
-            if (data instanceof Boolean && !(Boolean) data) {
-                isError = true;
-            } else if (sealed) {
-                BootConfig.getFieldEncoder().encodeField(data);
-            }
-        }
-        return isError ? errorResult(errCode, errMsg) : successResult(okMsg, data);
+        return Objects.isNull(data) ? errorResult(errCode, errMsg) : successResult(okMsg, data, sealed);
     }
 
     /**
@@ -721,14 +536,7 @@ public class BaseController {
      */
     public <T extends Collection> Response<T> parseCollection(String okMsg, String errMsg, int errCode, T data,
                                                               boolean sealed) {
-        if (CollectionUtil.isEmpty(data)) {
-            return errorResult(errCode, errMsg);
-        } else {
-            if (sealed) {
-                BootConfig.getFieldEncoder().encodeField(data);
-            }
-            return printAndReturn(new Response<>(okMsg, data));
-        }
+        return CollUtil.isEmpty(data) ? errorResult(errCode, errMsg) : successResult(okMsg, data, sealed);
     }
 
     /**
