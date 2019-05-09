@@ -10,6 +10,7 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import org.code4everything.boot.base.constant.StringConsts;
 import org.code4everything.boot.config.BootConfig;
+import org.code4everything.boot.web.mvc.AssertUtils;
 
 import javax.mail.MessagingException;
 import java.util.Date;
@@ -102,6 +103,20 @@ public final class VerifyCodeUtils {
             remove(key);
         }
         return result;
+    }
+
+    /**
+     * 检测验证码是否正确，如果不正确则抛出异常
+     *
+     * @param key 邮箱或手机号
+     * @param code 验证码
+     * @param remove 验证通过后是否删除
+     * @param exception 想要抛出的异常
+     *
+     * @since 1.1.2
+     */
+    public static void assertCorrect(String key, String code, boolean remove, RuntimeException exception) {
+        AssertUtils.throwIf(!validate(key, code, remove), exception);
     }
 
     /**
