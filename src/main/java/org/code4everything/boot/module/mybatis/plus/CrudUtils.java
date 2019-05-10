@@ -4,7 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import org.code4everything.boot.base.bean.BaseBean;
+import org.code4everything.boot.base.bean.BaseDomain;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -35,8 +35,8 @@ public final class CrudUtils {
      */
     public static <T> UpdatedPair<T> updateById(BaseMapper<T> mapper, T t) {
         Serializable id = null;
-        if (t instanceof BaseBean) {
-            id = ((BaseBean) t).getId();
+        if (t instanceof BaseDomain) {
+            id = ((BaseDomain) t).primaryKey();
         }
         return updateById(mapper, t, id);
     }
