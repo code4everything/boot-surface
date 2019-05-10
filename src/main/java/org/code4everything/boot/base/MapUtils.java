@@ -1,5 +1,9 @@
 package org.code4everything.boot.base;
 
+import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.ArrayUtil;
+import org.code4everything.boot.base.constant.IntegerConsts;
+
 import java.util.*;
 
 /**
@@ -13,16 +17,79 @@ public final class MapUtils {
     private MapUtils() {}
 
     /**
+     * 新建 HashMap
+     *
+     * @param kvs 键值对
+     * @param <K> 键类型
+     * @param <V> 值类型
+     *
+     * @return HashMap
+     *
+     * @since 1.1.2
+     */
+    public static <K, V> HashMap<K, V> newHashMap(Object... kvs) {
+        return newHashMap(16, kvs);
+    }
+
+    /**
+     * 新建 HashMap
+     *
+     * @param capacity 初始化大小
+     * @param kvs 键值对
+     * @param <K> 键类型
+     * @param <V> 值类型
+     *
+     * @return HashMap
+     *
+     * @since 1.1.2
+     */
+    public static <K, V> HashMap<K, V> newHashMap(int capacity, Object... kvs) {
+        HashMap<K, V> map = new HashMap<>(capacity);
+        putKeyValue(map, kvs);
+        return map;
+    }
+
+    /**
+     * 添加键值对
+     *
+     * @param map 集合
+     * @param kvs 键值对
+     * @param <K> 键类型
+     * @param <V> 值类型
+     *
+     * @since 1.1.2
+     */
+    @SuppressWarnings("unchecked")
+    public static <K, V> void putKeyValue(Map<K, V> map, Object... kvs) {
+        if (ArrayUtil.isEmpty(kvs)) {
+            return;
+        }
+        if ((kvs.length & 1) == 1) {
+            throw new IllegalArgumentException("kvs length must be even(key value pair)");
+        }
+        for (int i = 0; i < kvs.length; i += IntegerConsts.TWO) {
+            map.put((K) kvs[i], (V) kvs[i + 1]);
+        }
+    }
+
+    /**
      * 值替换
      *
      * @param map 集合
      * @param regex 正则匹配
      * @param replacement 替换内容
      *
+     * @return 替换后的集合
+     *
      * @since 1.1.2
      */
-    public static void valueReplaceByRegex(Map<?, String> map, String regex, String replacement) {
-        map.values().forEach(v -> v = v.replaceAll(regex, replacement));
+    public static <T> Map<T, String> valueReplaceByRegex(Map<T, String> map, String regex, String replacement) {
+        if (MapUtil.isEmpty(map)) {
+            return new HashMap<>(8);
+        }
+        Map<T, String> tmp = new HashMap<>(map.size());
+        map.forEach((k, v) -> tmp.put(k, v.replaceAll(regex, replacement)));
+        return tmp;
     }
 
     /**
@@ -32,10 +99,17 @@ public final class MapUtils {
      * @param target 目标内容
      * @param replacement 替换内容
      *
+     * @return 替换后的集合
+     *
      * @since 1.1.2
      */
-    public static void valueReplace(Map<?, String> map, CharSequence target, CharSequence replacement) {
-        map.values().forEach(v -> v = v.replace(target, replacement));
+    public static <T> Map<T, String> valueReplace(Map<T, String> map, CharSequence target, CharSequence replacement) {
+        if (MapUtil.isEmpty(map)) {
+            return new HashMap<>(8);
+        }
+        Map<T, String> tmp = new HashMap<>(map.size());
+        map.forEach((k, v) -> tmp.put(k, v.replace(target, replacement)));
+        return tmp;
     }
 
     /**
@@ -45,10 +119,17 @@ public final class MapUtils {
      * @param regex 正则匹配
      * @param replacement 替换内容
      *
+     * @return 替换后的集合
+     *
      * @since 1.1.2
      */
-    public static void keyReplaceByRegex(Map<String, ?> map, String regex, String replacement) {
-        map.keySet().forEach(k -> k = k.replaceAll(regex, replacement));
+    public static <T> Map<String, T> keyReplaceByRegex(Map<String, T> map, String regex, String replacement) {
+        if (MapUtil.isEmpty(map)) {
+            return new HashMap<>(8);
+        }
+        Map<String, T> tmp = new HashMap<>(map.size());
+        map.forEach((k, v) -> tmp.put(k.replaceAll(regex, replacement), v));
+        return tmp;
     }
 
     /**
@@ -58,10 +139,17 @@ public final class MapUtils {
      * @param target 目标内容
      * @param replacement 替换内容
      *
+     * @return 替换后的集合
+     *
      * @since 1.1.2
      */
-    public static void keyReplace(Map<String, ?> map, CharSequence target, CharSequence replacement) {
-        map.keySet().forEach(k -> k = k.replace(target, replacement));
+    public static <T> Map<String, T> keyReplace(Map<String, T> map, CharSequence target, CharSequence replacement) {
+        if (MapUtil.isEmpty(map)) {
+            return new HashMap<>(8);
+        }
+        Map<String, T> tmp = new HashMap<>(map.size());
+        map.forEach((k, v) -> tmp.put(k.replace(target, replacement), v));
+        return tmp;
     }
 
     /**
