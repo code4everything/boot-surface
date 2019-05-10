@@ -4,7 +4,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
-import org.code4everything.boot.base.bean.BaseBean;
+import com.alibaba.fastjson.JSON;
 import org.code4everything.boot.base.constant.IntegerConsts;
 import org.code4everything.boot.base.constant.MessageConsts;
 import org.code4everything.boot.base.constant.StringConsts;
@@ -24,7 +24,7 @@ import java.util.Objects;
  * @author pantao
  * @since 2018/10/30
  */
-public class Response<T> implements BaseBean, Serializable {
+public class Response<T> implements Serializable {
 
     private static final long serialVersionUID = -5763007029340547926L;
 
@@ -272,7 +272,13 @@ public class Response<T> implements BaseBean, Serializable {
         return this;
     }
 
-    @Override
+    /**
+     * 是否有数据
+     *
+     * @return 是否有数据
+     *
+     * @since 1.1.2
+     */
     public boolean hasValue() {
         return ObjectUtil.isNotNull(data);
     }
@@ -514,6 +520,17 @@ public class Response<T> implements BaseBean, Serializable {
      */
     public boolean isError() {
         return !isOk();
+    }
+
+    /**
+     * 序列化成JSON
+     *
+     * @return JSON字符串
+     *
+     * @since 1.1.2
+     */
+    public String toJsonString() {
+        return JSON.toJSONString(this);
     }
 
     /**

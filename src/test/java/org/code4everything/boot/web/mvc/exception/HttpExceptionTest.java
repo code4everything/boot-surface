@@ -7,7 +7,6 @@ public class HttpExceptionTest {
     @Test
     public void testSetter() {
         CustomHttpException exception = new CustomHttpException();
-        exception.setCode(400).setMsg("exception");
     }
 }
 

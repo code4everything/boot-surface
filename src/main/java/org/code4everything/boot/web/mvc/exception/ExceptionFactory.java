@@ -17,6 +17,13 @@ import java.util.concurrent.TimeUnit;
 public class ExceptionFactory {
 
     /**
+     * 默认异常加载器
+     *
+     * @since 1.1.2
+     */
+    private static final ExceptionLoader<HttpException> EXCEPTION_LOADER = HttpException::new;
+
+    /**
      * 已创建对象的存储器，有效期一天
      *
      * @since 1.0.9
@@ -59,7 +66,7 @@ public class ExceptionFactory {
      * @since 1.1.0
      */
     public static HttpException exception(int code, String msg) {
-        return exception(code, msg, HttpStatus.BAD_REQUEST, HttpException.class);
+        return exception(code, msg, EXCEPTION_LOADER);
     }
 
     /**
@@ -67,15 +74,15 @@ public class ExceptionFactory {
      *
      * @param code 错误码
      * @param msg 消息
-     * @param clazz 类
+     * @param loader 异常构造类
      * @param <T> 异常
      *
      * @return 异常
      *
      * @since 1.1.0
      */
-    public static <T extends HttpException> T exception(int code, String msg, Class<T> clazz) {
-        return exception(code, msg, HttpStatus.BAD_REQUEST, clazz);
+    public static <T extends HttpException> T exception(int code, String msg, ExceptionLoader<T> loader) {
+        return exception(code, HttpStatus.BAD_REQUEST, msg, loader);
     }
 
     /**
@@ -88,8 +95,8 @@ public class ExceptionFactory {
      *
      * @since 1.1.0
      */
-    public static HttpException exception(String msg, HttpStatus status) {
-        return exception(status.value(), msg, status, HttpException.class);
+    public static HttpException exception(HttpStatus status, String msg) {
+        return exception(status, msg, EXCEPTION_LOADER);
     }
 
     /**
@@ -97,30 +104,15 @@ public class ExceptionFactory {
      *
      * @param msg 消息
      * @param status 响应状态
-     * @param clazz 类
+     * @param loader 异常构造类
      * @param <T> 异常
      *
      * @return 异常
      *
      * @since 1.1.0
      */
-    public static <T extends HttpException> T exception(String msg, HttpStatus status, Class<T> clazz) {
-        return exception(status.value(), msg, status, clazz);
-    }
-
-    /**
-     * 获取异常
-     *
-     * @param code 错误码
-     * @param msg 消息
-     * @param status 响应状态
-     *
-     * @return 异常
-     *
-     * @since 1.1.0
-     */
-    public static HttpException exception(int code, String msg, HttpStatus status) {
-        return exception(code, msg, status, HttpException.class);
+    public static <T extends HttpException> T exception(HttpStatus status, String msg, ExceptionLoader<T> loader) {
+        return exception(status.value(), status, msg, loader);
     }
 
     /**
@@ -129,34 +121,38 @@ public class ExceptionFactory {
      * @param code 错误码
      * @param msg 消息
      * @param status 响应状态
-     * @param clazz 类
+     *
+     * @return 异常
+     *
+     * @since 1.1.0
+     */
+    public static HttpException exception(int code, HttpStatus status, String msg) {
+        return exception(code, status, msg, EXCEPTION_LOADER);
+    }
+
+    /**
+     * 获取异常
+     *
+     * @param code 错误码
+     * @param msg 消息
+     * @param status 响应状态
+     * @param loader 异常构造类
      * @param <T> 异常
      *
      * @return 异常
      *
      * @since 1.1.0
      */
-    public static <T extends HttpException> T exception(int code, String msg, HttpStatus status, Class<T> clazz) {
+    @SuppressWarnings("unchecked")
+    public static <T extends HttpException> T exception(int code, HttpStatus status, String msg,
+                                                        ExceptionLoader<T> loader) {
         String key = msg + status.toString() + code;
-        if (!cache.asMap().containsKey(key)) {
-            T exception = exception(key, clazz);
-            exception.setMsg(msg);
-            exception.setCode(code);
-            exception.setStatus(status);
-            return exception;
+        if (cache.asMap().containsKey(key)) {
+            return (T) cache.getIfPresent(key);
         }
-        return exception(key, clazz);
-    }
-
-    /**
-     * 获取异常
-     *
-     * @return 异常
-     *
-     * @since 1.1.0
-     */
-    public static HttpException exception() {
-        return exception(HttpException.class);
+        T exception = loader.load(code, status, msg);
+        cache.put(key, exception);
+        return exception;
     }
 
     /**
@@ -186,16 +182,16 @@ public class ExceptionFactory {
      */
     @SuppressWarnings("unchecked")
     public static <T extends HttpException> T exception(String key, Class<T> clazz) {
-        HttpException exception = cache.getIfPresent(key);
-        if (Objects.isNull(exception)) {
-            try {
-                exception = clazz.newInstance();
-                cache.put(key, exception);
-            } catch (Exception e) {
-                throw new HttpException("new class " + clazz.getName() + " error, must set a default constructor");
-            }
+        if (cache.asMap().containsKey(key)) {
+            return (T) cache.getIfPresent(key);
         }
-        return (T) exception;
+        try {
+            T exception = clazz.newInstance();
+            cache.put(key, exception);
+            return exception;
+        } catch (Exception e) {
+            throw new HttpException("new class " + clazz.getName() + " error, must set a default constructor");
+        }
     }
 
     /**

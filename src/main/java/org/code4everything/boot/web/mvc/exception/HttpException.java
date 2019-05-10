@@ -13,18 +13,18 @@ import org.springframework.http.HttpStatus;
 public class HttpException extends RuntimeException implements ExceptionBiscuit, BaseBean {
 
     /**
+     * 消息
+     *
+     * @since 1.0.4
+     */
+    private static final String DEFAULT_MSG = MessageConsts.UNKNOWN_ERROR_ZH;
+
+    /**
      * 错误码
      *
      * @since 1.0.4
      */
     private int code = HttpStatus.INTERNAL_SERVER_ERROR.value();
-
-    /**
-     * 消息
-     *
-     * @since 1.0.4
-     */
-    private String msg = MessageConsts.UNKNOWN_ERROR_ZH;
 
     /**
      * HTTP状态
@@ -49,7 +49,6 @@ public class HttpException extends RuntimeException implements ExceptionBiscuit,
      */
     public HttpException(String msg) {
         super(msg);
-        this.msg = msg;
     }
 
     /**
@@ -62,7 +61,6 @@ public class HttpException extends RuntimeException implements ExceptionBiscuit,
      */
     public HttpException(String msg, Throwable throwable) {
         super(msg, throwable);
-        this.msg = msg;
     }
 
     /**
@@ -76,7 +74,6 @@ public class HttpException extends RuntimeException implements ExceptionBiscuit,
     public HttpException(int code, String msg) {
         super(msg);
         this.code = code;
-        this.msg = msg;
     }
 
     /**
@@ -91,7 +88,6 @@ public class HttpException extends RuntimeException implements ExceptionBiscuit,
     public HttpException(int code, String msg, Throwable throwable) {
         super(msg, throwable);
         this.code = code;
-        this.msg = msg;
     }
 
     /**
@@ -133,7 +129,6 @@ public class HttpException extends RuntimeException implements ExceptionBiscuit,
      */
     public HttpException(int code, HttpStatus status, String msg) {
         super(msg);
-        this.msg = msg;
         this.code = code;
         this.status = status;
     }
@@ -150,7 +145,6 @@ public class HttpException extends RuntimeException implements ExceptionBiscuit,
      */
     public HttpException(int code, HttpStatus status, String msg, Throwable throwable) {
         super(msg, throwable);
-        this.msg = msg;
         this.code = code;
         this.status = status;
     }
@@ -165,8 +159,7 @@ public class HttpException extends RuntimeException implements ExceptionBiscuit,
      * @since 1.0.8
      */
     public HttpException(int code, String msg, boolean responseOk) {
-        this.code = code;
-        this.msg = msg;
+        this(code, msg);
         if (responseOk) {
             this.status = HttpStatus.OK;
         }
@@ -185,7 +178,6 @@ public class HttpException extends RuntimeException implements ExceptionBiscuit,
     public HttpException(int code, String msg, boolean responseOk, Throwable throwable) {
         super(msg, throwable);
         this.code = code;
-        this.msg = msg;
         if (responseOk) {
             this.status = HttpStatus.OK;
         }
@@ -210,55 +202,13 @@ public class HttpException extends RuntimeException implements ExceptionBiscuit,
         return code;
     }
 
-    /**
-     * 错误码
-     *
-     * @param code 错误码
-     *
-     * @return {@link HttpException}
-     *
-     * @since 1.0.4
-     */
-    public HttpException setCode(Integer code) {
-        this.code = code;
-        return this;
-    }
-
     @Override
     public String getMsg() {
-        return msg;
-    }
-
-    /**
-     * 设置消息
-     *
-     * @param msg 消息
-     *
-     * @return {@link HttpException}
-     *
-     * @since 1.0.4
-     */
-    public HttpException setMsg(String msg) {
-        this.msg = msg;
-        return this;
+        return getMessage();
     }
 
     @Override
     public HttpStatus getStatus() {
         return status;
-    }
-
-    /**
-     * 设置HTTP状态
-     *
-     * @param status HTTP状态
-     *
-     * @return {@link HttpException}
-     *
-     * @since 1.0.4
-     */
-    public HttpException setStatus(HttpStatus status) {
-        this.status = status;
-        return this;
     }
 }

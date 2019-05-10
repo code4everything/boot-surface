@@ -6,9 +6,9 @@ import org.code4everything.boot.base.constant.MessageConsts;
 import org.code4everything.boot.config.BootConfig;
 import org.code4everything.boot.service.BootUserService;
 import org.code4everything.boot.web.http.HttpUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;
 import java.util.Objects;
@@ -26,7 +26,7 @@ public class BaseController {
 
     private static final String DEFAULT_OK_MSG = MessageConsts.REQUEST_OK_ZH;
 
-    @Autowired
+    @Resource
     public HttpServletRequest request;
 
     /**
