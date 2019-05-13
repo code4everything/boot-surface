@@ -1,7 +1,6 @@
 package org.code4everything.boot.web.http;
 
 import org.code4everything.boot.base.bean.BaseBean;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
 
@@ -49,13 +48,6 @@ public class DustFile implements BaseBean {
     private Map<String, Object> params;
 
     /**
-     * 表单文件
-     *
-     * @since 1.0.6
-     */
-    private MultipartFile multipartFile;
-
-    /**
      * 文件保存路径
      *
      * @since 1.0.6
@@ -84,31 +76,6 @@ public class DustFile implements BaseBean {
      */
     public void setStoragePath(String storagePath) {
         this.storagePath = storagePath;
-    }
-
-    /**
-     * 获取表单文件
-     *
-     * @return 表单文件
-     *
-     * @since 1.0.6
-     */
-    public MultipartFile getMultipartFile() {
-        return multipartFile;
-    }
-
-    /**
-     * 设置表单文件
-     *
-     * @param multipartFile 表单文件
-     *
-     * @return {@link DustFile}
-     *
-     * @since 1.0.6
-     */
-    public DustFile setMultipartFile(MultipartFile multipartFile) {
-        this.multipartFile = multipartFile;
-        return this;
     }
 
     /**
@@ -236,6 +203,6 @@ public class DustFile implements BaseBean {
 
     @Override
     public String toString() {
-        return "DustFile{" + "filename='" + filename + '\'' + ", originalFilename='" + originalFilename + '\'' + ", " + "md5='" + md5 + '\'' + ", size=" + size + ", params=" + params + ", multipartFile=" + multipartFile + ", storagePath='" + storagePath + '\'' + '}';
+        return "DustFile{" + "filename='" + filename + '\'' + ", originalFilename='" + originalFilename + '\'' + ", " + "md5='" + md5 + '\'' + ", size=" + size + ", params=" + params + ", storagePath='" + storagePath + '\'' + '}';
     }
 }
