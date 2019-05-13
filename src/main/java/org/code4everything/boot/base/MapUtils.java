@@ -17,6 +17,42 @@ public final class MapUtils {
     private MapUtils() {}
 
     /**
+     * 替换键
+     *
+     * @param map 集合
+     * @param oldKey 旧的键
+     * @param newKey 新的键
+     * @param <K> 键类型
+     * @param <V> 值类型
+     *
+     * @since 1.1.2
+     */
+    public static <K, V> void replaceKey(Map<K, V> map, K oldKey, K newKey) {
+        replaceKey(map, oldKey, newKey, true);
+    }
+
+    /**
+     * 替换键
+     *
+     * @param map 集合
+     * @param oldKey 旧的键
+     * @param newKey 新的键
+     * @param required 是否不允许键的值为空指针
+     * @param <K> 键类型
+     * @param <V> 值类型
+     *
+     * @since 1.1.2
+     */
+    public static <K, V> void replaceKey(Map<K, V> map, K oldKey, K newKey, boolean required) {
+        V value = map.get(oldKey);
+        if (required) {
+            Objects.requireNonNull(value, "map key must has value");
+        }
+        map.remove(oldKey);
+        map.put(newKey, value);
+    }
+
+    /**
      * 新建 HashMap
      *
      * @param kvs 键值对
