@@ -782,7 +782,7 @@ public class SqlBuilder {
      * @since 1.0.7
      */
     public String build() {
-        return sql.toString() + (Objects.isNull(page) ? "" : " limit " + (page.offset * page.size) + "," + page.size);
+        return sql.toString() + (Objects.isNull(page) ? "" : " LIMIT " + (page.offset * page.size) + "," + page.size);
     }
 
     @Override

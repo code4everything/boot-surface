@@ -29,8 +29,8 @@ public class ExceptionFactory {
      * @since 1.0.9
      */
     private static Cache<String, HttpException> cache = CacheBuilder.newBuilder()
-            // 一天后缓存失效
-            .expireAfterWrite(24, TimeUnit.HOURS).build();
+            // 一天后缓存失效，并使用虚引用策略（当 JVM GC 时回收）
+            .expireAfterWrite(24, TimeUnit.HOURS).weakKeys().weakValues().build();
 
     private ExceptionFactory() {}
 
@@ -133,6 +133,33 @@ public class ExceptionFactory {
     /**
      * 获取异常
      *
+     * @param biscuit {@link ExceptionBiscuit}
+     *
+     * @return 异常
+     *
+     * @since 1.1.2
+     */
+    public static HttpException exception(ExceptionBiscuit biscuit) {
+        return exception(biscuit, EXCEPTION_LOADER);
+    }
+
+    /**
+     * 获取异常
+     *
+     * @param biscuit {@link ExceptionBiscuit}
+     * @param loader 异常构造类
+     *
+     * @return 异常
+     *
+     * @since 1.1.2
+     */
+    public static <T extends HttpException> T exception(ExceptionBiscuit biscuit, ExceptionLoader<T> loader) {
+        return exception(biscuit.getCode(), biscuit.getStatus(), biscuit.getMsg(), loader);
+    }
+
+    /**
+     * 获取异常
+     *
      * @param code 错误码
      * @param msg 消息
      * @param status 响应状态
@@ -146,7 +173,7 @@ public class ExceptionFactory {
     @SuppressWarnings("unchecked")
     public static <T extends HttpException> T exception(int code, HttpStatus status, String msg,
                                                         ExceptionLoader<T> loader) {
-        String key = msg + status.toString() + code;
+        String key = code + " " + status.toString() + " " + msg;
         if (cache.asMap().containsKey(key)) {
             return (T) cache.getIfPresent(key);
         }

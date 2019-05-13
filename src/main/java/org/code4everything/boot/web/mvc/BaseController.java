@@ -6,6 +6,7 @@ import org.code4everything.boot.base.constant.MessageConsts;
 import org.code4everything.boot.config.BootConfig;
 import org.code4everything.boot.service.BootUserService;
 import org.code4everything.boot.web.http.HttpUtils;
+import org.code4everything.boot.web.mvc.exception.ExceptionBiscuit;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -230,6 +231,20 @@ public class BaseController {
      */
     public <T> Response<T> errorResult(int errCode, String errMsg) {
         return printAndReturn(new Response<T>().error(errCode, errMsg));
+    }
+
+    /**
+     * 请求失败
+     *
+     * @param biscuit {@link ExceptionBiscuit}
+     * @param <T> 数据类
+     *
+     * @return {@link Response}
+     *
+     * @since 1.1.2
+     */
+    public <T> Response<T> errorResult(ExceptionBiscuit biscuit) {
+        return errorResult(biscuit.getCode(), biscuit.getMsg());
     }
 
     /**

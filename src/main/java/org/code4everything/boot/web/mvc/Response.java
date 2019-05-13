@@ -9,6 +9,7 @@ import org.code4everything.boot.base.constant.IntegerConsts;
 import org.code4everything.boot.base.constant.MessageConsts;
 import org.code4everything.boot.base.constant.StringConsts;
 import org.code4everything.boot.config.BootConfig;
+import org.code4everything.boot.web.mvc.exception.ExceptionBiscuit;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -412,6 +413,19 @@ public class Response<T> implements Serializable {
      */
     public Response<T> error(String errMsg) {
         return error(BootConfig.DEFAULT_ERROR_CODE, errMsg);
+    }
+
+    /**
+     * 请求失败
+     *
+     * @param biscuit {@link ExceptionBiscuit}
+     *
+     * @return {@link Response}
+     *
+     * @since 1.1.2
+     */
+    public Response<T> error(ExceptionBiscuit biscuit) {
+        return error(biscuit.getCode(), biscuit.getMsg());
     }
 
     /**
