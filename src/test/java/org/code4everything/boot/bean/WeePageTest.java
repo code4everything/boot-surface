@@ -10,7 +10,7 @@ public class WeePageTest {
 
     @Test
     public void serialize() {
-        WeePage<String> weePage = new WeePage(1, 20, 6);
+        WeePage<String> weePage = new WeePage<>(1, 20, 6);
         weePage.setContent(Lists.newArrayList("test", "page"));
         weePage = ObjectUtil.unserialize(ObjectUtil.serialize(weePage));
         Console.log(weePage.toJsonString());
