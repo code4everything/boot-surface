@@ -18,6 +18,15 @@
     <name>boot-surface</name>
     <url>https://github.com/code4everything/boot-surface</url>
 
+    <!-- private nexus maven snapshot repository -->
+    <distributionManagement>
+        <repository>
+            <id>maven-snapshots</id>
+            <name>Nexus Snapshot Repository</name>
+            <url>http://nexus.code4everything.org/repository/maven-snapshots/</url>
+        </repository>
+    </distributionManagement>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
