@@ -69,8 +69,15 @@ public class BootConfig {
 
     private BootConfig() {}
 
-    public static void setServerAddress(String serverAddress) {
-        RestUtils.setServerAddress(serverAddress);
+    /**
+     * 设置REST默认服务器
+     *
+     * @param restServer 服务器地址
+     *
+     * @since 1.1.2
+     */
+    public static void setRestServer(String restServer) {
+        RestUtils.setRestServer(restServer);
     }
 
     /**
@@ -158,7 +165,7 @@ public class BootConfig {
         setDebug(properties.getDebug());
         setMaxUploadFileSize(properties.getMaxUploadFileSize());
         setVisitLog(properties.getVisitLog());
-        setServerAddress(properties.getRestServerAddr());
+        setRestServer(properties.getRestServer());
         LOGGER.info("boot config is changed >>> {}", properties);
     }
 

@@ -1,17 +1,21 @@
 package org.code4everything.boot.web.http;
 
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
+import org.code4everything.boot.base.constant.StringConsts;
+import org.code4everything.boot.config.BootConfig;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.BufferedImageHttpMessageConverter;
-import org.springframework.http.converter.ByteArrayHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Objects;
+import javax.servlet.http.HttpServletRequest;
+import java.util.*;
 
 /**
  * RestTemplate 工具类
@@ -23,7 +27,7 @@ public final class RestUtils {
 
     private static final String HTTP_PROTOCOL_HEAD = "http";
 
-    private static String serverAddress;
+    private static String restServer;
 
     private static RestTemplate rest = null;
 
@@ -32,13 +36,13 @@ public final class RestUtils {
     /**
      * 设置默认服务器
      *
-     * @param serverAddress 服务器地址
+     * @param restServer 服务器地址
      *
      * @since 1.1.2
      */
-    public static void setServerAddress(String serverAddress) {
-        if (StrUtil.isNotEmpty(serverAddress)) {
-            RestUtils.serverAddress = serverAddress;
+    public static void setRestServer(String restServer) {
+        if (StrUtil.isNotEmpty(restServer)) {
+            RestUtils.restServer = restServer;
         }
     }
 
@@ -47,16 +51,129 @@ public final class RestUtils {
             synchronized (RestUtils.class) {
                 if (Objects.isNull(rest)) {
                     rest = new RestTemplate();
-                    rest.getMessageConverters().add(new FastJsonHttpMessageConverter());
-                    rest.getMessageConverters().add(new BufferedImageHttpMessageConverter());
-                    rest.getMessageConverters().add(new ByteArrayHttpMessageConverter());
+                    FastJsonHttpMessageConverter converter = new FastJsonHttpMessageConverter();
+                    List<MediaType> supportedMediaTypes = new ArrayList<>();
+                    supportedMediaTypes.add(MediaType.APPLICATION_JSON);
+                    supportedMediaTypes.add(MediaType.APPLICATION_JSON_UTF8);
+                    supportedMediaTypes.add(MediaType.APPLICATION_ATOM_XML);
+                    supportedMediaTypes.add(MediaType.APPLICATION_FORM_URLENCODED);
+                    supportedMediaTypes.add(MediaType.APPLICATION_OCTET_STREAM);
+                    supportedMediaTypes.add(MediaType.APPLICATION_PDF);
+                    supportedMediaTypes.add(MediaType.APPLICATION_RSS_XML);
+                    supportedMediaTypes.add(MediaType.APPLICATION_XHTML_XML);
+                    supportedMediaTypes.add(MediaType.APPLICATION_XML);
+                    supportedMediaTypes.add(MediaType.IMAGE_GIF);
+                    supportedMediaTypes.add(MediaType.IMAGE_JPEG);
+                    supportedMediaTypes.add(MediaType.IMAGE_PNG);
+                    supportedMediaTypes.add(MediaType.TEXT_EVENT_STREAM);
+                    supportedMediaTypes.add(MediaType.TEXT_HTML);
+                    supportedMediaTypes.add(MediaType.TEXT_MARKDOWN);
+                    supportedMediaTypes.add(MediaType.TEXT_PLAIN);
+                    supportedMediaTypes.add(MediaType.TEXT_XML);
+                    converter.setSupportedMediaTypes(supportedMediaTypes);
+                    rest.getMessageConverters().add(converter);
                 }
             }
         }
     }
 
     /**
-     * 请求 {@link ResponseEntity}
+     * post {@link ResponseEntity}
+     *
+     * @param url 请求路径
+     * @param params 参数
+     * @param body 请求正文
+     *
+     * @return {@link ResponseEntity}
+     *
+     * @since 1.1.2
+     */
+    public static ResponseEntity<Object> postForEntity(String url, Object body, Object... params) {
+        return postForEntity(url, body, Object.class, params);
+    }
+
+    /**
+     * post {@link ResponseEntity}
+     *
+     * @param url 请求路径
+     * @param responseType 响应类型
+     * @param params 参数
+     * @param body 请求正文
+     *
+     * @return {@link ResponseEntity}
+     *
+     * @since 1.1.2
+     */
+    public static <T> ResponseEntity<T> postForEntity(String url, Object body, Class<T> responseType,
+                                                      Object... params) {
+        checkRestTemplate();
+        return rest.postForEntity(formatUrl(url, params), body, responseType);
+    }
+
+    /**
+     * post {@link Object}
+     *
+     * @param url 请求路径
+     * @param params 参数
+     * @param body 请求正文
+     *
+     * @return {@link Object}
+     *
+     * @since 1.1.2
+     */
+    public static Object postForObject(String url, Object body, Object... params) {
+        return postForObject(url, body, Object.class, params);
+    }
+
+    /**
+     * post {@link T}
+     *
+     * @param url 请求路径
+     * @param responseType 响应类型
+     * @param params 参数
+     * @param body 请求正文
+     *
+     * @return {@link T}
+     *
+     * @since 1.1.2
+     */
+    public static <T> T postForObject(String url, Object body, Class<T> responseType, Object... params) {
+        checkRestTemplate();
+        return rest.postForObject(formatUrl(url, params), body, responseType);
+    }
+
+    /**
+     * post {@link JSONObject}
+     *
+     * @param url 请求路径
+     * @param params 参数
+     * @param body 请求正文
+     *
+     * @return {@link JSONObject}
+     *
+     * @since 1.1.2
+     */
+    public static JSONObject postForJsonObject(String url, Object body, Object... params) {
+        return JSONObject.parseObject(postForObject(url, body, params).toString());
+    }
+
+    /**
+     * post {@link JSONArray}
+     *
+     * @param url 请求路径
+     * @param params 参数
+     * @param body 请求正文
+     *
+     * @return {@link JSONArray}
+     *
+     * @since 1.1.2
+     */
+    public static JSONArray postForJsonArray(String url, Object body, Object... params) {
+        return JSONArray.parseArray(postForObject(url, body, params).toString());
+    }
+
+    /**
+     * get {@link ResponseEntity}
      *
      * @param url 请求路径
      * @param params 参数
@@ -70,7 +187,7 @@ public final class RestUtils {
     }
 
     /**
-     * 请求 {@link ResponseEntity}
+     * get {@link ResponseEntity}
      *
      * @param url 请求路径
      * @param responseType 响应类型
@@ -86,7 +203,7 @@ public final class RestUtils {
     }
 
     /**
-     * 请求 {@link Object}
+     * get {@link Object}
      *
      * @param url 请求路径
      * @param params 参数
@@ -100,7 +217,7 @@ public final class RestUtils {
     }
 
     /**
-     * 请求 {@link T}
+     * get {@link T}
      *
      * @param url 请求路径
      * @param responseType 响应类型
@@ -116,7 +233,7 @@ public final class RestUtils {
     }
 
     /**
-     * 请求 {@link JSONObject}
+     * get {@link JSONObject}
      *
      * @param url 请求路径
      * @param params 参数
@@ -130,7 +247,7 @@ public final class RestUtils {
     }
 
     /**
-     * 请求 {@link JSONArray}
+     * get {@link JSONArray}
      *
      * @param url 请求路径
      * @param params 参数
@@ -143,11 +260,61 @@ public final class RestUtils {
         return JSONArray.parseArray(getForObject(url, params).toString());
     }
 
-    private static String formatUrl(String url, Object... params) {
-        if (!url.startsWith(HTTP_PROTOCOL_HEAD) && StrUtil.isNotEmpty(serverAddress)) {
-            url = serverAddress + (serverAddress.endsWith("/") || url.startsWith("/") ? "" : "/") + url;
+    /**
+     * 转发 {@link HttpServletRequest} 参数
+     *
+     * @param url 请求路径
+     * @param request {@link HttpServletRequest}
+     * @param ignore 忽略参数
+     *
+     * @return 整合后的请求路径
+     *
+     * @since 1.1.2
+     */
+    public static String forwardRequest(String url, HttpServletRequest request, String... ignore) {
+        Set<String> ignoreSet = new HashSet<>();
+        if (ArrayUtil.isNotEmpty(ignore)) {
+            ignoreSet.addAll(Arrays.asList(ignore));
         }
-        return StrUtil.format(String.format(url, params), params);
+        return forwardRequest(url, request, ignoreSet);
+    }
+
+    /**
+     * 转发 {@link HttpServletRequest} 参数
+     *
+     * @param url 请求路径
+     * @param request {@link HttpServletRequest}
+     * @param ignore 忽略参数
+     *
+     * @return 整合后的请求路径
+     *
+     * @since 1.1.2
+     */
+    public static String forwardRequest(String url, HttpServletRequest request, Set<String> ignore) {
+        StringBuilder builder = new StringBuilder().append(url);
+        String seq = url.contains("?") ? "&" : "?";
+        Set<String> paramKey = request.getParameterMap().keySet();
+        for (String key : paramKey) {
+            if (!ignore.contains(key)) {
+                builder.append(seq).append(key).append("=").append(request.getParameter(key));
+                seq = "&";
+            }
+        }
+        return builder.toString();
+    }
+
+    private static String formatUrl(String url, Object... params) {
+        if (!url.startsWith(HTTP_PROTOCOL_HEAD) && StrUtil.isNotEmpty(restServer)) {
+            url = restServer + (restServer.endsWith("/") || url.startsWith("/") ? "" : "/") + url;
+        }
+        if (ArrayUtil.isNotEmpty(params)) {
+            url = StrUtil.format(String.format(url, params), params);
+        }
+        if (BootConfig.isDebug()) {
+            String date = DateUtil.format(new Date(), StringConsts.DateFormat.DATE_TIME_MILLIS);
+            Console.log(date + " RestUtils - request url: " + url);
+        }
+        return url;
     }
 
     /**

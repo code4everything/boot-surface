@@ -12,42 +12,59 @@ public class BootConfigProperties {
 
     /**
      * 最大文件上传大小
+     *
+     * @since 1.1.0
      */
     private Long maxUploadFileSize;
 
     /**
      * 是否开启调试模式
+     *
+     * @since 1.1.0
      */
     private Boolean debug;
 
     /**
      * 是否给响应字段加密
+     *
+     * @since 1.1.0
      */
     private Boolean sealed;
 
     /**
      * 正确响应码
+     *
+     * @since 1.1.0
      */
     private Integer okCode;
 
     /**
      * 请求频率
+     *
+     * @since 1.1.0
      */
     private Integer frequency;
 
     /**
      * 是否统计访问数据
+     *
+     * @since 1.1.0
      */
     private Boolean visitLog;
 
-    private String restServerAddr;
+    /**
+     * Rest Template 默认地址
+     *
+     * @since 1.1.2
+     */
+    private String restServer;
 
-    public String getRestServerAddr() {
-        return restServerAddr;
+    public String getRestServer() {
+        return restServer;
     }
 
-    public void setRestServerAddr(String restServerAddr) {
-        this.restServerAddr = restServerAddr;
+    public void setRestServer(String restServer) {
+        this.restServer = restServer;
     }
 
     public Boolean getVisitLog() {
