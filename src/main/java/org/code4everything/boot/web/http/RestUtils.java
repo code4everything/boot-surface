@@ -9,6 +9,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import org.code4everything.boot.base.constant.StringConsts;
 import org.code4everything.boot.config.BootConfig;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -247,17 +249,113 @@ public final class RestUtils {
     }
 
     /**
+     * patch {@link Object}
+     *
+     * @param url 请求路径
+     * @param params 参数
+     * @param body 请求正文
+     *
+     * @return {@link Object}
+     *
+     * @since 1.1.2
+     */
+    public static Object patchForObject(String url, Object body, Object... params) {
+        return patchForObject(url, body, Object.class, params);
+    }
+
+    /**
+     * patch {@link T}
+     *
+     * @param url 请求路径
+     * @param responseType 响应类型
+     * @param params 参数
+     * @param body 请求正文
+     *
+     * @return {@link T}
+     *
+     * @since 1.1.2
+     */
+    public static <T> T patchForObject(String url, Object body, Class<T> responseType, Object... params) {
+        checkRestTemplate();
+        return rest.patchForObject(formatUrl(url, params), body, responseType);
+    }
+
+    /**
+     * get {@link JSONObject}
+     *
+     * @param url 请求路径
+     * @param params 参数
+     * @param body 请求正文
+     *
+     * @return {@link JSONObject}
+     *
+     * @since 1.1.2
+     */
+    public static JSONObject patchForJsonObject(String url, Object body, Object... params) {
+        return JSONObject.parseObject(patchForObject(url, body, params).toString());
+    }
+
+    /**
      * get {@link JSONArray}
      *
      * @param url 请求路径
      * @param params 参数
+     * @param body 请求正文
      *
      * @return {@link JSONArray}
      *
      * @since 1.1.2
      */
-    public static JSONArray getForJsonArray(String url, Object... params) {
-        return JSONArray.parseArray(getForObject(url, params).toString());
+    public static JSONArray patchForJsonArray(String url, Object body, Object... params) {
+        return JSONArray.parseArray(patchForObject(url, body, params).toString());
+    }
+
+    /**
+     * delete
+     *
+     * @param url 请求路径
+     * @param params 参数
+     *
+     * @since 1.1.2
+     */
+    public static void delete(String url, Object... params) {
+        rest.delete(formatUrl(url, params));
+    }
+
+    /**
+     * put
+     *
+     * @param url 请求路径
+     * @param params 参数
+     *
+     * @since 1.1.2
+     */
+    public static void put(String url, Object body, Object... params) {
+        rest.put(formatUrl(url, params), body);
+    }
+
+    /**
+     * options
+     *
+     * @param url 请求路径
+     * @param params 参数
+     *
+     * @since 1.1.2
+     */
+    public static Set<HttpMethod> options(String url, Object... params) {
+        return rest.optionsForAllow(formatUrl(url, params));
+    }
+
+    /**
+     * head
+     *
+     * @param url 请求路径
+     * @param params 参数
+     *
+     * @since 1.1.2
+     */
+    public static HttpHeaders head(String url, Object... params) {
+        return rest.headForHeaders(formatUrl(url, params));
     }
 
     /**
