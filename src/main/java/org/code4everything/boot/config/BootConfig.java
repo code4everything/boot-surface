@@ -13,6 +13,7 @@ import org.code4everything.boot.base.encoder.FieldEncoder;
 import org.code4everything.boot.log.AopLogUtils;
 import org.code4everything.boot.message.MailUtils;
 import org.code4everything.boot.module.redis.RedisTemplateUtils;
+import org.code4everything.boot.web.http.RestUtils;
 import org.code4everything.boot.web.mvc.DefaultWebInterceptor;
 import org.code4everything.boot.web.mvc.FilterPath;
 import org.code4everything.boot.web.mvc.Response;
@@ -67,6 +68,10 @@ public class BootConfig {
     private static FieldEncoder fieldEncoder;
 
     private BootConfig() {}
+
+    public static void setServerAddress(String serverAddress) {
+        RestUtils.setServerAddress(serverAddress);
+    }
 
     /**
      * 设置邮件发送器
@@ -153,6 +158,7 @@ public class BootConfig {
         setDebug(properties.getDebug());
         setMaxUploadFileSize(properties.getMaxUploadFileSize());
         setVisitLog(properties.getVisitLog());
+        setServerAddress(properties.getRestServerAddr());
         LOGGER.info("boot config is changed >>> {}", properties);
     }
 

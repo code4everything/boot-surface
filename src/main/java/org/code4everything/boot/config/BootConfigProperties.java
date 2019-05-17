@@ -40,6 +40,16 @@ public class BootConfigProperties {
      */
     private Boolean visitLog;
 
+    private String restServerAddr;
+
+    public String getRestServerAddr() {
+        return restServerAddr;
+    }
+
+    public void setRestServerAddr(String restServerAddr) {
+        this.restServerAddr = restServerAddr;
+    }
+
     public Boolean getVisitLog() {
         return visitLog;
     }
