@@ -88,6 +88,19 @@ public class ExceptionFactory {
     /**
      * 获取异常
      *
+     * @param status 响应状态
+     *
+     * @return 异常
+     *
+     * @since 1.1.2
+     */
+    public static HttpException exception(HttpStatus status) {
+        return exception(status, status.getReasonPhrase(), EXCEPTION_LOADER);
+    }
+
+    /**
+     * 获取异常
+     *
      * @param msg 消息
      * @param status 响应状态
      *

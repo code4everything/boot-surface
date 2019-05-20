@@ -100,7 +100,7 @@ public final class RestUtils {
      */
     public static void requireOk(ResponseEntity response) {
         if (Objects.isNull(response)) {
-            throw ExceptionFactory.exception(HttpStatus.REQUEST_TIMEOUT, "request timeout");
+            throw ExceptionFactory.exception(HttpStatus.REQUEST_TIMEOUT);
         }
         HttpStatus status = response.getStatusCode();
         if (status.is2xxSuccessful()) {
