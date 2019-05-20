@@ -3,6 +3,8 @@ package org.code4everything.boot.base.bean;
 import java.io.Serializable;
 
 /**
+ * 表实体基类
+ *
  * @author pantao
  * @since 2019/5/10
  **/

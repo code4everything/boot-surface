@@ -189,7 +189,7 @@ public final class VerifyCodeUtils {
                 // 发送验证码
                 MailUtils.send(email, subject, html);
                 // 放入缓存
-                put2cache(email, code);
+                put2Cache(email, code);
                 // 成功回调
                 if (ObjectUtil.isNotNull(callback)) {
                     callback.handleSuccess(email, subject, html);
@@ -236,7 +236,7 @@ public final class VerifyCodeUtils {
     public static String sendByMail(String email, String subject, String template, int codeLen) throws MessagingException {
         final String code = generateCode(email, codeLen);
         MailUtils.send(email, subject, StrUtil.format(String.format(template, code), code));
-        put2cache(email, code);
+        put2Cache(email, code);
         return code;
     }
 
@@ -271,7 +271,7 @@ public final class VerifyCodeUtils {
         final String code = generateCode(address, codeLen);
         boolean success = sender.sendMessage(address, StrUtil.format(String.format(template, code), code));
         if (success) {
-            put2cache(address, code);
+            put2Cache(address, code);
             return code;
         }
         return "";
@@ -305,7 +305,7 @@ public final class VerifyCodeUtils {
      *
      * @since 1.1.0
      */
-    private static void put2cache(String key, String code) {
+    private static void put2Cache(String key, String code) {
         codeCache.put(key, code);
         frequentlyCache.put(key, code);
     }
