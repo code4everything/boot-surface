@@ -3,16 +3,15 @@ package org.code4everything.boot.web.http;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import org.code4everything.boot.base.constant.StringConsts;
 import org.code4everything.boot.config.BootConfig;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.code4everything.boot.web.mvc.exception.ExceptionFactory;
+import org.springframework.http.*;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
@@ -77,6 +76,37 @@ public final class RestUtils {
                 }
             }
         }
+    }
+
+    /**
+     * 是否响应成功
+     *
+     * @param response {@link ResponseEntity}
+     *
+     * @return 是否响应成功
+     *
+     * @since 1.1.2
+     */
+    public static boolean isOk(ResponseEntity response) {
+        return ObjectUtil.isNotNull(response) && response.getStatusCode().is2xxSuccessful();
+    }
+
+    /**
+     * 要求请求成功
+     *
+     * @param response {@link ResponseEntity}
+     *
+     * @since 1.1.2
+     */
+    public static void requireOk(ResponseEntity response) {
+        if (Objects.isNull(response)) {
+            throw ExceptionFactory.exception(HttpStatus.REQUEST_TIMEOUT, "request timeout");
+        }
+        HttpStatus status = response.getStatusCode();
+        if (status.is2xxSuccessful()) {
+            return;
+        }
+        throw ExceptionFactory.exception(status.value(), status.getReasonPhrase());
     }
 
     /**

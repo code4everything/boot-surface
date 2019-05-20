@@ -13,32 +13,41 @@ import org.springframework.http.HttpStatus;
 public class HttpException extends RuntimeException implements ExceptionBiscuit, BaseBean {
 
     /**
-     * 消息
+     * 默认消息
      *
      * @since 1.0.4
      */
     private static final String DEFAULT_MSG = MessageConsts.UNKNOWN_ERROR_ZH;
 
     /**
-     * 错误码
+     * 默认状态码
      *
-     * @since 1.0.4
+     * @since 1.1.2
      */
-    private int code = HttpStatus.INTERNAL_SERVER_ERROR.value();
+    private static final HttpStatus DEFAULT_STATUS = HttpStatus.INTERNAL_SERVER_ERROR;
 
     /**
      * HTTP状态
      *
      * @since 1.0.4
      */
-    private HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+    private final HttpStatus status;
+
+    /**
+     * 错误码
+     *
+     * @since 1.0.4
+     */
+    private final int code;
 
     /**
      * 无参构造函数
      *
      * @since 1.0.4
      */
-    public HttpException() {}
+    public HttpException() {
+        this(DEFAULT_MSG);
+    }
 
     /**
      * 设置消息
@@ -48,19 +57,30 @@ public class HttpException extends RuntimeException implements ExceptionBiscuit,
      * @since 1.0.4
      */
     public HttpException(String msg) {
-        super(msg);
+        this(DEFAULT_STATUS, msg);
     }
 
     /**
-     * 设置消息和异常
+     * 设置HTTP状态
      *
-     * @param msg 消息
-     * @param throwable 异常
+     * @param status HTTP状态
      *
-     * @since 1.0.4
+     * @since 1.1.2
      */
-    public HttpException(String msg, Throwable throwable) {
-        super(msg, throwable);
+    public HttpException(HttpStatus status) {
+        this(status, DEFAULT_MSG);
+    }
+
+    /**
+     * 设置HTTP状态和消息
+     *
+     * @param status HTTP状态
+     * @param msg 消息
+     *
+     * @since 1.1.2
+     */
+    public HttpException(HttpStatus status, String msg) {
+        this(status.value(), status, msg);
     }
 
     /**
@@ -72,22 +92,7 @@ public class HttpException extends RuntimeException implements ExceptionBiscuit,
      * @since 1.0.4
      */
     public HttpException(int code, String msg) {
-        super(msg);
-        this.code = code;
-    }
-
-    /**
-     * 设置错误码，消息和异常
-     *
-     * @param code 错误码
-     * @param msg 消息
-     * @param throwable 异常
-     *
-     * @since 1.0.4
-     */
-    public HttpException(int code, String msg, Throwable throwable) {
-        super(msg, throwable);
-        this.code = code;
+        this(code, DEFAULT_STATUS, msg);
     }
 
     /**
@@ -99,23 +104,7 @@ public class HttpException extends RuntimeException implements ExceptionBiscuit,
      * @since 1.0.4
      */
     public HttpException(int code, HttpStatus status) {
-        this.code = code;
-        this.status = status;
-    }
-
-    /**
-     * 设置错误码，HTTP状态和异常
-     *
-     * @param code 错误码
-     * @param status HTTP状态
-     * @param throwable 异常
-     *
-     * @since 1.0.4
-     */
-    public HttpException(int code, HttpStatus status, Throwable throwable) {
-        super(throwable);
-        this.code = code;
-        this.status = status;
+        this(code, status, DEFAULT_MSG);
     }
 
     /**
@@ -134,22 +123,6 @@ public class HttpException extends RuntimeException implements ExceptionBiscuit,
     }
 
     /**
-     * 设置错误码，HTTP状态，消息和异常
-     *
-     * @param code 错误码
-     * @param status HTTP状态
-     * @param msg 消息
-     * @param throwable 异常
-     *
-     * @since 1.0.4
-     */
-    public HttpException(int code, HttpStatus status, String msg, Throwable throwable) {
-        super(msg, throwable);
-        this.code = code;
-        this.status = status;
-    }
-
-    /**
      * 设置错误码，消息
      *
      * @param code 错误码
@@ -159,28 +132,7 @@ public class HttpException extends RuntimeException implements ExceptionBiscuit,
      * @since 1.0.8
      */
     public HttpException(int code, String msg, boolean responseOk) {
-        this(code, msg);
-        if (responseOk) {
-            this.status = HttpStatus.OK;
-        }
-    }
-
-    /**
-     * 设置错误码，消息和异常
-     *
-     * @param code 错误码
-     * @param msg 消息
-     * @param responseOk 适应响应成功
-     * @param throwable 异常
-     *
-     * @since 1.0.8
-     */
-    public HttpException(int code, String msg, boolean responseOk, Throwable throwable) {
-        super(msg, throwable);
-        this.code = code;
-        if (responseOk) {
-            this.status = HttpStatus.OK;
-        }
+        this(code, responseOk ? HttpStatus.OK : DEFAULT_STATUS, msg);
     }
 
     /**

@@ -2,6 +2,7 @@ package org.code4everything.boot.web.http;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.digest.DigestUtil;
@@ -11,6 +12,7 @@ import org.code4everything.boot.config.BootConfig;
 import org.code4everything.boot.service.BootFileService;
 import org.code4everything.boot.web.mvc.AssertUtils;
 import org.code4everything.boot.web.mvc.Response;
+import org.code4everything.boot.web.mvc.exception.ExceptionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.FileSystemResource;
@@ -42,6 +44,40 @@ public final class HttpUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(HttpUtils.class);
 
     private HttpUtils() {}
+
+    /**
+     * 要求指定的参数不能为空指针
+     *
+     * @param request {@link HttpServletRequest}
+     * @param key 参数
+     *
+     * @return 参数值
+     *
+     * @since 1.1.2
+     */
+    public static String requireParameter(HttpServletRequest request, String key) {
+        String value = request.getParameter(key);
+        if (ObjectUtil.isNotNull(value)) {
+            return value;
+        }
+        throw ExceptionFactory.exception(HttpStatus.BAD_REQUEST, String.format("parameter '%s' must no be empty", key));
+    }
+
+    /**
+     * 要求指定的参数不能为空指针
+     *
+     * @param request {@link HttpServletRequest}
+     * @param keys 参数集合
+     *
+     * @since 1.1.2
+     */
+    public static void requireParameters(HttpServletRequest request, String... keys) {
+        if (ArrayUtil.isNotEmpty(keys)) {
+            for (String key : keys) {
+                requireParameter(request, key);
+            }
+        }
+    }
 
     /**
      * 是否是设置的成功响应码
