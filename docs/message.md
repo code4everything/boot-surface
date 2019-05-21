@@ -29,7 +29,7 @@
 - 将邮箱配置传递到`BootSurface`库
 
     ``` java
-    @EnableSurfaceMailSender
+    @EnableSurfaceMail
     ```
     
 - 到这里，配置就结束了，下面测试一下如何发送一封简单的邮件

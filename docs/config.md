@@ -13,13 +13,14 @@
 在 `application.properties` 或 `application.yml` 中配置
 
 ``` properties
+# 只需要关心自己所需要的配置属性即可
 boot.surface.max-upload-file-size=1024
 boot.surface.debug=false
 boot.surface.sealed=false
 boot.surface.ok-code=0
 boot.surface.frequency=1000
+boot.surface.rest-server=http:127.0.0.1
 ```
-
 
 ### 设置日志缓存
 

@@ -83,7 +83,7 @@ public class LogServiceImpl implements BootLogService<Log> {
 }
 ```
 
-#### 创建切面类或直接在 `Spring Boot` 应用的主类上使用注解 `@EnableSurfaceAutoLog`
+#### 创建切面类或直接在 `Spring Boot` 应用的主类上使用注解 `@EnableSurfaceLog`
 
 ``` java
 @Aspect
