@@ -144,7 +144,7 @@ public class ExceptionFactory {
     }
 
     /**
-     * 获取异常
+     * 获取异常，通常使用一个实现 {@link ExceptionBiscuit} 接口的枚举类来定义系统异常情况
      *
      * @param biscuit {@link ExceptionBiscuit}
      *
@@ -157,7 +157,7 @@ public class ExceptionFactory {
     }
 
     /**
-     * 获取异常
+     * 获取异常，通常使用一个实现 {@link ExceptionBiscuit} 接口的枚举类来定义系统异常情况
      *
      * @param biscuit {@link ExceptionBiscuit}
      * @param loader 异常构造类

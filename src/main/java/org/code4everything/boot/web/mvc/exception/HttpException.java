@@ -108,6 +108,17 @@ public class HttpException extends RuntimeException implements ExceptionBiscuit,
     }
 
     /**
+     * 设置错误码，HTTP状态和消息，通常使用一个实现 {@link ExceptionBiscuit} 接口的枚举类来定义系统异常情况
+     *
+     * @param biscuit {@link ExceptionBiscuit}
+     *
+     * @since 1.1.2
+     */
+    public HttpException(ExceptionBiscuit biscuit) {
+        this(biscuit.getCode(), biscuit.getStatus(), biscuit.getMsg());
+    }
+
+    /**
      * 设置错误码，HTTP状态和消息
      *
      * @param code 错误码
