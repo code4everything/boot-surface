@@ -7,6 +7,10 @@ import org.code4everything.boot.config.BootConfig;
 import org.code4everything.boot.service.BootUserService;
 import org.code4everything.boot.web.http.HttpUtils;
 import org.code4everything.boot.web.mvc.exception.ExceptionBiscuit;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -27,6 +31,11 @@ public class BaseController {
 
     private static final String DEFAULT_OK_MSG = MessageConsts.REQUEST_OK_ZH;
 
+    /**
+     * @since 1.1.2
+     */
+    private static BootUserService<?> userService;
+
     @Resource
     public HttpServletRequest request;
 
@@ -36,6 +45,119 @@ public class BaseController {
      * @since 1.0.9
      */
     protected BaseController() {}
+
+    /**
+     * 设置 {@link BootUserService}
+     *
+     * @param userService {@link BootUserService}
+     *
+     * @since 1.1.2
+     */
+    public static void setUserService(BootUserService<?> userService) {
+        BaseController.userService = userService;
+    }
+
+    /**
+     * 返回 {@link ResponseEntity} extends {@link HttpEntity}
+     *
+     * @param <T> 数据类型
+     *
+     * @return {@link ResponseEntity} extends {@link HttpEntity}
+     *
+     * @since 1.1.2
+     */
+    public <T> ResponseEntity<Response<T>> http() {
+        return http(null, null, HttpStatus.OK);
+    }
+
+    /**
+     * 返回 {@link ResponseEntity} extends {@link HttpEntity}
+     *
+     * @param status 响应状态
+     * @param <T> 数据类型
+     *
+     * @return {@link ResponseEntity} extends {@link HttpEntity}
+     *
+     * @since 1.1.2
+     */
+    public <T> ResponseEntity<Response<T>> http(HttpStatus status) {
+        return http(null, null, status);
+    }
+
+    /**
+     * 返回 {@link ResponseEntity} extends {@link HttpEntity}
+     *
+     * @param headers 响应头
+     * @param status 响应状态
+     * @param <T> 数据类型
+     *
+     * @return {@link ResponseEntity} extends {@link HttpEntity}
+     *
+     * @since 1.1.2
+     */
+    public <T> ResponseEntity<Response<T>> http(HttpHeaders headers, HttpStatus status) {
+        return http(null, headers, status);
+    }
+
+    /**
+     * 返回 {@link ResponseEntity} extends {@link HttpEntity}
+     *
+     * @param response 响应BODY
+     * @param <T> 数据类型
+     *
+     * @return {@link ResponseEntity} extends {@link HttpEntity}
+     *
+     * @since 1.1.2
+     */
+    public <T> ResponseEntity<Response<T>> http(Response<T> response) {
+        return http(response, null, HttpStatus.OK);
+    }
+
+    /**
+     * 返回 {@link ResponseEntity} extends {@link HttpEntity}
+     *
+     * @param response 响应BODY
+     * @param headers 响应头
+     * @param <T> 数据类型
+     *
+     * @return {@link ResponseEntity} extends {@link HttpEntity}
+     *
+     * @since 1.1.2
+     */
+    public <T> ResponseEntity<Response<T>> http(Response<T> response, HttpHeaders headers) {
+        return http(response, headers, HttpStatus.OK);
+    }
+
+    /**
+     * 返回 {@link ResponseEntity} extends {@link HttpEntity}
+     *
+     * @param response 响应BODY
+     * @param status 响应状态
+     * @param <T> 数据类型
+     *
+     * @return {@link ResponseEntity} extends {@link HttpEntity}
+     *
+     * @since 1.1.2
+     */
+    public <T> ResponseEntity<Response<T>> http(Response<T> response, HttpStatus status) {
+        return http(response, null, status);
+    }
+
+    /**
+     * 返回 {@link ResponseEntity} extends {@link HttpEntity}
+     *
+     * @param response 响应BODY
+     * @param headers 响应头
+     * @param status 响应状态
+     * @param <T> 数据类型
+     *
+     * @return {@link ResponseEntity} extends {@link HttpEntity}
+     *
+     * @since 1.1.2
+     */
+    public <T> ResponseEntity<Response<T>> http(Response<T> response, HttpHeaders headers, HttpStatus status) {
+        return new ResponseEntity<>(response, headers, status);
+    }
 
     /**
      * 获取Token
@@ -73,6 +195,35 @@ public class BaseController {
      */
     public <T> T getUser(BootUserService<T> service) {
         return service.getUserByToken(Strings.nullToEmpty(getToken()));
+    }
+
+    /**
+     * 获取用户
+     *
+     * @param <T> 用户
+     *
+     * @return 用户
+     *
+     * @since 1.0.4
+     */
+    @SuppressWarnings("unchecked")
+    public <T> T getUser() {
+        Objects.requireNonNull(userService, "please register org.code4everything.boot.service.BootUserService");
+        return (T) userService.getUserByToken(Strings.nullToEmpty(getToken()));
+    }
+
+    /**
+     * 获取用户
+     *
+     * @param <T> 用户
+     *
+     * @return 用户
+     *
+     * @since 1.0.4
+     */
+    public <T> T requireUser() {
+        requireToken();
+        return AssertUtils.assertUserLoggedIn(getUser());
     }
 
     /**
