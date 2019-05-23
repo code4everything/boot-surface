@@ -46,6 +46,51 @@ public final class HttpUtils {
     private HttpUtils() {}
 
     /**
+     * 请求是否包括某个参数
+     *
+     * @param request {@link HttpServletRequest}
+     * @param keys 参数数组
+     *
+     * @return 是否包含某个参数
+     *
+     * @since 1.1.2
+     */
+    public static boolean hasParamterAny(HttpServletRequest request, String... keys) {
+        if (ArrayUtil.isEmpty(keys)) {
+            return true;
+        }
+        Map map = request.getParameterMap();
+        for (String key : keys) {
+            if (map.containsKey(key)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 请求是否包含全部参数
+     *
+     * @param request {@link HttpServletRequest}
+     * @param keys 参数数组
+     *
+     * @return 是否包含全部参数
+     *
+     * @since 1.1.2
+     */
+    public static boolean hasParamters(HttpServletRequest request, String... keys) {
+        if (ArrayUtil.isNotEmpty(keys)) {
+            Map map = request.getParameterMap();
+            for (String key : keys) {
+                if (!map.containsKey(key)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
      * 要求指定的参数不能为空指针
      *
      * @param request {@link HttpServletRequest}
