@@ -7,7 +7,9 @@ import cn.hutool.core.io.watch.WatchMonitor;
 import cn.hutool.core.io.watch.Watcher;
 import cn.hutool.core.io.watch.watchers.DelayWatcher;
 import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
+import org.code4everything.boot.base.constant.IntegerConsts;
 import org.code4everything.boot.base.constant.StringConsts;
 import org.code4everything.boot.config.BootConfig;
 import org.code4everything.boot.config.BootConfigProperties;
@@ -30,7 +32,47 @@ public final class FileUtils {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FileUtils.class);
 
+    private static final String[] SIZE = {"B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"};
+
+    private static final int KB = 1000;
+
     private FileUtils() {}
+
+    /**
+     * 格式化文件大小
+     *
+     * @param size 大小
+     * @param scale 保留小数位数
+     *
+     * @return 文件大小
+     *
+     * @since 1.1.2
+     */
+    public static String formatSize(long size, int scale) {
+        if (size < 0) {
+            throw new IllegalArgumentException("size must not be negative");
+        }
+        if (scale < 0) {
+            scale = 0;
+        }
+        if (scale > IntegerConsts.THREE) {
+            scale = 3;
+        }
+        int idx = 0;
+        long last = 0;
+        while (size >= KB) {
+            idx++;
+            last = size;
+            size /= KB;
+        }
+        if (scale == 0) {
+            last = 0;
+        } else {
+            last %= KB;
+            last = scale == 3 ? last : (scale == 1 ? last / 100 : last / 10);
+        }
+        return size + (last > 0 ? "." + StrUtil.padPre(String.valueOf(last), scale, "0") : "") + " " + SIZE[idx];
+    }
 
     /**
      * 监听文件变化，并自动注入Bean类

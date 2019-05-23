@@ -674,6 +674,7 @@ public final class HttpUtils {
         }
         // 格式化存储路径
         DustFile dustFile = new DustFile();
+        FileUtil.mkdir(storage);
         dustFile.setStoragePath(storage + (storage.endsWith(File.separator) ? "" : File.separator));
         // 设置文件信息
         String ofn = file.getOriginalFilename();
@@ -846,6 +847,7 @@ public final class HttpUtils {
         }
         // 格式化存储路径
         DustFile dustFile = new DustFile();
+        FileUtil.mkdir(storage);
         dustFile.setStoragePath(storage + (storage.endsWith(File.separator) ? "" : File.separator));
         // 设置文件信息
         if (md5) {

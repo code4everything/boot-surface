@@ -2,7 +2,9 @@ package org.code4everything.boot.web.http;
 
 import org.code4everything.boot.base.bean.BaseBean;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * 文件信息
@@ -55,6 +57,28 @@ public class DustFile implements BaseBean {
     private String storagePath;
 
     DustFile() {}
+
+    /**
+     * 添加参数
+     *
+     * @param key 键
+     * @param value 值
+     *
+     * @since 1.1.2
+     */
+    public void addParam(String key, Object value) {
+        if (Objects.isNull(params)) {
+            params = new HashMap<>(8);
+        }
+        params.put(key, value);
+    }
+
+    public Object getParam(String key) {
+        if (Objects.isNull(params)) {
+            return null;
+        }
+        return params.get(key);
+    }
 
     /**
      * 获取文件保存路径
