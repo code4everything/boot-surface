@@ -131,6 +131,7 @@ public final class RestUtils {
      * @param responseType 响应类型
      * @param params 参数
      * @param body 请求正文
+     * @param <T> 响应类型
      *
      * @return {@link ResponseEntity}
      *
@@ -164,6 +165,7 @@ public final class RestUtils {
      * @param responseType 响应类型
      * @param params 参数
      * @param body 请求正文
+     * @param <T> 响应类型
      *
      * @return {@link T}
      *
@@ -224,6 +226,7 @@ public final class RestUtils {
      * @param url 请求路径
      * @param responseType 响应类型
      * @param params 参数
+     * @param <T> 响应类型
      *
      * @return {@link ResponseEntity}
      *
@@ -254,6 +257,7 @@ public final class RestUtils {
      * @param url 请求路径
      * @param responseType 响应类型
      * @param params 参数
+     * @param <T> 响应类型
      *
      * @return {@link T}
      *
@@ -300,6 +304,7 @@ public final class RestUtils {
      * @param responseType 响应类型
      * @param params 参数
      * @param body 请求正文
+     * @param <T> 响应类型
      *
      * @return {@link T}
      *
@@ -356,6 +361,7 @@ public final class RestUtils {
      * put
      *
      * @param url 请求路径
+     * @param body 请求正文
      * @param params 参数
      *
      * @since 1.1.2
@@ -370,6 +376,8 @@ public final class RestUtils {
      * @param url 请求路径
      * @param params 参数
      *
+     * @return 支持的请求方法
+     *
      * @since 1.1.2
      */
     public static Set<HttpMethod> options(String url, Object... params) {
@@ -381,6 +389,8 @@ public final class RestUtils {
      *
      * @param url 请求路径
      * @param params 参数
+     *
+     * @return 请求头
      *
      * @since 1.1.2
      */

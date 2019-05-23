@@ -114,6 +114,7 @@ public final class MapUtils {
      * @param map 集合
      * @param regex 正则匹配
      * @param replacement 替换内容
+     * @param <T> 键类型
      *
      * @return 替换后的集合
      *
@@ -134,6 +135,7 @@ public final class MapUtils {
      * @param map 集合
      * @param target 目标内容
      * @param replacement 替换内容
+     * @param <T> 键类型
      *
      * @return 替换后的集合
      *
@@ -154,6 +156,7 @@ public final class MapUtils {
      * @param map 集合
      * @param regex 正则匹配
      * @param replacement 替换内容
+     * @param <T> 值类型
      *
      * @return 替换后的集合
      *
@@ -174,6 +177,7 @@ public final class MapUtils {
      * @param map 集合
      * @param target 目标内容
      * @param replacement 替换内容
+     * @param <T> 值类型
      *
      * @return 替换后的集合
      *

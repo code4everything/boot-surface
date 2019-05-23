@@ -73,11 +73,31 @@ public class DustFile implements BaseBean {
         params.put(key, value);
     }
 
+    /**
+     * 获取参数
+     *
+     * @param key 键
+     *
+     * @return 参数值
+     *
+     * @since 1.1.2
+     */
     public Object getParam(String key) {
-        if (Objects.isNull(params)) {
-            return null;
-        }
-        return params.get(key);
+        return Objects.isNull(params) ? null : params.get(key);
+    }
+
+    /**
+     * 获取参数
+     *
+     * @param key 键
+     *
+     * @return 参数值
+     *
+     * @since 1.1.2
+     */
+    public String getParamString(String key) {
+        Object value = getParam(key);
+        return Objects.isNull(value) ? null : String.valueOf(value);
     }
 
     /**

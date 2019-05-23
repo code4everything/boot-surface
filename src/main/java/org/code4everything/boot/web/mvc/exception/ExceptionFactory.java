@@ -161,6 +161,7 @@ public class ExceptionFactory {
      *
      * @param biscuit {@link ExceptionBiscuit}
      * @param loader 异常构造类
+     * @param <T> 异常类型
      *
      * @return 异常
      *

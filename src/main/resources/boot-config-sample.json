@@ -1,6 +1,9 @@
 {
-  "maxUploadFileSize": 1048576,
-  "debug": false,
-  "sealed": false,
-  "okCode": 0
+    "maxUploadFileSize": 1048576,
+    "debug": false,
+    "sealed": false,
+    "okCode": 0,
+    "frequency": 1000,
+    "visitLog": false,
+    "restServer": "http://127.0.0.1:8080"
 }
