@@ -5,5 +5,17 @@
     "okCode": 0,
     "frequency": 1000,
     "visitLog": false,
-    "restServer": "http://127.0.0.1:8080"
+    "restServer": "http://127.0.0.1:8080",
+    "redis": {
+        "host": "127.0.0.1",
+        "port": 6379,
+        "db": 1
+    },
+    "mail": {
+        "host": "smtp.qq.com",
+        "port": 25,
+        "protocol": "smtp",
+        "username": "example@qq.com",
+        "password": "123456"
+    }
 }

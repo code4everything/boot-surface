@@ -20,7 +20,22 @@ boot.surface.sealed=false
 boot.surface.ok-code=0
 boot.surface.frequency=1000
 boot.surface.rest-server=http:127.0.0.1
+
+# 配置邮箱
+boot.surface.mail.host=smtp.qq.com
+boot.surface.mail.port=25
+boot.surface.mail.protocol=smtp
+boot.surface.mail.username=example@qq.com
+boot.surface.mail.password=123456
+
+# 配置缓存
+boot.surface.redis.host=127.0.0.1
+boot.surface.redis.port=6379
+boot.surface.redis.db=1
 ```
+
+> 当使用BootSurface属性配置 `Mail` 和 `Redis` 时，无需使用注解 `@EnableSurfaceRedis` `@EnableSurfaceMail` 手动开启相关功能，
+否则可能导致配置无效
 
 ### 设置日志缓存
 

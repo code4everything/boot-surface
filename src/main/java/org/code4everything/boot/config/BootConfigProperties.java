@@ -59,6 +59,36 @@ public class BootConfigProperties {
      */
     private String restServer;
 
+    /**
+     * Redis 配置
+     *
+     * @since 1.1.3
+     */
+    private RedisConfigProperties redis;
+
+    private MailConfigProperties mail;
+
+    public MailConfigProperties getMail() {
+        return mail;
+    }
+
+    public void setMail(MailConfigProperties mail) {
+        this.mail = mail;
+    }
+
+    @Override
+    public String toString() {
+        return "BootConfigProperties{" + "maxUploadFileSize=" + maxUploadFileSize + ", debug=" + debug + ", sealed=" + sealed + ", okCode=" + okCode + ", frequency=" + frequency + ", visitLog=" + visitLog + ", restServer='" + restServer + '\'' + ", redis=" + redis + ", mail=" + mail + '}';
+    }
+
+    public RedisConfigProperties getRedis() {
+        return redis;
+    }
+
+    public void setRedis(RedisConfigProperties redis) {
+        this.redis = redis;
+    }
+
     public String getRestServer() {
         return restServer;
     }
@@ -115,8 +145,140 @@ public class BootConfigProperties {
         this.frequency = frequency;
     }
 
+}
+
+class MailConfigProperties {
+
+    /**
+     * 主机
+     *
+     * @since 1.1.3
+     */
+    private String host;
+
+    /**
+     * 端口
+     *
+     * @since 1.1.3
+     */
+    private Integer port;
+
+    /**
+     * 协议
+     *
+     * @since 1.1.3
+     */
+    private String protocol;
+
+    /**
+     * 用户名（发件箱）
+     *
+     * @since 1.1.3
+     */
+    private String username;
+
+    /**
+     * 密码或授权密钥
+     *
+     * @since 1.1.3
+     */
+    private String password;
+
+    public String getHost() {
+        return host;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    public Integer getPort() {
+        return port;
+    }
+
+    public void setPort(Integer port) {
+        this.port = port;
+    }
+
+    public String getProtocol() {
+        return protocol;
+    }
+
+    public void setProtocol(String protocol) {
+        this.protocol = protocol;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     @Override
     public String toString() {
-        return "BootConfigProperties{" + "maxUploadFileSize=" + maxUploadFileSize + ", debug=" + debug + ", sealed=" + sealed + ", okCode=" + okCode + ", frequency=" + frequency + ", visitLog=" + visitLog + ", restServer='" + restServer + '\'' + '}';
+        return "MailConfigProperties{" + "host='" + host + '\'' + ", port=" + port + ", protocol='" + protocol + '\'' + ", username='" + username + '\'' + ", password='" + password + '\'' + '}';
+    }
+}
+
+class RedisConfigProperties {
+
+    /**
+     * Redis 主机
+     *
+     * @since 1.1.3
+     */
+    private String host;
+
+    /**
+     * Redis 端口
+     *
+     * @since 1.1.3
+     */
+    private Integer port;
+
+    /**
+     * Redis 数据库
+     *
+     * @since 1.1.3
+     */
+    private Integer db;
+
+    public String getHost() {
+        return host;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    public Integer getPort() {
+        return port;
+    }
+
+    public void setPort(Integer port) {
+        this.port = port;
+    }
+
+    public Integer getDb() {
+        return db;
+    }
+
+    public void setDb(Integer db) {
+        this.db = db;
+    }
+
+    @Override
+    public String toString() {
+        return "RedisConfigProperties{" + "host='" + host + '\'' + ", port=" + port + ", db=" + db + '}';
     }
 }

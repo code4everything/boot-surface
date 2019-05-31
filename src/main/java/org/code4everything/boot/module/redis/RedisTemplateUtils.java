@@ -93,7 +93,6 @@ public final class RedisTemplateUtils {
         initRedisConnectionFactory(hostName, null, null);
     }
 
-
     /**
      * 初始化 Redis 连接池
      *
@@ -179,7 +178,6 @@ public final class RedisTemplateUtils {
         }
         return redisTemplate;
     }
-
 
     /**
      * 获取模板

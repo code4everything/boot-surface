@@ -23,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 import java.util.Objects;
 
@@ -106,6 +107,46 @@ public class BootConfig {
     }
 
     /**
+     * 设置邮件发送器
+     *
+     * @param sender {@link JavaMailSenderImpl}
+     *
+     * @since 1.1.3
+     */
+    public static void setMailSender(JavaMailSenderImpl sender) {
+        MailUtils.setMailSender(sender);
+    }
+
+    /**
+     * 初始化邮件发送器
+     *
+     * @param host 主机
+     * @param protocol 协议
+     * @param username 用户名（发件箱）
+     * @param password 密码或授权密钥
+     *
+     * @since 1.1.3
+     */
+    public static void initMailSender(String host, String protocol, String username, String password) {
+        MailUtils.initMailSender(host, null, protocol, username, password);
+    }
+
+    /**
+     * 初始化邮件发送器
+     *
+     * @param host 主机
+     * @param port 端口
+     * @param protocol 协议
+     * @param username 用户名（发件箱）
+     * @param password 密码或授权密钥
+     *
+     * @since 1.1.3
+     */
+    public static void initMailSender(String host, Integer port, String protocol, String username, String password) {
+        MailUtils.initMailSender(host, port, protocol, username, password);
+    }
+
+    /**
      * 设置请求检测的频率，单位：毫秒
      *
      * @param frequency 频率
@@ -179,6 +220,17 @@ public class BootConfig {
         setMaxUploadFileSize(properties.getMaxUploadFileSize());
         setVisitLog(properties.getVisitLog());
         setRestServer(properties.getRestServer());
+
+        RedisConfigProperties redis = properties.getRedis();
+        if (ObjectUtil.isNotNull(redis)) {
+            initRedisConnectionFactory(redis.getHost(), redis.getPort(), redis.getDb());
+        }
+
+        MailConfigProperties mail = properties.getMail();
+        if (ObjectUtil.isNotNull(mail)) {
+            initMailSender(mail.getHost(), mail.getPort(), mail.getProtocol(), mail.getUsername(), mail.getPassword());
+        }
+
         LOGGER.info("boot config is changed >>> {}", properties);
     }
 

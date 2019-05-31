@@ -3,6 +3,7 @@ package org.code4everything.boot.message;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ObjectUtil;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 
 import javax.mail.MessagingException;
@@ -43,6 +44,54 @@ public final class MailUtils {
     public static void setMailSender(String outbox, JavaMailSender mailSender) {
         MailUtils.mailSender = mailSender;
         MailUtils.outbox = outbox;
+    }
+
+    /**
+     * 设置邮件发送器
+     *
+     * @param sender {@link JavaMailSenderImpl}
+     *
+     * @since 1.1.3
+     */
+    public static void setMailSender(JavaMailSenderImpl sender) {
+        setMailSender(sender.getUsername(), sender);
+    }
+
+    /**
+     * 初始化邮件发送器
+     *
+     * @param host 主机
+     * @param protocol 协议
+     * @param username 用户名（发件箱）
+     * @param password 密码或授权密钥
+     *
+     * @since 1.1.3
+     */
+    public static void initMailSender(String host, String protocol, String username, String password) {
+        initMailSender(host, null, protocol, username, password);
+    }
+
+    /**
+     * 初始化邮件发送器
+     *
+     * @param host 主机
+     * @param port 端口
+     * @param protocol 协议
+     * @param username 用户名（发件箱）
+     * @param password 密码或授权密钥
+     *
+     * @since 1.1.3
+     */
+    public static void initMailSender(String host, Integer port, String protocol, String username, String password) {
+        JavaMailSenderImpl sender = new JavaMailSenderImpl();
+        sender.setHost(host);
+        sender.setProtocol(protocol);
+        sender.setUsername(username);
+        sender.setPassword(password);
+        if (ObjectUtil.isNotNull(port)) {
+            sender.setPort(port);
+        }
+        setMailSender(sender);
     }
 
     /**
