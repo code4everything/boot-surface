@@ -25,6 +25,17 @@ public final class MailUtils {
     private static JavaMailSender mailSender;
 
     /**
+     * 返回 {@link JavaMailSender}
+     *
+     * @return {@link JavaMailSender}
+     *
+     * @since 1.1.3
+     */
+    public static JavaMailSender getMailSender() {
+        return mailSender;
+    }
+
+    /**
      * 发件箱
      *
      * @since 1.0.9
