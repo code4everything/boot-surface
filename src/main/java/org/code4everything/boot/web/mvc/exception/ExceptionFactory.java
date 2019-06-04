@@ -1,5 +1,6 @@
 package org.code4everything.boot.web.mvc.exception;
 
+import cn.hutool.core.util.ArrayUtil;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import org.code4everything.boot.web.mvc.exception.template.*;
@@ -196,7 +197,8 @@ public class ExceptionFactory {
      */
     public static <T extends HttpException> T exception(ExceptionBiscuit biscuit, ExceptionLoader<T> loader,
                                                         Object... params) {
-        return exception(biscuit.getCode(), biscuit.getStatus(), biscuit.getMsgs(params), loader);
+        String msg = ArrayUtil.isEmpty(params) ? biscuit.getMsg() : biscuit.getMsgs(params);
+        return exception(biscuit.getCode(), biscuit.getStatus(), msg, loader);
     }
 
     /**

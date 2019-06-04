@@ -1,5 +1,6 @@
 package org.code4everything.boot.web.mvc.exception;
 
+import cn.hutool.core.util.ArrayUtil;
 import org.springframework.http.HttpStatus;
 
 /**
@@ -27,7 +28,7 @@ public interface ExceptionBiscuit {
      * @since 1.1.3
      */
     default String getMsgs(Object... params) {
-        return getMsg();
+        return ArrayUtil.isEmpty(params) ? getMsg() : String.format(getMsg(), params);
     }
 
     /**

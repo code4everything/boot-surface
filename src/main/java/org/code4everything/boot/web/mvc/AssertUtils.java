@@ -115,7 +115,7 @@ public final class AssertUtils {
      * @since 1.1.2
      */
     public static void throwIf(Optional<?> optional, ExceptionBiscuit biscuit, Object... params) {
-        throwIf(!optional.isPresent(), biscuit);
+        throwIf(!optional.isPresent(), biscuit, params);
     }
 
     /**
@@ -167,7 +167,7 @@ public final class AssertUtils {
      * @since 1.1.2
      */
     public static void throwIf(BooleanFunction function, ExceptionBiscuit biscuit, Object... params) {
-        throwIf(function.call(), biscuit);
+        throwIf(function.call(), biscuit, params);
     }
 
     /**
@@ -204,7 +204,7 @@ public final class AssertUtils {
      * @since 1.1.2
      */
     public static void throwIfNull(Object object, ExceptionBiscuit biscuit, Object... params) {
-        throwIf(Objects.isNull(object), biscuit);
+        throwIf(Objects.isNull(object), biscuit, params);
     }
 
     /**
@@ -241,6 +241,6 @@ public final class AssertUtils {
      * @since 1.1.2
      */
     public static void throwIfNotNull(Object object, ExceptionBiscuit biscuit, Object... params) {
-        throwIf(ObjectUtil.isNotNull(object), biscuit);
+        throwIf(ObjectUtil.isNotNull(object), biscuit, params);
     }
 }

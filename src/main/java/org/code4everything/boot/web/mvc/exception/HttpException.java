@@ -131,7 +131,7 @@ public class HttpException extends RuntimeException implements ExceptionBiscuit,
      * @since 1.1.2
      */
     public HttpException(ExceptionBiscuit biscuit, Object... params) {
-        this(biscuit.getCode(), biscuit.getStatus(), biscuit.getMsgs(params));
+        this(biscuit.getCode(), biscuit.getStatus(), params == null ? biscuit.getMsg() : biscuit.getMsgs(params));
     }
 
     /**
