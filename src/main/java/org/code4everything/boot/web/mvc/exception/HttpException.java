@@ -61,17 +61,6 @@ public class HttpException extends RuntimeException implements ExceptionBiscuit,
     }
 
     /**
-     * 设置HTTP状态
-     *
-     * @param status HTTP状态
-     *
-     * @since 1.1.2
-     */
-    public HttpException(HttpStatus status) {
-        this(status, DEFAULT_MSG);
-    }
-
-    /**
      * 设置HTTP状态和消息
      *
      * @param status HTTP状态
@@ -81,6 +70,32 @@ public class HttpException extends RuntimeException implements ExceptionBiscuit,
      */
     public HttpException(HttpStatus status, String msg) {
         this(status.value(), status, msg);
+    }
+
+    /**
+     * 设置错误码，HTTP状态和消息
+     *
+     * @param code 错误码
+     * @param status HTTP状态
+     * @param msg 消息
+     *
+     * @since 1.0.4
+     */
+    public HttpException(int code, HttpStatus status, String msg) {
+        super(msg);
+        this.code = code;
+        this.status = status;
+    }
+
+    /**
+     * 设置HTTP状态
+     *
+     * @param status HTTP状态
+     *
+     * @since 1.1.2
+     */
+    public HttpException(HttpStatus status) {
+        this(status, DEFAULT_MSG);
     }
 
     /**
@@ -111,26 +126,12 @@ public class HttpException extends RuntimeException implements ExceptionBiscuit,
      * 设置错误码，HTTP状态和消息，通常使用一个实现 {@link ExceptionBiscuit} 接口的枚举类来定义系统异常情况
      *
      * @param biscuit {@link ExceptionBiscuit}
+     * @param params 消息格式化参数
      *
      * @since 1.1.2
      */
-    public HttpException(ExceptionBiscuit biscuit) {
-        this(biscuit.getCode(), biscuit.getStatus(), biscuit.getMsg());
-    }
-
-    /**
-     * 设置错误码，HTTP状态和消息
-     *
-     * @param code 错误码
-     * @param status HTTP状态
-     * @param msg 消息
-     *
-     * @since 1.0.4
-     */
-    public HttpException(int code, HttpStatus status, String msg) {
-        super(msg);
-        this.code = code;
-        this.status = status;
+    public HttpException(ExceptionBiscuit biscuit, Object... params) {
+        this(biscuit.getCode(), biscuit.getStatus(), biscuit.getMsgs(params));
     }
 
     /**

@@ -88,6 +88,31 @@ public class ExceptionFactory {
     /**
      * 获取异常
      *
+     * @param code 错误码
+     * @param msg 消息
+     * @param status 响应状态
+     * @param loader 异常构造类
+     * @param <T> 异常
+     *
+     * @return 异常
+     *
+     * @since 1.1.0
+     */
+    @SuppressWarnings("unchecked")
+    public static <T extends HttpException> T exception(int code, HttpStatus status, String msg,
+                                                        ExceptionLoader<T> loader) {
+        String key = code + " " + status.toString() + " " + msg;
+        if (cache.asMap().containsKey(key)) {
+            return (T) cache.getIfPresent(key);
+        }
+        T exception = loader.load(code, status, msg);
+        cache.put(key, exception);
+        return exception;
+    }
+
+    /**
+     * 获取异常
+     *
      * @param status 响应状态
      *
      * @return 异常
@@ -96,20 +121,6 @@ public class ExceptionFactory {
      */
     public static HttpException exception(HttpStatus status) {
         return exception(status, status.getReasonPhrase(), EXCEPTION_LOADER);
-    }
-
-    /**
-     * 获取异常
-     *
-     * @param msg 消息
-     * @param status 响应状态
-     *
-     * @return 异常
-     *
-     * @since 1.1.0
-     */
-    public static HttpException exception(HttpStatus status, String msg) {
-        return exception(status, msg, EXCEPTION_LOADER);
     }
 
     /**
@@ -131,6 +142,20 @@ public class ExceptionFactory {
     /**
      * 获取异常
      *
+     * @param msg 消息
+     * @param status 响应状态
+     *
+     * @return 异常
+     *
+     * @since 1.1.0
+     */
+    public static HttpException exception(HttpStatus status, String msg) {
+        return exception(status, msg, EXCEPTION_LOADER);
+    }
+
+    /**
+     * 获取异常
+     *
      * @param code 错误码
      * @param msg 消息
      * @param status 响应状态
@@ -147,13 +172,14 @@ public class ExceptionFactory {
      * 获取异常，通常使用一个实现 {@link ExceptionBiscuit} 接口的枚举类来定义系统异常情况
      *
      * @param biscuit {@link ExceptionBiscuit}
+     * @param params 消息格式化参数
      *
      * @return 异常
      *
      * @since 1.1.2
      */
-    public static HttpException exception(ExceptionBiscuit biscuit) {
-        return exception(biscuit, EXCEPTION_LOADER);
+    public static HttpException exception(ExceptionBiscuit biscuit, Object... params) {
+        return exception(biscuit, EXCEPTION_LOADER, params);
     }
 
     /**
@@ -161,39 +187,27 @@ public class ExceptionFactory {
      *
      * @param biscuit {@link ExceptionBiscuit}
      * @param loader 异常构造类
+     * @param params 消息格式化参数
      * @param <T> 异常类型
      *
      * @return 异常
      *
      * @since 1.1.2
      */
-    public static <T extends HttpException> T exception(ExceptionBiscuit biscuit, ExceptionLoader<T> loader) {
-        return exception(biscuit.getCode(), biscuit.getStatus(), biscuit.getMsg(), loader);
+    public static <T extends HttpException> T exception(ExceptionBiscuit biscuit, ExceptionLoader<T> loader,
+                                                        Object... params) {
+        return exception(biscuit.getCode(), biscuit.getStatus(), biscuit.getMsgs(params), loader);
     }
 
     /**
-     * 获取异常
+     * 获取 {@link TokenBlankException}
      *
-     * @param code 错误码
-     * @param msg 消息
-     * @param status 响应状态
-     * @param loader 异常构造类
-     * @param <T> 异常
+     * @return {@link TokenBlankException}
      *
-     * @return 异常
-     *
-     * @since 1.1.0
+     * @since 1.0.9
      */
-    @SuppressWarnings("unchecked")
-    public static <T extends HttpException> T exception(int code, HttpStatus status, String msg,
-                                                        ExceptionLoader<T> loader) {
-        String key = code + " " + status.toString() + " " + msg;
-        if (cache.asMap().containsKey(key)) {
-            return (T) cache.getIfPresent(key);
-        }
-        T exception = loader.load(code, status, msg);
-        cache.put(key, exception);
-        return exception;
+    public static TokenBlankException tokenBlank() {
+        return exception(TokenBlankException.class);
     }
 
     /**
@@ -233,17 +247,6 @@ public class ExceptionFactory {
         } catch (Exception e) {
             throw new HttpException("new class " + clazz.getName() + " error, must set a default constructor");
         }
-    }
-
-    /**
-     * 获取 {@link TokenBlankException}
-     *
-     * @return {@link TokenBlankException}
-     *
-     * @since 1.0.9
-     */
-    public static TokenBlankException tokenBlank() {
-        return exception(TokenBlankException.class);
     }
 
     /**

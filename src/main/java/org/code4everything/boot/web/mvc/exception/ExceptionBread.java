@@ -1,5 +1,6 @@
 package org.code4everything.boot.web.mvc.exception;
 
+import cn.hutool.core.util.StrUtil;
 import org.code4everything.boot.base.bean.BaseBean;
 import org.springframework.http.HttpStatus;
 
@@ -64,6 +65,11 @@ public class ExceptionBread implements ExceptionBiscuit, BaseBean, Serializable 
     public ExceptionBread setCode(int code) {
         this.code = code;
         return this;
+    }
+
+    @Override
+    public String getMsgs(Object... params) {
+        return StrUtil.format(getMsg(), params);
     }
 
     @Override

@@ -18,6 +18,19 @@ public interface ExceptionBiscuit {
     int getCode();
 
     /**
+     * 自定义格式化
+     *
+     * @param params 参数
+     *
+     * @return 消息
+     *
+     * @since 1.1.3
+     */
+    default String getMsgs(Object... params) {
+        return getMsg();
+    }
+
+    /**
      * 获取消息
      *
      * @return 消息

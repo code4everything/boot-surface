@@ -54,6 +54,18 @@ public final class AssertUtils {
     }
 
     /**
+     * 如果对象为空抛出异常
+     *
+     * @param optional {@link Optional}
+     * @param exception 想要抛出的异常
+     *
+     * @since 1.1.2
+     */
+    public static void throwIf(Optional<?> optional, RuntimeException exception) {
+        throwIf(!optional.isPresent(), exception);
+    }
+
+    /**
      * 抛出异常
      *
      * @param shouldThrow 是否抛出异常
@@ -68,17 +80,15 @@ public final class AssertUtils {
     }
 
     /**
-     * 从异常缓存中获取并抛出
+     * 如果对象为空抛出异常
      *
-     * @param shouldThrow 是否抛出异常
-     * @param biscuit {@link ExceptionBiscuit}
+     * @param optional {@link Optional}
+     * @param exception 想要抛出的异常
      *
      * @since 1.1.2
      */
-    public static void throwIf(boolean shouldThrow, ExceptionBiscuit biscuit) {
-        if (shouldThrow) {
-            throw ExceptionFactory.exception(biscuit);
-        }
+    public static void throwIf(Optional<?> optional, HttpException exception) {
+        throwIf(!optional.isPresent(), exception);
     }
 
     /**
@@ -96,40 +106,31 @@ public final class AssertUtils {
     }
 
     /**
-     * 如果对象为空抛出异常
-     *
-     * @param optional {@link Optional}
-     * @param exception 想要抛出的异常
-     *
-     * @since 1.1.2
-     */
-    public static void throwIf(Optional<?> optional, RuntimeException exception) {
-        throwIf(!optional.isPresent(), exception);
-    }
-
-    /**
-     * 如果对象为空抛出异常
-     *
-     * @param optional {@link Optional}
-     * @param exception 想要抛出的异常
-     *
-     * @since 1.1.2
-     */
-    public static void throwIf(Optional<?> optional, HttpException exception) {
-        throwIf(!optional.isPresent(), exception);
-    }
-
-
-    /**
      * 从异常缓存中获取并抛出
      *
      * @param optional {@link Optional}
      * @param biscuit {@link ExceptionBiscuit}
+     * @param params 消息格式化参数
      *
      * @since 1.1.2
      */
-    public static void throwIf(Optional<?> optional, ExceptionBiscuit biscuit) {
+    public static void throwIf(Optional<?> optional, ExceptionBiscuit biscuit, Object... params) {
         throwIf(!optional.isPresent(), biscuit);
+    }
+
+    /**
+     * 从异常缓存中获取并抛出
+     *
+     * @param shouldThrow 是否抛出异常
+     * @param biscuit {@link ExceptionBiscuit}
+     * @param params 消息格式化参数
+     *
+     * @since 1.1.2
+     */
+    public static void throwIf(boolean shouldThrow, ExceptionBiscuit biscuit, Object... params) {
+        if (shouldThrow) {
+            throw ExceptionFactory.exception(biscuit, params);
+        }
     }
 
     /**
@@ -161,10 +162,11 @@ public final class AssertUtils {
      *
      * @param function 布尔函数
      * @param biscuit {@link ExceptionBiscuit}
+     * @param params 消息格式化参数
      *
      * @since 1.1.2
      */
-    public static void throwIf(BooleanFunction function, ExceptionBiscuit biscuit) {
+    public static void throwIf(BooleanFunction function, ExceptionBiscuit biscuit, Object... params) {
         throwIf(function.call(), biscuit);
     }
 
@@ -197,10 +199,11 @@ public final class AssertUtils {
      *
      * @param object 对象
      * @param biscuit {@link ExceptionBiscuit}
+     * @param params 消息格式化参数
      *
      * @since 1.1.2
      */
-    public static void throwIfNull(Object object, ExceptionBiscuit biscuit) {
+    public static void throwIfNull(Object object, ExceptionBiscuit biscuit, Object... params) {
         throwIf(Objects.isNull(object), biscuit);
     }
 
@@ -233,10 +236,11 @@ public final class AssertUtils {
      *
      * @param object 对象
      * @param biscuit {@link ExceptionBiscuit}
+     * @param params 消息格式化参数
      *
      * @since 1.1.2
      */
-    public static void throwIfNotNull(Object object, ExceptionBiscuit biscuit) {
+    public static void throwIfNotNull(Object object, ExceptionBiscuit biscuit, Object... params) {
         throwIf(ObjectUtil.isNotNull(object), biscuit);
     }
 }
