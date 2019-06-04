@@ -25,17 +25,6 @@ public final class MailUtils {
     private static JavaMailSender mailSender;
 
     /**
-     * 返回 {@link JavaMailSender}
-     *
-     * @return {@link JavaMailSender}
-     *
-     * @since 1.1.3
-     */
-    public static JavaMailSender getMailSender() {
-        return mailSender;
-    }
-
-    /**
      * 发件箱
      *
      * @since 1.0.9
@@ -45,16 +34,14 @@ public final class MailUtils {
     private MailUtils() {}
 
     /**
-     * 设置邮件发送器
+     * 返回 {@link JavaMailSender}
      *
-     * @param outbox 发件箱
-     * @param mailSender {@link JavaMailSender}
+     * @return {@link JavaMailSender}
      *
-     * @since 1.0.9
+     * @since 1.1.3
      */
-    public static void setMailSender(String outbox, JavaMailSender mailSender) {
-        MailUtils.mailSender = mailSender;
-        MailUtils.outbox = outbox;
+    public static JavaMailSender getMailSender() {
+        return mailSender;
     }
 
     /**
@@ -99,10 +86,24 @@ public final class MailUtils {
         sender.setProtocol(protocol);
         sender.setUsername(username);
         sender.setPassword(password);
+        sender.setDefaultEncoding("utf-8");
         if (ObjectUtil.isNotNull(port)) {
             sender.setPort(port);
         }
         setMailSender(sender);
+    }
+
+    /**
+     * 设置邮件发送器
+     *
+     * @param outbox 发件箱
+     * @param mailSender {@link JavaMailSender}
+     *
+     * @since 1.0.9
+     */
+    public static void setMailSender(String outbox, JavaMailSender mailSender) {
+        MailUtils.mailSender = mailSender;
+        MailUtils.outbox = outbox;
     }
 
     /**
@@ -116,21 +117,6 @@ public final class MailUtils {
      */
     public static void sendAsync(String email, String subject, String html) {
         sendAsync(email, subject, html, buildDefaultMessageHelper(), null);
-    }
-
-
-    /**
-     * 发送文本邮件
-     *
-     * @param email 邮箱
-     * @param subject 主题
-     * @param html 邮件内容
-     * @param callback 回调函数
-     *
-     * @since 1.0.9
-     */
-    public static void sendAsync(String email, String subject, String html, MailCallback callback) {
-        sendAsync(email, subject, html, buildDefaultMessageHelper(), callback);
     }
 
     /**
@@ -162,17 +148,15 @@ public final class MailUtils {
     }
 
     /**
-     * 发送文本邮件
+     * 创建一个{@link MimeMessageHelper}
      *
-     * @param email 邮箱
-     * @param subject 主题
-     * @param html 邮件内容
+     * @return {@link MimeMessageHelper}
      *
-     * @throws MessagingException 异常
      * @since 1.0.9
      */
-    public static void send(String email, String subject, String html) throws MessagingException {
-        send(email, subject, html, buildDefaultMessageHelper());
+    public static MimeMessageHelper buildDefaultMessageHelper() {
+        Objects.requireNonNull(mailSender, "please set a java mail sender");
+        return new MimeMessageHelper(mailSender.createMimeMessage());
     }
 
     /**
@@ -201,14 +185,30 @@ public final class MailUtils {
     }
 
     /**
-     * 创建一个{@link MimeMessageHelper}
+     * 发送文本邮件
      *
-     * @return {@link MimeMessageHelper}
+     * @param email 邮箱
+     * @param subject 主题
+     * @param html 邮件内容
+     * @param callback 回调函数
      *
      * @since 1.0.9
      */
-    public static MimeMessageHelper buildDefaultMessageHelper() {
-        Objects.requireNonNull(mailSender, "please set a java mail sender");
-        return new MimeMessageHelper(mailSender.createMimeMessage());
+    public static void sendAsync(String email, String subject, String html, MailCallback callback) {
+        sendAsync(email, subject, html, buildDefaultMessageHelper(), callback);
+    }
+
+    /**
+     * 发送文本邮件
+     *
+     * @param email 邮箱
+     * @param subject 主题
+     * @param html 邮件内容
+     *
+     * @throws MessagingException 异常
+     * @since 1.0.9
+     */
+    public static void send(String email, String subject, String html) throws MessagingException {
+        send(email, subject, html, buildDefaultMessageHelper());
     }
 }
