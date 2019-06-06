@@ -12,6 +12,8 @@ import java.util.Date;
  **/
 public final class DateUtils {
 
+    // -------------------当天--------------------------------
+
     private static Date startOfToday = new Date(0);
 
     private static Date copiedStartOfToday = new Date(0);
@@ -20,7 +22,39 @@ public final class DateUtils {
 
     private static Date copiedEndOfToday = new Date(0);
 
+    // ------------------当月-------------------------------------------
+
+    private static Date startOfThisMonth = new Date(0);
+
+    private static Date copiedStartOfThisMonth = new Date(0);
+
+    private static Date endOfThisMonth = new Date(0);
+
+    private static Date copiedEndOfThisMonth = new Date(0);
+
     private DateUtils() {}
+
+    /**
+     * 获取本月的开始时间点
+     *
+     * @return 本月的开始
+     *
+     * @since 1.1.3
+     */
+    public static Date getStartOfThisMonth() {
+        return checkThisMonth(startOfThisMonth, copiedStartOfThisMonth);
+    }
+
+    /**
+     * 获取本月的结束时间点
+     *
+     * @return 本月的结束
+     *
+     * @since 1.1.3
+     */
+    public static Date getEndOfThisMonth() {
+        return checkThisMonth(endOfThisMonth, copiedEndOfThisMonth);
+    }
 
     /**
      * 获取今天的开始时间点
@@ -47,6 +81,18 @@ public final class DateUtils {
     /**
      * 使用副本来防止原引用被篡改
      */
+    private static Date checkThisMonth(Date origin, Date copied) {
+        if (getStartOfToday().getTime() > endOfThisMonth.getTime()) {
+            // 如果当前的时间戳超过了endOfThisMonth的时间戳，说明ThisMonth的时间戳已经过期，需重新设置
+            startOfThisMonth.setTime(DateUtil.beginOfMonth(copiedStartOfToday).getTime());
+            endOfThisMonth.setTime(DateUtil.beginOfMonth(startOfToday).getTime());
+        }
+        return check(origin, copied);
+    }
+
+    /**
+     * 使用副本来防止原引用被篡改
+     */
     private static Date checkToday(Date origin, Date copied) {
         long curr = System.currentTimeMillis();
         if (curr > endOfToday.getTime()) {
@@ -54,6 +100,10 @@ public final class DateUtils {
             startOfToday.setTime(DateUtil.beginOfDay(new Date(curr)).getTime());
             endOfToday.setTime(DateUtil.endOfDay(startOfToday).getTime());
         }
+        return check(origin, copied);
+    }
+
+    private static Date check(Date origin, Date copied) {
         if (!origin.equals(copied)) {
             // 如果副本被篡改，那么重置副本
             copied.setTime(origin.getTime());

@@ -17,6 +17,22 @@ import java.util.Objects;
 public interface BaseBean {
 
     /**
+     * 比较对象是否相等，快速失败
+     *
+     * @param object 对象
+     *
+     * @return 是否相等
+     *
+     * @since 1.1.3
+     */
+    default boolean equalsFailFast(Object object) {
+        if (Objects.isNull(object)) {
+            return false;
+        }
+        return this.hashCode() == object.hashCode() && this.equals(object);
+    }
+
+    /**
      * 对象内是否有必要的属性值，大多数情况下都需要重写此方法
      *
      * @return 是否有必要的属性值
