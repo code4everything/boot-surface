@@ -14,23 +14,23 @@ public final class DateUtils {
 
     // -------------------当天--------------------------------
 
-    private static Date startOfToday = new Date(0);
+    private static long startOfToday = 0;
 
-    private static Date copiedStartOfToday = new Date(0);
+    private static Date startOfTodayCopier = new Date(0);
 
-    private static Date endOfToday = new Date(0);
+    private static long endOfToday = 0;
 
-    private static Date copiedEndOfToday = new Date(0);
+    private static Date endOfTodayCopier = new Date(0);
 
     // ------------------当月-------------------------------------------
 
-    private static Date startOfThisMonth = new Date(0);
+    private static long startOfThisMonth = 0;
 
-    private static Date copiedStartOfThisMonth = new Date(0);
+    private static Date startOfThisMonthCopier = new Date(0);
 
-    private static Date endOfThisMonth = new Date(0);
+    private static long endOfThisMonth = 0;
 
-    private static Date copiedEndOfThisMonth = new Date(0);
+    private static Date endOfThisMonthCopier = new Date(0);
 
     private DateUtils() {}
 
@@ -42,7 +42,7 @@ public final class DateUtils {
      * @since 1.1.3
      */
     public static Date getStartOfThisMonth() {
-        return checkThisMonth(startOfThisMonth, copiedStartOfThisMonth);
+        return checkThisMonth(startOfThisMonth, startOfThisMonthCopier);
     }
 
     /**
@@ -53,7 +53,7 @@ public final class DateUtils {
      * @since 1.1.3
      */
     public static Date getEndOfThisMonth() {
-        return checkThisMonth(endOfThisMonth, copiedEndOfThisMonth);
+        return checkThisMonth(endOfThisMonth, endOfThisMonthCopier);
     }
 
     /**
@@ -64,7 +64,7 @@ public final class DateUtils {
      * @since 1.0.9
      */
     public static Date getStartOfToday() {
-        return checkToday(startOfToday, copiedStartOfToday);
+        return checkToday(startOfToday, startOfTodayCopier);
     }
 
     /**
@@ -75,39 +75,42 @@ public final class DateUtils {
      * @since 1.0.9
      */
     public static Date getEndOfToday() {
-        return checkToday(endOfToday, copiedEndOfToday);
+        return checkToday(endOfToday, endOfTodayCopier);
     }
 
     /**
      * 使用副本来防止原引用被篡改
      */
-    private static Date checkThisMonth(Date origin, Date copied) {
-        if (getStartOfToday().getTime() > endOfThisMonth.getTime()) {
-            // 如果当前的时间戳超过了endOfThisMonth的时间戳，说明ThisMonth的时间戳已经过期，需重新设置
-            startOfThisMonth.setTime(DateUtil.beginOfMonth(copiedStartOfToday).getTime());
-            endOfThisMonth.setTime(DateUtil.beginOfMonth(startOfToday).getTime());
-        }
-        return check(origin, copied);
-    }
-
-    /**
-     * 使用副本来防止原引用被篡改
-     */
-    private static Date checkToday(Date origin, Date copied) {
+    private static Date checkThisMonth(long origin, Date copier) {
         long curr = System.currentTimeMillis();
-        if (curr > endOfToday.getTime()) {
-            // 如果当前的时间戳超过了endOfToday的时间戳，说明Today的时间戳已经过期，需重新设置
-            startOfToday.setTime(DateUtil.beginOfDay(new Date(curr)).getTime());
-            endOfToday.setTime(DateUtil.endOfDay(startOfToday).getTime());
+        if (curr > endOfThisMonth) {
+            // 如果当前的时间戳超过了endOfThisMonth的时间戳，说明ThisMonth的时间戳已经过期，需重新设置
+            Date date = new Date();
+            startOfThisMonth = DateUtil.beginOfMonth(date).getTime();
+            endOfThisMonth = DateUtil.endOfMonth(date).getTime();
         }
-        return check(origin, copied);
+        return check(origin, copier);
     }
 
-    private static Date check(Date origin, Date copied) {
-        if (!origin.equals(copied)) {
-            // 如果副本被篡改，那么重置副本
-            copied.setTime(origin.getTime());
+    /**
+     * 使用副本来防止原引用被篡改
+     */
+    private static Date checkToday(long origin, Date copier) {
+        long curr = System.currentTimeMillis();
+        if (curr > endOfToday) {
+            // 如果当前的时间戳超过了endOfToday的时间戳，说明Today的时间戳已经过期，需重新设置
+            Date date = new Date();
+            startOfToday = DateUtil.beginOfDay(new Date(curr)).getTime();
+            endOfToday = DateUtil.endOfDay(date).getTime();
         }
-        return copied;
+        return check(origin, copier);
+    }
+
+    private static Date check(long origin, Date copier) {
+        if (copier.getTime() != origin) {
+            // 如果副本被篡改，那么重置副本
+            copier.setTime(origin);
+        }
+        return copier;
     }
 }
