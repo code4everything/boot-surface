@@ -11,7 +11,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -24,20 +23,20 @@ import java.util.Objects;
  * @author pantao
  * @since 2018/11/2
  **/
-@RestController
-public class BaseController {
+public class BaseController<U> {
 
     private static final int DEFAULT_ERROR_CODE = BootConfig.DEFAULT_ERROR_CODE;
 
     private static final String DEFAULT_OK_MSG = MessageConsts.REQUEST_OK_ZH;
 
+    @Resource
+    public HttpServletRequest request;
+
     /**
      * @since 1.1.2
      */
-    private static BootUserService<?> userService;
-
     @Resource
-    public HttpServletRequest request;
+    private BootUserService<U> userService;
 
     /**
      * 只允许继承
@@ -47,14 +46,16 @@ public class BaseController {
     protected BaseController() {}
 
     /**
-     * 设置 {@link BootUserService}
+     * 创建对象
      *
+     * @param request {@link HttpServletRequest}
      * @param userService {@link BootUserService}
      *
-     * @since 1.1.2
+     * @since 1.1.3
      */
-    public static void setUserService(BootUserService<?> userService) {
-        BaseController.userService = userService;
+    public BaseController(HttpServletRequest request, BootUserService<U> userService) {
+        this.request = request;
+        this.userService = userService;
     }
 
     /**
@@ -186,72 +187,37 @@ public class BaseController {
     /**
      * 获取用户
      *
-     * @param service 用户服务
-     * @param <T> 用户
-     *
      * @return 用户
      *
      * @since 1.0.4
      */
-    public <T> T getUser(BootUserService<T> service) {
-        return service.getUserByToken(Strings.nullToEmpty(getToken()));
+    public U getUser() {
+        return getUser(Strings.nullToEmpty(getToken()));
     }
 
     /**
      * 获取用户
      *
-     * @param <T> 用户
+     * @param token 令牌
      *
      * @return 用户
      *
-     * @since 1.0.4
+     * @since 1.1.3
      */
-    @SuppressWarnings("unchecked")
-    public <T> T getUser() {
-        Objects.requireNonNull(userService, "please register org.code4everything.boot.service.BootUserService");
-        return (T) userService.getUserByToken(Strings.nullToEmpty(getToken()));
+    public U getUser(String token) {
+        Objects.requireNonNull(userService, "please implementation interface 'BootUserService<T>'");
+        return userService.getUserByToken(token);
     }
 
     /**
      * 获取用户
      *
-     * @param <T> 用户
-     *
      * @return 用户
      *
      * @since 1.0.4
      */
-    public <T> T requireUser() {
-        requireToken();
-        return AssertUtils.assertUserLoggedIn(getUser());
-    }
-
-    /**
-     * 获取用户
-     *
-     * @param service 用户服务
-     * @param <T> 用户
-     *
-     * @return 用户
-     *
-     * @since 1.0.4
-     */
-    public <T> T requireUser(BootUserService<T> service) {
-        return AssertUtils.assertUserLoggedIn(service.getUserByToken(requireToken()));
-    }
-
-    /**
-     * 获取用户
-     *
-     * @param user 用户实体
-     * @param <T> 用户
-     *
-     * @return 用户
-     *
-     * @since 1.1.0
-     */
-    public <T> T requireUser(T user) {
-        return AssertUtils.assertUserLoggedIn(user);
+    public U requireUser() {
+        return AssertUtils.assertUserLoggedIn(getUser(requireToken()));
     }
 
     /**

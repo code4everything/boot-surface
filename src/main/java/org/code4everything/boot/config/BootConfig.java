@@ -13,9 +13,7 @@ import org.code4everything.boot.base.encoder.FieldEncoder;
 import org.code4everything.boot.log.AopLogUtils;
 import org.code4everything.boot.message.MailUtils;
 import org.code4everything.boot.module.redis.RedisTemplateUtils;
-import org.code4everything.boot.service.BootUserService;
 import org.code4everything.boot.web.http.RestUtils;
-import org.code4everything.boot.web.mvc.BaseController;
 import org.code4everything.boot.web.mvc.DefaultWebInterceptor;
 import org.code4everything.boot.web.mvc.FilterPath;
 import org.code4everything.boot.web.mvc.Response;
@@ -71,17 +69,6 @@ public class BootConfig {
     private static FieldEncoder fieldEncoder;
 
     private BootConfig() {}
-
-    /**
-     * 设置 {@link BootUserService}
-     *
-     * @param userService {@link BootUserService}
-     *
-     * @since 1.1.2
-     */
-    public static void setUserService(BootUserService<?> userService) {
-        BaseController.setUserService(userService);
-    }
 
     /**
      * 设置REST默认服务器
