@@ -20,7 +20,7 @@ public class BaseServiceImpl<U> implements BootBaseService {
     public HttpServletRequest request;
 
     @Resource
-    private BootUserService<U> userService;
+    protected BootUserService<U> userService;
 
     /**
      * 只能继承
@@ -43,6 +43,16 @@ public class BaseServiceImpl<U> implements BootBaseService {
     }
 
     @Override
+    public String getToken() {
+        return HttpUtils.requireToken(request);
+    }
+
+    @Override
+    public String getToken(boolean require) {
+        return require ? HttpUtils.requireToken(request) : HttpUtils.getToken(request);
+    }
+
+    @Override
     public U getUser() {
         return getUser(true);
     }
@@ -50,8 +60,7 @@ public class BaseServiceImpl<U> implements BootBaseService {
     @Override
     public U getUser(boolean require) {
         Objects.requireNonNull(userService, "please set interface 'BootUserService<T>'");
-        String token = require ? HttpUtils.requireToken(request) : HttpUtils.getToken(request);
-        U user = userService.getUserByToken(StrUtil.nullToEmpty(token));
+        U user = userService.getUserByToken(StrUtil.nullToEmpty(getToken(require)));
         return require ? AssertUtils.assertUserLoggedIn(user) : user;
     }
 }
