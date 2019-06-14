@@ -15,20 +15,56 @@ import java.util.concurrent.TimeUnit;
  **/
 public class RedisCache extends AbstractCache {
 
+    /**
+     * @since 1.1.3
+     */
     private final RedisTemplate<String, Object> redisTemplate;
 
+    /**
+     * @since 1.1.3
+     */
     private final String keyPrefix;
 
+    /**
+     * @since 1.1.3
+     */
     private final long timeout;
 
+    /**
+     * 构造函数
+     *
+     * @param name 缓存名
+     * @param redisTemplate {@link RedisTemplate}
+     *
+     * @since 1.1.3
+     */
     public RedisCache(String name, RedisTemplate<String, Object> redisTemplate) {
         this(name, redisTemplate, Long.MAX_VALUE, name);
     }
 
+    /**
+     * 构造函数
+     *
+     * @param name 缓存名
+     * @param redisTemplate {@link RedisTemplate}
+     * @param timeout 过期时长
+     *
+     * @since 1.1.3
+     */
     public RedisCache(String name, RedisTemplate<String, Object> redisTemplate, long timeout) {
         this(name, redisTemplate, timeout, name);
     }
 
+    /**
+     * 构造函数
+     *
+     * @param name 缓存名
+     * @param redisTemplate {@link RedisTemplate}
+     * @param timeout 过期时长
+     * @param keyPrefix 键前缀
+     *
+     * @since 1.1.3
+     */
     public RedisCache(String name, RedisTemplate<String, Object> redisTemplate, long timeout, String keyPrefix) {
         super(name, redisTemplate);
         this.keyPrefix = keyPrefix + ":";
@@ -68,6 +104,14 @@ public class RedisCache extends AbstractCache {
         redisTemplate.delete(redisTemplate.keys(keyPrefix + "*"));
     }
 
+    /**
+     * 在某个时间点过期
+     *
+     * @param key 键
+     * @param date 日期
+     *
+     * @since 1.1.3
+     */
     public void expireAt(String key, Date date) {
         redisTemplate.expireAt(keyPrefix + key, date);
     }

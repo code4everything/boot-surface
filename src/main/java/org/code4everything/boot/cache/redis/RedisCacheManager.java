@@ -32,6 +32,15 @@ public class RedisCacheManager extends BootCacheManager {
         this(caches, null);
     }
 
+    /**
+     * 在某个时间点过期
+     *
+     * @param cacheName 缓存名
+     * @param key 键
+     * @param date 日期
+     *
+     * @since 1.1.3
+     */
     public void expireAt(String cacheName, String key, Date date) {
         Cache cache = getCache(cacheName);
         if (ObjectUtil.isNotNull(cache)) {
