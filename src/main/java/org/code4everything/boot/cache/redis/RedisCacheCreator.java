@@ -14,9 +14,9 @@ import java.util.Objects;
  **/
 public class RedisCacheCreator implements CacheCreator {
 
-    private final long timeout;
+    protected final long timeout;
 
-    private final Map<String, String> prefixMap;
+    protected final Map<String, String> prefixMap;
 
     public RedisCacheCreator() {
         this(Long.MAX_VALUE, null);

@@ -2,7 +2,6 @@ package org.code4everything.boot.cache.guava;
 
 import com.google.common.cache.CacheBuilder;
 import org.code4everything.boot.cache.CacheCreator;
-import org.springframework.cache.Cache;
 
 import java.util.Objects;
 
@@ -14,7 +13,7 @@ import java.util.Objects;
  **/
 public class GuavaCacheCreator implements CacheCreator {
 
-    private final CacheBuilder<Object, Object> cacheBuilder;
+    protected final CacheBuilder<Object, Object> cacheBuilder;
 
     public GuavaCacheCreator(CacheBuilder<Object, Object> cacheBuilder) {
         Objects.requireNonNull(cacheBuilder, "guava cache builder must not be null");
@@ -22,11 +21,7 @@ public class GuavaCacheCreator implements CacheCreator {
     }
 
     @Override
-    public Cache createCache(String cacheName) {
+    public GuavaCache createCache(String cacheName) {
         return new GuavaCache(cacheName, cacheBuilder.build());
-    }
-
-    public CacheBuilder<Object, Object> getCacheBuilder() {
-        return cacheBuilder;
     }
 }

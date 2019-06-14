@@ -2,9 +2,8 @@ package org.code4everything.boot.cache.guava;
 
 import com.google.common.cache.CacheBuilder;
 import org.code4everything.boot.cache.BootCacheManager;
-import org.code4everything.boot.cache.CacheCreator;
-import org.springframework.cache.Cache;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -23,23 +22,23 @@ public class GuavaCacheManager extends BootCacheManager {
         this(new GuavaCacheCreator(cacheBuilder), capacity);
     }
 
-    public GuavaCacheManager(CacheCreator cacheCreator) {
-        this(cacheCreator, 16);
+    public GuavaCacheManager(GuavaCacheCreator guavaCacheCreator) {
+        this(guavaCacheCreator, 16);
     }
 
-    public GuavaCacheManager(CacheCreator cacheCreator, int capacity) {
-        super(cacheCreator, capacity);
+    public GuavaCacheManager(GuavaCacheCreator guavaCacheCreator, int capacity) {
+        super(guavaCacheCreator, capacity);
     }
 
-    public GuavaCacheManager(Collection<Cache> caches, CacheCreator cacheCreator) {
-        super(caches, cacheCreator);
+    public GuavaCacheManager(Collection<GuavaCache> caches, GuavaCacheCreator guavaCacheCreator) {
+        super(new ArrayList<>(caches), guavaCacheCreator);
     }
 
-    public GuavaCacheManager(Collection<Cache> caches, CacheBuilder<Object, Object> cacheBuilder) {
-        super(caches, new GuavaCacheCreator(cacheBuilder));
+    public GuavaCacheManager(Collection<GuavaCache> caches, CacheBuilder<Object, Object> cacheBuilder) {
+        super(new ArrayList<>(caches), new GuavaCacheCreator(cacheBuilder));
     }
 
-    public GuavaCacheManager(Collection<Cache> caches) {
-        super(caches);
+    public GuavaCacheManager(Collection<GuavaCache> caches) {
+        super(new ArrayList<>(caches));
     }
 }
