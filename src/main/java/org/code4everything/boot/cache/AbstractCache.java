@@ -1,10 +1,8 @@
 package org.code4everything.boot.cache;
 
 import org.code4everything.boot.config.BootConfig;
-import org.code4everything.boot.web.mvc.exception.ExceptionFactory;
 import org.springframework.cache.Cache;
 import org.springframework.cache.support.SimpleValueWrapper;
-import org.springframework.http.HttpStatus;
 
 import java.util.Objects;
 import java.util.concurrent.Callable;
@@ -59,7 +57,7 @@ public abstract class AbstractCache implements Cache {
                 return valueLoader.call();
             } catch (Exception e) {
                 if (BootConfig.isDebug()) {
-                    throw ExceptionFactory.exception(HttpStatus.INTERNAL_SERVER_ERROR, "value loader error");
+                    throw new RuntimeException("value loader error");
                 }
                 return null;
             }

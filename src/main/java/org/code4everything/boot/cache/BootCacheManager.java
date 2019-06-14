@@ -1,10 +1,14 @@
 package org.code4everything.boot.cache;
 
+import cn.hutool.core.collection.ConcurrentHashSet;
 import cn.hutool.core.util.ObjectUtil;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -32,7 +36,7 @@ public class BootCacheManager implements CacheManager {
         this.dynamic = true;
         this.cacheCreator = cacheCreator;
         cacheMap = new ConcurrentHashMap<>(capacity);
-        cacheNames = new HashSet<>(capacity);
+        cacheNames = new ConcurrentHashSet<>(capacity);
     }
 
     public BootCacheManager(Collection<Cache> caches, CacheCreator cacheCreator) {
@@ -41,7 +45,7 @@ public class BootCacheManager implements CacheManager {
         this.cacheCreator = cacheCreator;
         int capacity = caches.size() * 4 / 3 + 1;
         cacheMap = new ConcurrentHashMap<>(capacity);
-        cacheNames = new HashSet<>(capacity);
+        cacheNames = new ConcurrentHashSet<>(capacity);
         caches.forEach(cache -> {
             cacheMap.put(cache.getName(), cache);
             cacheNames.add(cache.getName());
@@ -70,5 +74,41 @@ public class BootCacheManager implements CacheManager {
     @Override
     public Collection<String> getCacheNames() {
         return cacheNames;
+    }
+
+    public Cache requireCache(String cacheName) {
+        Cache cache = getCache(cacheName);
+        Objects.requireNonNull(cache, "cache '" + cacheName + "' has no config");
+        return cache;
+    }
+
+    public void putVal(String cacheName, String key, Object value) {
+        Cache cache = getCache(cacheName);
+        if (ObjectUtil.isNotNull(cache)) {
+            cache.put(key, value);
+        }
+    }
+
+    public void delVal(String cacheName, String key) {
+        Cache cache = getCache(cacheName);
+        if (ObjectUtil.isNotNull(cache)) {
+            cache.evict(key);
+        }
+    }
+
+    public void removeAll(String cacheName) {
+        Cache cache = getCache(cacheName);
+        if (ObjectUtil.isNotNull(cache)) {
+            cache.clear();
+        }
+    }
+
+    public Object getVal(String cacheName, String key) {
+        Cache cache = getCache(cacheName);
+        if (ObjectUtil.isNotNull(cache)) {
+            Cache.ValueWrapper wrapper = cache.get(key);
+            return Objects.isNull(wrapper) ? null : wrapper.get();
+        }
+        return null;
     }
 }
