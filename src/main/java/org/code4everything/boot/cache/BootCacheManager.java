@@ -2,6 +2,8 @@ package org.code4everything.boot.cache;
 
 import cn.hutool.core.collection.ConcurrentHashSet;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
+import org.code4everything.boot.base.constant.StringConsts;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 
@@ -19,12 +21,32 @@ import java.util.concurrent.ConcurrentHashMap;
  **/
 public class BootCacheManager implements CacheManager {
 
+    /**
+     * 缓存名与缓存的映射
+     *
+     * @since 1.1.3
+     */
     protected final Map<String, Cache> cacheMap;
 
+    /**
+     * 缓存名集合
+     *
+     * @since 1.1.3
+     */
     protected final Set<String> cacheNames;
 
+    /**
+     * 缓存创建者
+     *
+     * @since 1.1.3
+     */
     protected final CacheCreator cacheCreator;
 
+    /**
+     * 是否可以动态的创建缓存
+     *
+     * @since 1.1.3
+     */
     protected final boolean dynamic;
 
     public BootCacheManager(CacheCreator cacheCreator) {
@@ -76,12 +98,30 @@ public class BootCacheManager implements CacheManager {
         return cacheNames;
     }
 
+    /**
+     * 请求一个缓存必须存在
+     *
+     * @param cacheName 缓存名
+     *
+     * @return 对应的缓存
+     *
+     * @since 1.1.3
+     */
     public Cache requireCache(String cacheName) {
         Cache cache = getCache(cacheName);
-        Objects.requireNonNull(cache, "cache '" + cacheName + "' has no config");
+        Objects.requireNonNull(cache, "cache '" + cacheName + "' not exists");
         return cache;
     }
 
+    /**
+     * 新增对象缓存
+     *
+     * @param cacheName 缓存名
+     * @param key 键
+     * @param value 值
+     *
+     * @since 1.1.3
+     */
     public void putVal(String cacheName, String key, Object value) {
         Cache cache = getCache(cacheName);
         if (ObjectUtil.isNotNull(cache)) {
@@ -89,20 +129,73 @@ public class BootCacheManager implements CacheManager {
         }
     }
 
+    /**
+     * 添加一个对象缓存，如果缓存是列表的话
+     *
+     * @param cacheName 缓存名
+     * @param key 键
+     * @param value 值
+     *
+     * @since 1.1.3
+     */
+    @SuppressWarnings("unchecked")
+    public void addVal(String cacheName, String key, Object value) {
+        Cache cache = getCache(cacheName);
+        if (ObjectUtil.isNotNull(cache)) {
+            Object object = cache.get(key);
+            if (object instanceof Collection) {
+                ((Collection) object).add(value);
+            }
+        }
+    }
+
+    /**
+     * 删除一个对象缓存，works on all caches if cacheName==null || cacheName=="" || cacheName=="*"
+     *
+     * @param cacheName 缓存名
+     * @param key 键
+     *
+     * @since 1.1.3
+     */
     public void delVal(String cacheName, String key) {
+        if (StrUtil.isEmpty(cacheName) || StringConsts.Sign.STAR.equals(cacheName)) {
+            cacheMap.values().forEach(cache -> cache.evict(key));
+            return;
+        }
         Cache cache = getCache(cacheName);
         if (ObjectUtil.isNotNull(cache)) {
             cache.evict(key);
         }
     }
 
+    /**
+     * 删除所有对象缓存，works on all caches if cacheName==null || cacheName=="" || cacheName=="*"
+     *
+     * @param cacheName 缓存名
+     *
+     * @since 1.1.3
+     */
     public void removeAll(String cacheName) {
+        if (StrUtil.isEmpty(cacheName) || StringConsts.Sign.STAR.equals(cacheName)) {
+            cacheMap.values().forEach(Cache::clear);
+            return;
+        }
         Cache cache = getCache(cacheName);
         if (ObjectUtil.isNotNull(cache)) {
             cache.clear();
         }
     }
 
+    /**
+     * 获取缓存的对象
+     *
+     * @param cacheName 缓存名
+     * @param key 键
+     *
+     * @return 缓存的对象
+     *
+     * @since 1.1.3
+     */
     public Object getVal(String cacheName, String key) {
         Cache cache = getCache(cacheName);
         if (ObjectUtil.isNotNull(cache)) {

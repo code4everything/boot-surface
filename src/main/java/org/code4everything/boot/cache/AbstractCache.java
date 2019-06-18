@@ -57,7 +57,7 @@ public abstract class AbstractCache implements Cache {
                 return valueLoader.call();
             } catch (Exception e) {
                 if (BootConfig.isDebug()) {
-                    throw new RuntimeException("value loader error");
+                    throw new RuntimeException("value loader error, details: " + e.getMessage(), e);
                 }
                 return null;
             }
