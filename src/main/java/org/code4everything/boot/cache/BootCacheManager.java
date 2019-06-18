@@ -1,5 +1,6 @@
 package org.code4everything.boot.cache;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ConcurrentHashSet;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
@@ -169,6 +170,24 @@ public class BootCacheManager implements CacheManager {
     }
 
     /**
+     * 从缓存列表中移除缓存
+     *
+     * @param cacheName 缓存名称
+     * @param key 键
+     * @param removable 移除条件的回调
+     * @param <T> 值类型
+     *
+     * @since 1.1.3
+     */
+    public <T> void delVal(String cacheName, String key, CacheRemovable<T> removable) {
+        Collection<T> collection = getValByType(cacheName, key);
+        if (CollUtil.isEmpty(collection)) {
+            return;
+        }
+        collection.removeIf(removable::shouldRemove);
+    }
+
+    /**
      * 删除所有对象缓存，works on all caches if cacheName==null || cacheName=="" || cacheName=="*"
      *
      * @param cacheName 缓存名
@@ -203,5 +222,22 @@ public class BootCacheManager implements CacheManager {
             return Objects.isNull(wrapper) ? null : wrapper.get();
         }
         return null;
+    }
+
+    /**
+     * 获取缓存的对象
+     *
+     * @param cacheName 缓存名
+     * @param key 键
+     * @param <T> 目标类型
+     *
+     * @return 缓存的对象
+     *
+     * @since 1.1.3
+     */
+    @SuppressWarnings("unchecked")
+    public <T> T getValByType(String cacheName, String key) {
+        Object value = getVal(cacheName, key);
+        return Objects.isNull(value) ? null : (T) value;
     }
 }
