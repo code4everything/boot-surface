@@ -100,7 +100,7 @@ public final class DateUtils {
         if (curr > endOfToday) {
             // 如果当前的时间戳超过了endOfToday的时间戳，说明Today的时间戳已经过期，需重新设置
             Date date = new Date();
-            startOfToday = DateUtil.beginOfDay(new Date(curr)).getTime();
+            startOfToday = DateUtil.beginOfDay(date).getTime();
             endOfToday = DateUtil.endOfDay(date).getTime();
         }
         return check(origin, copier);
