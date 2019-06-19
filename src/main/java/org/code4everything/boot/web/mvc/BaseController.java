@@ -1,10 +1,8 @@
 package org.code4everything.boot.web.mvc;
 
 import cn.hutool.core.collection.CollUtil;
-import com.google.common.base.Strings;
 import org.code4everything.boot.base.constant.MessageConsts;
 import org.code4everything.boot.config.BootConfig;
-import org.code4everything.boot.service.BootUserService;
 import org.code4everything.boot.web.http.HttpUtils;
 import org.code4everything.boot.web.mvc.exception.ExceptionBiscuit;
 import org.springframework.http.HttpEntity;
@@ -23,7 +21,7 @@ import java.util.Objects;
  * @author pantao
  * @since 2018/11/2
  **/
-public class BaseController<U> {
+public class BaseController {
 
     private static final int DEFAULT_ERROR_CODE = BootConfig.DEFAULT_ERROR_CODE;
 
@@ -31,12 +29,6 @@ public class BaseController<U> {
 
     @Resource
     public HttpServletRequest request;
-
-    /**
-     * @since 1.1.2
-     */
-    @Resource
-    private BootUserService<U> userService;
 
     /**
      * 只允许继承
@@ -49,13 +41,11 @@ public class BaseController<U> {
      * 创建对象
      *
      * @param request {@link HttpServletRequest}
-     * @param userService {@link BootUserService}
      *
      * @since 1.1.3
      */
-    public BaseController(HttpServletRequest request, BootUserService<U> userService) {
+    public BaseController(HttpServletRequest request) {
         this.request = request;
-        this.userService = userService;
     }
 
     /**
@@ -182,42 +172,6 @@ public class BaseController<U> {
      */
     public String getToken(String tokenKey) {
         return HttpUtils.getToken(tokenKey, request);
-    }
-
-    /**
-     * 获取用户
-     *
-     * @return 用户
-     *
-     * @since 1.0.4
-     */
-    public U getUser() {
-        return getUser(Strings.nullToEmpty(getToken()));
-    }
-
-    /**
-     * 获取用户
-     *
-     * @param token 令牌
-     *
-     * @return 用户
-     *
-     * @since 1.1.3
-     */
-    public U getUser(String token) {
-        Objects.requireNonNull(userService, "please implementation interface 'BootUserService<T>'");
-        return userService.getUserByToken(token);
-    }
-
-    /**
-     * 获取用户
-     *
-     * @return 用户
-     *
-     * @since 1.0.4
-     */
-    public U requireUser() {
-        return AssertUtils.assertUserLoggedIn(getUser(requireToken()));
     }
 
     /**
