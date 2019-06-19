@@ -42,7 +42,7 @@ public final class DateUtils {
      * @since 1.1.3
      */
     public static Date getStartOfThisMonth() {
-        return checkThisMonth(startOfThisMonth, startOfThisMonthCopier);
+        return checkThisMonth(true, startOfThisMonthCopier);
     }
 
     /**
@@ -53,7 +53,7 @@ public final class DateUtils {
      * @since 1.1.3
      */
     public static Date getEndOfThisMonth() {
-        return checkThisMonth(endOfThisMonth, endOfThisMonthCopier);
+        return checkThisMonth(false, endOfThisMonthCopier);
     }
 
     /**
@@ -64,7 +64,7 @@ public final class DateUtils {
      * @since 1.0.9
      */
     public static Date getStartOfToday() {
-        return checkToday(startOfToday, startOfTodayCopier);
+        return checkToday(true, startOfTodayCopier);
     }
 
     /**
@@ -75,13 +75,13 @@ public final class DateUtils {
      * @since 1.0.9
      */
     public static Date getEndOfToday() {
-        return checkToday(endOfToday, endOfTodayCopier);
+        return checkToday(false, endOfTodayCopier);
     }
 
     /**
      * 使用副本来防止原引用被篡改
      */
-    private static Date checkThisMonth(long origin, Date copier) {
+    private static Date checkThisMonth(boolean isStart, Date copier) {
         long curr = System.currentTimeMillis();
         if (curr > endOfThisMonth) {
             // 如果当前的时间戳超过了endOfThisMonth的时间戳，说明ThisMonth的时间戳已经过期，需重新设置
@@ -89,13 +89,13 @@ public final class DateUtils {
             startOfThisMonth = DateUtil.beginOfMonth(date).getTime();
             endOfThisMonth = DateUtil.endOfMonth(date).getTime();
         }
-        return check(origin, copier);
+        return check(isStart ? startOfThisMonth : endOfThisMonth, copier);
     }
 
     /**
      * 使用副本来防止原引用被篡改
      */
-    private static Date checkToday(long origin, Date copier) {
+    private static Date checkToday(boolean isStart, Date copier) {
         long curr = System.currentTimeMillis();
         if (curr > endOfToday) {
             // 如果当前的时间戳超过了endOfToday的时间戳，说明Today的时间戳已经过期，需重新设置
@@ -103,7 +103,7 @@ public final class DateUtils {
             startOfToday = DateUtil.beginOfDay(date).getTime();
             endOfToday = DateUtil.endOfDay(date).getTime();
         }
-        return check(origin, copier);
+        return check(isStart ? startOfToday : endOfToday, copier);
     }
 
     private static Date check(long origin, Date copier) {
