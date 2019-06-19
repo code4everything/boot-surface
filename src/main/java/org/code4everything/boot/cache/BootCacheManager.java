@@ -87,6 +87,7 @@ public class BootCacheManager implements CacheManager {
                 cache = cacheMap.get(name);
                 if (cache == null) {
                     cache = cacheCreator.createCache(name);
+                    cacheMap.put(name, cache);
                     cacheNames.add(name);
                 }
             }
@@ -225,7 +226,7 @@ public class BootCacheManager implements CacheManager {
     }
 
     /**
-     * 获取缓存的对象
+     * 获取缓存的对象，自动类型推断
      *
      * @param cacheName 缓存名
      * @param key 键
