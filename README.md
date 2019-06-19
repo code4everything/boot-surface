@@ -55,6 +55,8 @@ Boot Surface主要是一个依赖于Spring框架的Web开发工具类，旨在�
 
 - [消息类](docs/message.md)
 
+- [Spring注解缓存](docs/cache.md)
+
 ## 示例项目
 
 [https://gitee.com/code4everything/wanna-spring/tree/master/spring-bee](https://gitee.com/code4everything/wanna-spring/tree/master/spring-bee)

@@ -42,13 +42,21 @@
 
 如果是通过邮件发送验证码，那么你需要先配置邮箱，请参考上面的说明
 
-> 目前仅支持邮箱发送验证码，短信验证码后期会完善的
-
-- 发送验证码
+- 邮箱发送验证码
 
     ``` java
     // 验证码有效期：30分钟
     VerifyCodeUtils.sendByMailAsync("sendto@example.com", "验证码", "你的验证码：{}，请不要告诉其他人哦");
+    ```
+    
+- 短信（包括任何其他方式）的验证码发送
+
+    需要一个实现了 `MessageSender` 的类，在类中你可以定义任何消息的发送
+
+    ``` java
+    // 你需要实现的类
+    MessageSender sender = new MessageSender();
+    VerifyCodeUtils.sendBy(sender, "18780692121", "你的验证码：{}，请不要告诉其他人哦");
     ```
     
 - 校验验证码

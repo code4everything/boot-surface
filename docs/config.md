@@ -93,3 +93,9 @@ setFieldEncoder(org.code4everything.boot.base.encoder.DefaultFieldEncoder)
 ```
 
 > [用法参考](response.md)
+
+> [PROPERTY配置样本](../src/main/resources/application-sample.properties)
+
+> [JSON配置样本](../src/main/resources/boot-config-sample.json)
+
+> [LOGBACK日志配置样本](../src/main/resources/logback-sample.xml)
