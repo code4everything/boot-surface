@@ -21,12 +21,12 @@ public GuavaCacheManager guavaCacheManager() {
 
 ``` java
 @Bean
-public RedisCacheManager redisCacheManager() {
-    Map<String, RedisCacheCreator> creatorMap = new HashMap<>(2, 1);
+public GuavaCacheManager guavaCacheManager() {
+    Map<String, GuavaCacheCreator> creatorMap = new HashMap<>(2, 1);
     // 不同的缓存使用不同的缓存策略
-    creatorMap.put("cache1", new RedisCacheCreator(60 * 60));
-    creatorMap.put("cache2", new RedisCacheCreator(60 * 60 * 24));
-    return CacheUtils.newRedisCacheManager(creatorMap);
+    creatorMap.put("cache1", CacheBuilder.newBuilder().expireAfterWrite(10, TimeUnit.MINUTES));
+    creatorMap.put("cache2", CacheBuilder.newBuilder().expireAfterWrite(60, TimeUnit.MINUTES));
+    return CacheUtils.newGuavaCacheManager(creatorMap);
 }
 ```
 
@@ -47,7 +47,7 @@ public RedisCacheManager redisCacheManager() {
 或者
 
 ``` java
-@Cacheable(value = "cache2", key = "#root.args", cacheManager = "redisCacheManager")
+@Cacheable(value = "cache2", key = "#root.args", cacheManager = "guavaCacheManager")
 ```
 
 当然，你也可以不使用注解，直接在代码中手动缓存，使用你用到的 `CacheManager` 即可

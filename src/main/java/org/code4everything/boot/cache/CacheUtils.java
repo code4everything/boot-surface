@@ -4,9 +4,6 @@ import cn.hutool.core.collection.CollUtil;
 import com.google.common.cache.CacheBuilder;
 import org.code4everything.boot.cache.guava.GuavaCache;
 import org.code4everything.boot.cache.guava.GuavaCacheManager;
-import org.code4everything.boot.cache.redis.RedisCache;
-import org.code4everything.boot.cache.redis.RedisCacheCreator;
-import org.code4everything.boot.cache.redis.RedisCacheManager;
 import org.springframework.cache.Cache;
 
 import java.util.ArrayList;
@@ -23,72 +20,6 @@ import java.util.Map;
 public class CacheUtils {
 
     private CacheUtils() {}
-
-    // -------------------------------------------Redis-----------------------------------------------------------------
-
-    /**
-     * 新建缓存管理器
-     *
-     * @param redisCacheCreatorMap 缓存名与缓存创建者的映射
-     *
-     * @return 缓存管理器
-     *
-     * @since 1.1.3
-     */
-    public static RedisCacheManager newRedisCacheManager(Map<String, RedisCacheCreator> redisCacheCreatorMap) {
-        return newRedisCacheManager(redisCacheCreatorMap, null);
-    }
-
-    /**
-     * 新建缓存管理器
-     *
-     * @param redisCacheCreatorMap 缓存名与缓存创建者的映射
-     * @param defaultRedisCacheCreator 缓存创建者
-     *
-     * @return 缓存管理器
-     *
-     * @since 1.1.3
-     */
-    public static RedisCacheManager newRedisCacheManager(Map<String, RedisCacheCreator> redisCacheCreatorMap,
-                                                         RedisCacheCreator defaultRedisCacheCreator) {
-        Collection<RedisCache> caches = new ArrayList<>();
-        redisCacheCreatorMap.forEach((k, v) -> caches.add(v.createCache(k)));
-        return new RedisCacheManager(caches, defaultRedisCacheCreator);
-    }
-
-    /**
-     * 新建缓存管理器
-     *
-     * @param redisCacheCreator 缓存创建者
-     * @param names 缓存名集合
-     *
-     * @return 缓存管理器
-     *
-     * @since 1.1.3
-     */
-    public static RedisCacheManager newRedisCacheManager(RedisCacheCreator redisCacheCreator, String... names) {
-        return newRedisCacheManager(redisCacheCreator, Arrays.asList(names));
-    }
-
-    /**
-     * 新建缓存管理器
-     *
-     * @param redisCacheCreator 缓存创建者
-     * @param names 缓存名集合
-     *
-     * @return 缓存管理器
-     *
-     * @since 1.1.3
-     */
-    public static RedisCacheManager newRedisCacheManager(RedisCacheCreator redisCacheCreator,
-                                                         Collection<String> names) {
-        if (CollUtil.isEmpty(names)) {
-            return new RedisCacheManager(redisCacheCreator);
-        }
-        Collection<RedisCache> caches = new ArrayList<>(names.size());
-        names.forEach(name -> caches.add(redisCacheCreator.createCache(name)));
-        return new RedisCacheManager(caches, redisCacheCreator);
-    }
 
     // ---------------------------------------Guava---------------------------------------------------------------------
 
