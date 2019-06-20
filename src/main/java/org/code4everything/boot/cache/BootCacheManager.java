@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ConcurrentHashSet;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import org.code4everything.boot.base.bean.BaseDomain;
 import org.code4everything.boot.base.constant.StringConsts;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
@@ -186,6 +187,50 @@ public class BootCacheManager implements CacheManager {
             return;
         }
         collection.removeIf(removable::shouldRemove);
+    }
+
+    /**
+     * 从缓存列表中移除缓存
+     *
+     * @param cacheName 缓存名称
+     * @param key 键
+     * @param value 需要从列表中移除的值
+     * @param <T> 值类型
+     *
+     * @since 1.1.5
+     */
+    public <T> void delVal(String cacheName, String key, T value) {
+        Collection<T> collection = getValByType(cacheName, key);
+        if (CollUtil.isEmpty(collection)) {
+            return;
+        }
+        collection.removeIf(t -> Objects.equals(t, value));
+    }
+
+    /**
+     * 从缓存列表中移除缓存
+     *
+     * @param cacheName 缓存名称
+     * @param key 键
+     * @param value 需要从列表中移除的值
+     * @param <T> 值类型
+     *
+     * @since 1.1.5
+     */
+    public <T extends BaseDomain> void delDomain(String cacheName, String key, T value) {
+        Collection<T> collection = getValByType(cacheName, key);
+        if (CollUtil.isEmpty(collection)) {
+            return;
+        }
+        collection.removeIf(t -> {
+            if (t == value) {
+                return true;
+            } else if (Objects.isNull(t) || Objects.isNull(value)) {
+                return false;
+            } else {
+                return t.primaryKey().equals(value.primaryKey());
+            }
+        });
     }
 
     /**
