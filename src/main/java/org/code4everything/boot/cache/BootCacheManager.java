@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ConcurrentHashSet;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import com.google.common.collect.Lists;
 import org.code4everything.boot.base.bean.BaseDomain;
 import org.code4everything.boot.base.constant.StringConsts;
 import org.springframework.cache.Cache;
@@ -146,8 +147,11 @@ public class BootCacheManager implements CacheManager {
         Cache cache = getCache(cacheName);
         if (ObjectUtil.isNotNull(cache)) {
             Object object = cache.get(key);
-            if (object instanceof Collection) {
+            if (Objects.isNull(object)) {
+                putVal(cacheName, key, Lists.newArrayList(value));
+            } else if (object instanceof Collection) {
                 ((Collection) object).add(value);
+                putVal(cacheName, key, object);
             }
         }
     }
