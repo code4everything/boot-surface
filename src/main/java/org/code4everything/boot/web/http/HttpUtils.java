@@ -713,6 +713,10 @@ public final class HttpUtils {
     public static <T> Response<T> upload(BootFileService<T> service, MultipartFile file, String storage, boolean md5,
                                          Map<String, Object> params, boolean force) {
         Response<T> response = new Response<>();
+        // 文件空指针检测
+        if (Objects.isNull(file)) {
+            return response.error("file is null");
+        }
         // 检测文件大小是否超标
         if (file.getSize() > BootConfig.getMaxUploadFileSize()) {
             return response.error("file size must less than " + BootConfig.getMaxUploadFileSize());
