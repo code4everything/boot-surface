@@ -823,7 +823,7 @@ public final class HttpUtils {
      *
      * @since 1.1.0
      */
-    public static <T> Response<T> upload(BootFileService<T> service, byte[] bytes, String name, String storage,
+    public static <T> Response<T> upload(BootFileService<T> service, byte[] bytes, String storage, String name,
                                          boolean md5) {
         return upload(service, bytes, storage, name, md5, null, false);
     }
