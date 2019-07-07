@@ -1,5 +1,6 @@
 package org.code4everything.boot.base.encoder;
 
+import cn.hutool.core.codec.Base64;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.crypto.digest.DigestUtil;
 import org.slf4j.Logger;
@@ -52,6 +53,9 @@ public class DefaultFieldEncoder implements FieldEncoder {
                     break;
                 case "sha256":
                     field.set(data, DigestUtil.sha256Hex(value));
+                    break;
+                case "base64":
+                    field.set(data, Base64.encode(value));
                     break;
                 default:
                     field.set(data, sealed.value());

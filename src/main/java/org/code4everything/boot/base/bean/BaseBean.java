@@ -3,7 +3,7 @@ package org.code4everything.boot.base.bean;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.JSON;
 
 import java.lang.reflect.Field;
 import java.util.Objects;
@@ -53,7 +53,7 @@ public interface BaseBean {
      * @since 1.1.2
      */
     default String toJsonString(boolean pretty) {
-        return JSONObject.toJSONString(this, pretty);
+        return JSON.toJSONString(this, pretty);
     }
 
     /**

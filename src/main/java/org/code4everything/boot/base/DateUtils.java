@@ -22,6 +22,16 @@ public final class DateUtils {
 
     private static Date endOfTodayCopier = new Date(0);
 
+    // -----------------------本周----------------------------------------------
+
+    private static long startOfThisWeek = 0;
+
+    private static Date startOfThisWeekCopier = new Date(0);
+
+    private static long endOfThisWeek = 0;
+
+    private static Date endOfThisWeekCopier = new Date(0);
+
     // ------------------当月-------------------------------------------
 
     private static long startOfThisMonth = 0;
@@ -32,7 +42,61 @@ public final class DateUtils {
 
     private static Date endOfThisMonthCopier = new Date(0);
 
+    // ----------------------------当年-----------------------------------------------
+
+    private static long startOfThisYear = 0;
+
+    private static Date startOfThisYearCopier = new Date(0);
+
+    private static long endOfThisYear = 0;
+
+    private static Date endOfThisYearCopier = new Date(0);
+
     private DateUtils() {}
+
+    /**
+     * 获取本年的开始时间点
+     *
+     * @return 本年的开始
+     *
+     * @since 1.1.5
+     */
+    public static Date getStartOfThisYear() {
+        return checkThisYear(true, startOfThisYearCopier);
+    }
+
+    /**
+     * 获取本年的结束时间点
+     *
+     * @return 本年的结束
+     *
+     * @since 1.1.5
+     */
+    public static Date getEndOfThisYear() {
+        return checkThisYear(false, endOfThisYearCopier);
+    }
+
+    /**
+     * 获取本周的开始时间点
+     *
+     * @return 本周的开始
+     *
+     * @since 1.1.3
+     */
+    public static Date getStartOfThisWeek() {
+        return checkThisWeek(true, startOfThisWeekCopier);
+    }
+
+    /**
+     * 获取本周的结束时间点
+     *
+     * @return 本周的结束
+     *
+     * @since 1.1.5
+     */
+    public static Date getEndOfThisWeek() {
+        return checkThisWeek(false, endOfThisWeekCopier);
+    }
 
     /**
      * 获取本月的开始时间点
@@ -76,6 +140,35 @@ public final class DateUtils {
      */
     public static Date getEndOfToday() {
         return checkToday(false, endOfTodayCopier);
+    }
+
+    /**
+     * 使用副本来防止原引用被篡改
+     */
+    private static Date checkThisYear(boolean isStart, Date copier) {
+        long curr = System.currentTimeMillis();
+        if (curr > endOfThisYear) {
+            // 如果当前的时间戳超过了endOfThisYear的时间戳，说明ThisMonth的时间戳已经过期，需重新设置
+            Date date = new Date();
+            startOfThisYear = DateUtil.beginOfYear(date).getTime();
+            endOfThisYear = DateUtil.endOfYear(date).getTime();
+        }
+        return check(isStart ? startOfThisYear : endOfThisYear, copier);
+    }
+
+
+    /**
+     * 使用副本来防止原引用被篡改
+     */
+    private static Date checkThisWeek(boolean isStart, Date copier) {
+        long curr = System.currentTimeMillis();
+        if (curr > endOfThisWeek) {
+            // 如果当前的时间戳超过了endOfThisWeek的时间戳，说明ThisMonth的时间戳已经过期，需重新设置
+            Date date = new Date();
+            startOfThisWeek = DateUtil.beginOfWeek(date).getTime();
+            endOfThisWeek = DateUtil.endOfWeek(date).getTime();
+        }
+        return check(isStart ? startOfThisWeek : endOfThisWeek, copier);
     }
 
     /**

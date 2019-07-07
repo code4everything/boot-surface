@@ -1,7 +1,10 @@
 package org.code4everything.boot.base.collection;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.comparator.ComparatorException;
 import cn.hutool.core.util.ObjectUtil;
+import com.alibaba.fastjson.JSON;
+import org.code4everything.boot.base.bean.BaseBean;
 
 import javax.annotation.concurrent.NotThreadSafe;
 import java.util.*;
@@ -14,7 +17,7 @@ import java.util.concurrent.PriorityBlockingQueue;
  * @since 2019/1/17
  **/
 @NotThreadSafe
-public class SortedList<E, T extends List<E>> {
+public class SortedList<E, T extends List<E>> implements BaseBean {
 
     /**
      * 数据源
@@ -356,5 +359,15 @@ public class SortedList<E, T extends List<E>> {
         if (Objects.isNull(comparator)) {
             throw new ComparatorException("comparator must not be null");
         }
+    }
+
+    @Override
+    public boolean hasValue() {
+        return CollUtil.isNotEmpty(list);
+    }
+
+    @Override
+    public String toJsonString(boolean pretty) {
+        return JSON.toJSONString(list);
     }
 }

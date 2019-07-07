@@ -1,5 +1,6 @@
 package org.code4everything.boot.cache.guava;
 
+import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import org.code4everything.boot.cache.AbstractCache;
 
@@ -16,17 +17,17 @@ public class GuavaCache extends AbstractCache {
     /**
      * @since 1.1.3
      */
-    private final com.google.common.cache.Cache<Object, Object> cache;
+    private final Cache<Object, Object> cache;
 
     /**
      * 构造函数
      *
      * @param name 缓存名
-     * @param cache {@link com.google.common.cache.Cache}
+     * @param cache {@link Cache}
      *
      * @since 1.1.3
      */
-    public GuavaCache(String name, com.google.common.cache.Cache<Object, Object> cache) {
+    public GuavaCache(String name, Cache<Object, Object> cache) {
         super(name, cache);
         this.cache = cache;
     }
