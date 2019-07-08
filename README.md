@@ -17,6 +17,8 @@ Boot Surface主要是一个依赖于Spring框架的Web开发工具类，旨在�
 
 - 封装了一些常用的常量
 
+- 一些常用的工具类
+
 ## 安装使用
 
 项目仅支持 JDK1.8 以上
@@ -27,7 +29,7 @@ Boot Surface主要是一个依赖于Spring框架的Web开发工具类，旨在�
 <dependency>
     <groupId>org.code4everything</groupId>
     <artifactId>boot-surface</artifactId>
-    <version>1.1.5</version>
+    <version>1.1.6</version>
 </dependency>
 ```
 

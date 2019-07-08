@@ -30,10 +30,6 @@ public final class FileUtils {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FileUtils.class);
 
-    private static final String[] SIZE = {" B", " KB", " MB", " GB", " TB", " PB", " EB", " ZB", " YB"};
-
-    private static final int KB = 1000;
-
     private FileUtils() {}
 
     /**
