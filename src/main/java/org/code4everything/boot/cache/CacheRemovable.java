@@ -5,7 +5,7 @@ package org.code4everything.boot.cache;
  *
  * @author pantao
  * @since 2019/6/18
- **/
+ */
 @FunctionalInterface
 public interface CacheRemovable<T> {
 

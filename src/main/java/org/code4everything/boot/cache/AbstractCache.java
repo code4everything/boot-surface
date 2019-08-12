@@ -10,7 +10,7 @@ import java.util.concurrent.Callable;
 /**
  * @author pantao
  * @since 2019/6/14
- **/
+ */
 public abstract class AbstractCache implements Cache {
 
     private final String name;

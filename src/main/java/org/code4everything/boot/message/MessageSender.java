@@ -3,7 +3,7 @@ package org.code4everything.boot.message;
 /**
  * @author pantao
  * @since 2019/4/11
- **/
+ */
 @FunctionalInterface
 public interface MessageSender {
 

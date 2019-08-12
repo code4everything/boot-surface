@@ -7,7 +7,7 @@ import java.util.List;
  *
  * @author pantao
  * @since 2019/5/6
- **/
+ */
 public final class ListUtils {
 
     private ListUtils() {}

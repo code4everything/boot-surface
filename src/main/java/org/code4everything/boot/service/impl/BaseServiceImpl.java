@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
  *
  * @author pantao
  * @since 2019/6/11
- **/
+ */
 public class BaseServiceImpl implements BootBaseService {
 
     @Resource

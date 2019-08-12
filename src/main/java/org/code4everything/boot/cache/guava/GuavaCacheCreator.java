@@ -10,7 +10,7 @@ import java.util.Objects;
  *
  * @author pantao
  * @since 2019/6/13
- **/
+ */
 public class GuavaCacheCreator implements CacheCreator {
 
     /**

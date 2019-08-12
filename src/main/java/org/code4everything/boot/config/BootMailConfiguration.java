@@ -9,7 +9,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 /**
  * @author pantao
  * @since 2019/4/16
- **/
+ */
 @Configuration
 @ConditionalOnClass(JavaMailSender.class)
 public class BootMailConfiguration {

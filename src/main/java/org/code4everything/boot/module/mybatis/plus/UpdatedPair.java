@@ -8,7 +8,7 @@ import org.code4everything.boot.base.bean.BaseBean;
  *
  * @author pantao
  * @since 2019/5/8
- **/
+ */
 public class UpdatedPair<T> implements BaseBean {
 
     private T oldValue;

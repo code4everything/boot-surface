@@ -7,7 +7,7 @@ import org.springframework.cache.Cache;
  *
  * @author pantao
  * @since 2019/6/13
- **/
+ */
 @FunctionalInterface
 public interface CacheCreator {
 

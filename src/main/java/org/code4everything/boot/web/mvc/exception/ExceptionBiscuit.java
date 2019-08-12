@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 /**
  * @author pantao
  * @since 2019/4/30
- **/
+ */
 public interface ExceptionBiscuit {
 
     /**

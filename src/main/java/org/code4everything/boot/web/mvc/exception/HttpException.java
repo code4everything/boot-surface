@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
  *
  * @author pantao
  * @since 2018/11/30
- **/
+ */
 public class HttpException extends RuntimeException implements ExceptionBiscuit, BaseBean {
 
     /**

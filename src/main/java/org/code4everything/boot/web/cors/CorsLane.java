@@ -11,7 +11,7 @@ import java.util.List;
  *
  * @author pantao
  * @since 2018/10/30
- **/
+ */
 public class CorsLane implements BaseBean, Serializable {
 
     private static final long serialVersionUID = -8878074589278671551L;

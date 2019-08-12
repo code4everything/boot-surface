@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 /**
  * @author pantao
  * @since 2019/5/9
- **/
+ */
 public final class UrlForbadeException extends HttpException {
 
     public UrlForbadeException() {

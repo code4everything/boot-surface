@@ -16,7 +16,7 @@ import java.util.Objects;
  *
  * @author pantao
  * @since 2018/11/11
- **/
+ */
 public class DefaultFieldEncoder implements FieldEncoder {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DefaultFieldEncoder.class);

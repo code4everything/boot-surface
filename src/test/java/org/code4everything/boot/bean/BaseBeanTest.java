@@ -6,7 +6,7 @@ import org.junit.Test;
 /**
  * @author pantao
  * @since 2019/1/11
- **/
+ */
 public class BaseBeanTest implements BaseBean {
 
     @Test

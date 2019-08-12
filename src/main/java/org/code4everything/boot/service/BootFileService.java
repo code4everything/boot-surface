@@ -10,7 +10,7 @@ import javax.annotation.Nullable;
  *
  * @author pantao
  * @since 2018/11/2
- **/
+ */
 public interface BootFileService<T> {
 
     /**

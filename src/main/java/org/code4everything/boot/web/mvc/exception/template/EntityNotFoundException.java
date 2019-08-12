@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 /**
  * @author pantao
  * @since 2019/3/20
- **/
+ */
 public final class EntityNotFoundException extends HttpException {
 
     public EntityNotFoundException() {}

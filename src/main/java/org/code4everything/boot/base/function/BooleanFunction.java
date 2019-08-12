@@ -5,7 +5,7 @@ package org.code4everything.boot.base.function;
  *
  * @author pantao
  * @since 2018/12/26
- **/
+ */
 @FunctionalInterface
 public interface BooleanFunction {
 

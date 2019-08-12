@@ -5,7 +5,7 @@ package org.code4everything.boot.base.constant;
  *
  * @author pantao
  * @since 2018/11/2
- **/
+ */
 public final class IntegerConsts {
 
     public static final int ONE_THOUSAND_AND_TWENTY_FOUR = 1024;

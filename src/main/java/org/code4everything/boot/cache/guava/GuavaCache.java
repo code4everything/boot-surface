@@ -11,7 +11,7 @@ import java.util.concurrent.Callable;
  *
  * @author pantao
  * @since 2019/6/13
- **/
+ */
 public class GuavaCache extends AbstractCache {
 
     /**

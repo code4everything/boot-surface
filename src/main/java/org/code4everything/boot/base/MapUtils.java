@@ -11,7 +11,7 @@ import java.util.*;
  *
  * @author pantao
  * @since 2019/4/19
- **/
+ */
 public final class MapUtils {
 
     private MapUtils() {}

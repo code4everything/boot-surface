@@ -11,7 +11,7 @@ import java.util.Collection;
  *
  * @author pantao
  * @since 2019/6/13
- **/
+ */
 public class GuavaCacheManager extends BootCacheManager {
 
     public GuavaCacheManager(CacheBuilder<Object, Object> cacheBuilder) {

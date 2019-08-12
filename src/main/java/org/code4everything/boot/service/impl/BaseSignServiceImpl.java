@@ -13,7 +13,7 @@ import java.util.Objects;
  *
  * @author pantao
  * @since 2019/6/19
- **/
+ */
 public class BaseSignServiceImpl<U> extends BaseServiceImpl {
 
     @Resource

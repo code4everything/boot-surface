@@ -3,7 +3,7 @@ package org.code4everything.boot.service;
 /**
  * @author pantao
  * @since 2019/6/11
- **/
+ */
 public interface BootBaseService {
 
     /**

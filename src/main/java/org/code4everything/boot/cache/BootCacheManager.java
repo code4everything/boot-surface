@@ -21,7 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * @author pantao
  * @since 2019/6/13
- **/
+ */
 public class BootCacheManager implements CacheManager {
 
     /**

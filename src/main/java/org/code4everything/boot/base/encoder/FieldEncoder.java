@@ -5,7 +5,7 @@ package org.code4everything.boot.base.encoder;
  *
  * @author pantao
  * @since 2019/4/2
- **/
+ */
 @FunctionalInterface
 public interface FieldEncoder {
 

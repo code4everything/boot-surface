@@ -7,7 +7,7 @@ import org.junit.Test;
 /**
  * @author pantao
  * @since 2018/11/11
- **/
+ */
 public class CommonTest {
 
     @Test

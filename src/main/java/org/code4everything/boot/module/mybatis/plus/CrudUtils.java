@@ -17,7 +17,7 @@ import java.util.Objects;
  *
  * @author pantao
  * @since 2019/5/8
- **/
+ */
 public final class CrudUtils {
 
     private CrudUtils() {}

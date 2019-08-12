@@ -15,7 +15,7 @@ import java.util.concurrent.PriorityBlockingQueue;
  *
  * @author pantao
  * @since 2019/1/17
- **/
+ */
 @NotThreadSafe
 public class SortedList<E, T extends List<E>> implements BaseBean {
 

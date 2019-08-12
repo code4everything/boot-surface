@@ -6,7 +6,7 @@ import org.code4everything.boot.web.mvc.exception.HttpException;
 /**
  * @author pantao
  * @since 2019/5/9
- **/
+ */
 public final class UsernamePasswordIncorrectException extends HttpException {
 
     public UsernamePasswordIncorrectException(int errCode) {

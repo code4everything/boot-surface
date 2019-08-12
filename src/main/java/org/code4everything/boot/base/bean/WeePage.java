@@ -15,7 +15,7 @@ import java.util.Collection;
  *
  * @author pantao
  * @since 2019/3/20
- **/
+ */
 public class WeePage<T> implements BaseBean, Serializable {
 
     private static final long serialVersionUID = -7558939772837583007L;

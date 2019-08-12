@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 /**
  * @author pantao
  * @since 2019/4/8
- **/
+ */
 public final class RequestFrequentlyException extends HttpException {
 
     public RequestFrequentlyException() {

@@ -8,7 +8,7 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 /**
  * @author pantao
  * @since 2019/4/16
- **/
+ */
 @Configuration
 @ConditionalOnClass(RedisConnectionFactory.class)
 public class BootRedisConfiguration {

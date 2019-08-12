@@ -13,8 +13,15 @@ import java.util.Objects;
  *
  * @author pantao
  * @since 2019/1/11
- **/
+ */
 public interface BaseBean {
+
+    /**
+     * 将空指针的属性设为默认值
+     *
+     * @since 1.1.6
+     */
+    default void nulls2Default() {}
 
     /**
      * 比较对象是否相等，快速失败

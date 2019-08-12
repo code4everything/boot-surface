@@ -12,7 +12,7 @@ import java.util.Objects;
  *
  * @author pantao
  * @since 2019/6/19
- **/
+ */
 public class BaseSignController<U> extends BaseController {
 
     /**

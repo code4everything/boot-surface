@@ -11,7 +11,7 @@ import java.io.Serializable;
  *
  * @author pantao
  * @since 2018/11/15
- **/
+ */
 public class ExceptionBread implements ExceptionBiscuit, BaseBean, Serializable {
 
     private static final long serialVersionUID = 1349750625515704986L;

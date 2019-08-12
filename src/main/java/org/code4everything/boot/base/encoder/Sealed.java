@@ -10,7 +10,7 @@ import java.lang.reflect.Field;
  *
  * @author pantao
  * @since 2018/11/11
- **/
+ */
 @Documented
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)

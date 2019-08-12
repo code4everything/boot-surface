@@ -5,7 +5,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 /**
  * @author pantao
  * @since 2019/4/16
- **/
+ */
 @ConfigurationProperties("boot.surface")
 public class BootConfigProperties {
 

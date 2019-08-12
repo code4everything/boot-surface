@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 /**
  * @author pantao
  * @since 2019/5/10
- **/
+ */
 @FunctionalInterface
 public interface ExceptionLoader<T extends HttpException> {
 

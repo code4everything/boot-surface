@@ -9,7 +9,7 @@ import org.springframework.web.filter.CorsFilter;
  *
  * @author pantao
  * @since 2018/10/30
- **/
+ */
 public final class CorsUtils {
 
     private CorsUtils() {}

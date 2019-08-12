@@ -7,7 +7,9 @@ import cn.hutool.core.io.watch.WatchMonitor;
 import cn.hutool.core.io.watch.Watcher;
 import cn.hutool.core.io.watch.watchers.DelayWatcher;
 import cn.hutool.core.util.CharsetUtil;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import org.code4everything.boot.base.bean.BaseBean;
 import org.code4everything.boot.base.constant.StringConsts;
 import org.code4everything.boot.config.BootConfig;
 import org.code4everything.boot.config.BootConfigProperties;
@@ -25,7 +27,7 @@ import java.util.Objects;
  *
  * @author pantao
  * @since 2018/11/2
- **/
+ */
 public final class FileUtils {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FileUtils.class);
@@ -88,15 +90,22 @@ public final class FileUtils {
         Objects.requireNonNull(config, "the object 'config' must not be null");
         watchFile(jsonFile, new FileWatcher() {
 
+            // 是否实现了基类
+            private boolean isBase = config instanceof BaseBean;
+
             // 是否设置访问拦截名单
-            private boolean notSet = config instanceof FilterPath;
+            private boolean notSet = isBase && config instanceof FilterPath;
 
             @Override
             public void doSomething() {
                 // 解析JSON文件
-                JSONObject root = JSONObject.parseObject(FileUtil.readString(jsonFile, charset));
+                JSONObject root = JSON.parseObject(FileUtil.readString(jsonFile, charset));
                 // 属性复制
                 BeanUtil.copyProperties(root.toJavaObject(config.getClass()), config);
+                if (isBase) {
+                    // 对NULL进行默认赋值（需实现nulls2Default方法）
+                    ((BaseBean) config).nulls2Default();
+                }
                 // 解析BootSurface配置
                 if (root.containsKey(StringConsts.BOOT)) {
                     BootConfig.setConfig(root.getObject(StringConsts.BOOT, BootConfigProperties.class));

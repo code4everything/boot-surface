@@ -7,7 +7,7 @@ import java.io.Serializable;
  *
  * @author pantao
  * @since 2019/5/10
- **/
+ */
 public interface BaseDomain extends BaseBean, Serializable {
 
     /**

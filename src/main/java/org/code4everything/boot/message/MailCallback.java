@@ -5,7 +5,7 @@ import javax.mail.MessagingException;
 /**
  * @author pantao
  * @since 2019/3/22
- **/
+ */
 public interface MailCallback {
 
     /**

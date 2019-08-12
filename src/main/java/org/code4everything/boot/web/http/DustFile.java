@@ -11,7 +11,7 @@ import java.util.Objects;
  *
  * @author pantao
  * @since 2018/11/2
- **/
+ */
 public class DustFile implements BaseBean {
 
     /**

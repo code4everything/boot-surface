@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
  *
  * @author pantao
  * @since 2019/3/25
- **/
+ */
 public class ExceptionFactory {
 
     /**

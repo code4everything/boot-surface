@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 /**
  * @author pantao
  * @since 2019/4/16
- **/
+ */
 @Configuration
 @EnableConfigurationProperties(BootConfigProperties.class)
 public class BootConfiguration {

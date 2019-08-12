@@ -20,7 +20,7 @@ import java.util.Objects;
  *
  * @author pantao
  * @since 2018/11/2
- **/
+ */
 public class BaseController {
 
     private static final int DEFAULT_ERROR_CODE = BootConfig.DEFAULT_ERROR_CODE;

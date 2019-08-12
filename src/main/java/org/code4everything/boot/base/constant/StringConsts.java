@@ -5,7 +5,7 @@ package org.code4everything.boot.base.constant;
  *
  * @author pantao
  * @since 2018/10/31
- **/
+ */
 public final class StringConsts {
 
     public static final String TOKEN = "token";

@@ -23,7 +23,7 @@ import java.util.*;
  *
  * @author pantao
  * @since 2019/5/16
- **/
+ */
 public final class RestUtils {
 
     private static final String HTTP_PROTOCOL_HEAD = "http";
