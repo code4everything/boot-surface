@@ -111,24 +111,24 @@ public final class RedisTemplateUtils {
         if (Validator.isNotEmpty(hostName)) {
             // 设置主机地址
             configuration.setHostName(hostName);
-            message.append(sep).append(" host -> ").append(hostName);
+            message.append(sep).append("host -> ").append(hostName);
             sep = ", ";
         }
         if (ObjectUtil.isNotNull(port)) {
             // 设置端口
             configuration.setPort(port);
-            message.append(sep).append(" port -> ").append(port);
+            message.append(sep).append("port -> ").append(port);
             sep = ", ";
         }
         if (ObjectUtil.isNotNull(database)) {
             // 设置要连接的数据库
             configuration.setDatabase(database);
-            message.append(sep).append(" database -> ").append(database);
+            message.append(sep).append("database -> ").append(database);
         }
         // 生成连接工厂
         redisConnectionFactory = new JedisConnectionFactory(configuration);
         if (BootConfig.isDebug() && message.length() != 0) {
-            LOGGER.info("connect to redis server by {}", message);
+            LOGGER.info("connected to redis server by {}", message);
         }
     }
 
@@ -163,7 +163,7 @@ public final class RedisTemplateUtils {
         RedisTemplate<K, V> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(getRedisConnectionFactory());
         if (ObjectUtil.isNotNull(keyType)) {
-            // 选择键序列化的方式
+            // 选择键的序列化方式
             if (keyType == String.class || ClassUtil.isBasicType(keyType)) {
                 // 使用String序列化
                 redisTemplate.setKeySerializer(new StringRedisSerializer());
@@ -173,8 +173,14 @@ public final class RedisTemplateUtils {
             }
         }
         if (ObjectUtil.isNotNull(valueType)) {
-            // 对值进行FastJson序列化
-            redisTemplate.setValueSerializer(new FastJsonRedisSerializer<>(valueType));
+            // 选择值的序列化方式
+            if (valueType == String.class || ClassUtil.isBasicType(valueType)) {
+                // 使用String序列化
+                redisTemplate.setValueSerializer(new StringRedisSerializer());
+            } else {
+                // 使用FastJson序列化
+                redisTemplate.setValueSerializer(new FastJsonRedisSerializer<>(valueType));
+            }
         }
         return redisTemplate;
     }

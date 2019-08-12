@@ -269,10 +269,7 @@ public class BaseController {
      * @since 1.0.4
      */
     public <T> Response<T> successResult(String okMsg, T data, boolean sealed) {
-        if (sealed) {
-            BootConfig.getFieldEncoder().encodeField(data);
-        }
-        return printAndReturn(new Response<>(okMsg, data));
+        return printAndReturn(new Response<>(okMsg, data), sealed);
     }
 
     /**
@@ -637,5 +634,19 @@ public class BaseController {
      */
     public <T> Response<T> printAndReturn(Response<T> response) {
         return response.debug(request);
+    }
+
+    /**
+     * 输出日志信息
+     *
+     * @param response {@link Response}
+     * @param <T> 数据类型
+     *
+     * @return {@link Response}
+     *
+     * @since 1.1.6
+     */
+    public <T> Response<T> printAndReturn(Response<T> response, boolean sealed) {
+        return sealed ? response.debug(request).encode() : response.debug(request);
     }
 }
