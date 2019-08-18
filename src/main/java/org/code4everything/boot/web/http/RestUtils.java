@@ -35,19 +35,13 @@ public final class RestUtils {
     private RestUtils() {}
 
     /**
-     * 设置默认服务器
+     * 获取默认的RestTemplate
      *
-     * @param restServer 服务器地址
+     * @return {@link RestTemplate}
      *
-     * @since 1.1.2
+     * @since 1.1.6
      */
-    public static void setRestServer(String restServer) {
-        if (StrUtil.isNotEmpty(restServer)) {
-            RestUtils.restServer = restServer;
-        }
-    }
-
-    private static void checkRestTemplate() {
+    public static RestTemplate getRest() {
         if (Objects.isNull(rest)) {
             synchronized (RestUtils.class) {
                 if (Objects.isNull(rest)) {
@@ -75,6 +69,20 @@ public final class RestUtils {
                     rest.getMessageConverters().add(converter);
                 }
             }
+        }
+        return rest;
+    }
+
+    /**
+     * 设置默认服务器
+     *
+     * @param restServer 服务器地址
+     *
+     * @since 1.1.2
+     */
+    public static void setRestServer(String restServer) {
+        if (StrUtil.isNotEmpty(restServer)) {
+            RestUtils.restServer = restServer;
         }
     }
 
@@ -139,8 +147,7 @@ public final class RestUtils {
      */
     public static <T> ResponseEntity<T> postForEntity(String url, Object body, Class<T> responseType,
                                                       Object... params) {
-        checkRestTemplate();
-        return rest.postForEntity(formatUrl(url, params), body, responseType);
+        return getRest().postForEntity(formatUrl(url, params), body, responseType);
     }
 
     /**
@@ -172,8 +179,7 @@ public final class RestUtils {
      * @since 1.1.2
      */
     public static <T> T postForObject(String url, Object body, Class<T> responseType, Object... params) {
-        checkRestTemplate();
-        return rest.postForObject(formatUrl(url, params), body, responseType);
+        return getRest().postForObject(formatUrl(url, params), body, responseType);
     }
 
     /**
@@ -233,8 +239,7 @@ public final class RestUtils {
      * @since 1.1.2
      */
     public static <T> ResponseEntity<T> getForEntity(String url, Class<T> responseType, Object... params) {
-        checkRestTemplate();
-        return rest.getForEntity(formatUrl(url, params), responseType);
+        return getRest().getForEntity(formatUrl(url, params), responseType);
     }
 
     /**
@@ -264,8 +269,7 @@ public final class RestUtils {
      * @since 1.1.2
      */
     public static <T> T getForObject(String url, Class<T> responseType, Object... params) {
-        checkRestTemplate();
-        return rest.getForObject(formatUrl(url, params), responseType);
+        return getRest().getForObject(formatUrl(url, params), responseType);
     }
 
     /**
@@ -311,8 +315,7 @@ public final class RestUtils {
      * @since 1.1.2
      */
     public static <T> T patchForObject(String url, Object body, Class<T> responseType, Object... params) {
-        checkRestTemplate();
-        return rest.patchForObject(formatUrl(url, params), body, responseType);
+        return getRest().patchForObject(formatUrl(url, params), body, responseType);
     }
 
     /**
@@ -463,24 +466,11 @@ public final class RestUtils {
      * @since 1.1.2
      */
     public static void addMessageConverters(HttpMessageConverter<?>... converters) {
-        checkRestTemplate();
         if (ArrayUtil.isNotEmpty(converters)) {
             for (HttpMessageConverter<?> converter : converters) {
-                rest.getMessageConverters().add(converter);
+                getRest().getMessageConverters().add(converter);
             }
         }
-    }
-
-    /**
-     * 获取 {@link RestTemplate}
-     *
-     * @return {@link RestTemplate}
-     *
-     * @since 1.1.2
-     */
-    public static RestTemplate getTemplate() {
-        checkRestTemplate();
-        return rest;
     }
 
     /**
@@ -492,7 +482,7 @@ public final class RestUtils {
      *
      * @since 1.1.2
      */
-    public static RestTemplate newTemplate(HttpMessageConverter<?>... converters) {
+    public static RestTemplate newRest(HttpMessageConverter<?>... converters) {
         RestTemplate template = new RestTemplate();
         if (ArrayUtil.isNotEmpty(converters)) {
             for (HttpMessageConverter<?> converter : converters) {
