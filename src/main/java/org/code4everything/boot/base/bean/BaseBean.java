@@ -17,6 +17,13 @@ import java.util.Objects;
 public interface BaseBean {
 
     /**
+     * 初始化对象，调用者需重写此方法并手动调用
+     *
+     * @since 1.1.6
+     */
+    default void init() {}
+
+    /**
      * 将空指针的属性设为默认值
      *
      * @since 1.1.6
@@ -83,7 +90,7 @@ public interface BaseBean {
         Field[] fields = ReflectUtil.getFields(this.getClass());
         for (Field field : fields) {
             if (ObjectUtil.isNotNull(field) && Objects.isNull(ReflectUtil.getFieldValue(this, field))) {
-                throw new NullPointerException("the value of field '" + field.getName() + "' at class '" + this.getClass().getName() + "' must not be null");
+                throw new NullPointerException("the value of field '" + field.getName() + "' in class '" + this.getClass().getName() + "' must not be null");
             }
         }
     }
@@ -99,7 +106,7 @@ public interface BaseBean {
      * @since 1.0.6
      */
     default <T> T copyInto(T target) {
-        Objects.requireNonNull(target, "param must not be null");
+        Objects.requireNonNull(target, "target must not be null");
         BeanUtil.copyProperties(this, target);
         return target;
     }
