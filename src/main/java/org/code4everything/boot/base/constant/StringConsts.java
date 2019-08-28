@@ -22,7 +22,7 @@ public final class StringConsts {
 
     private StringConsts() {}
 
-    public final class DateFormat {
+    public static final class DateFormat {
 
         public static final String DATE_TIME_MILLIS = "yyyy-MM-dd HH:mm:ss.SSS";
 
@@ -39,7 +39,7 @@ public final class StringConsts {
         private DateFormat() {}
     }
 
-    public final class Sign {
+    public static final class Sign {
 
         public static final String ZERO = "0";
 

@@ -2,6 +2,10 @@ package org.code4everything.boot.base;
 
 import cn.hutool.core.date.DateUtil;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 
 /**
@@ -53,6 +57,36 @@ public final class DateUtils {
     private static Date endOfThisYearCopier = new Date(0);
 
     private DateUtils() {}
+
+    /**
+     * 日期互转
+     *
+     * @param localDate {@link LocalDate}
+     *
+     * @return {@link Date}
+     *
+     * @since 1.1.6
+     */
+    public static Date toDate(LocalDate localDate) {
+        ZoneId zone = ZoneId.systemDefault();
+        Instant instant = localDate.atStartOfDay().atZone(zone).toInstant();
+        return Date.from(instant);
+    }
+
+    /**
+     * 日期互转
+     *
+     * @param date {@link Date}
+     *
+     * @return {@link LocalDate}
+     *
+     * @since 1.1.6
+     */
+    public static LocalDate toLocalDate(Date date) {
+        Instant instant = date.toInstant();
+        ZoneId zone = ZoneId.systemDefault();
+        return LocalDateTime.ofInstant(instant, zone).toLocalDate();
+    }
 
     /**
      * 获取本年的开始时间点
