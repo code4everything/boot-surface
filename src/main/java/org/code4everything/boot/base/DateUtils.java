@@ -2,7 +2,6 @@ package org.code4everything.boot.base;
 
 import cn.hutool.core.date.DateUtil;
 
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -68,9 +67,20 @@ public final class DateUtils {
      * @since 1.1.6
      */
     public static Date toDate(LocalDate localDate) {
-        ZoneId zone = ZoneId.systemDefault();
-        Instant instant = localDate.atStartOfDay().atZone(zone).toInstant();
-        return Date.from(instant);
+        return toDate(localDate.atStartOfDay());
+    }
+
+    /**
+     * 日期互转
+     *
+     * @param localDateTime {@link LocalDateTime}
+     *
+     * @return {@link Date}
+     *
+     * @since 1.1.6
+     */
+    public static Date toDate(LocalDateTime localDateTime) {
+        return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
     }
 
     /**
@@ -78,15 +88,15 @@ public final class DateUtils {
      *
      * @param date {@link Date}
      *
-     * @return {@link LocalDate}
+     * @return {@link LocalDateTime}
      *
      * @since 1.1.6
      */
-    public static LocalDate toLocalDate(Date date) {
-        Instant instant = date.toInstant();
-        ZoneId zone = ZoneId.systemDefault();
-        return LocalDateTime.ofInstant(instant, zone).toLocalDate();
+    public static LocalDateTime toLocalDateTime(Date date) {
+        return LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
     }
+
+    // ------------------------------------------------分割线------------------------------------------------------------
 
     /**
      * 获取本年的开始时间点
