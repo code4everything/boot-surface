@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
 import com.alibaba.fastjson.JSON;
+import org.code4everything.boot.config.BootConfig;
 
 import java.lang.reflect.Field;
 import java.util.Objects;
@@ -15,6 +16,15 @@ import java.util.Objects;
  * @since 2019/1/11
  */
 public interface BaseBean {
+
+    /**
+     * 加密对象字段
+     *
+     * @since 1.1.6
+     */
+    default void encode() {
+        BootConfig.getFieldEncoder().encodeField(this);
+    }
 
     /**
      * 初始化对象，调用者需重写此方法并手动调用
