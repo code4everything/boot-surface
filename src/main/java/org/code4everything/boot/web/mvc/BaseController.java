@@ -640,6 +640,7 @@ public class BaseController {
      * 输出日志信息
      *
      * @param response {@link Response}
+     * @param sealed 是否加密字段
      * @param <T> 数据类型
      *
      * @return {@link Response}
