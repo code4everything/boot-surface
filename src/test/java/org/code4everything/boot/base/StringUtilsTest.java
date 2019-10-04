@@ -24,8 +24,8 @@ public class StringUtilsTest {
     @Test
     public void testTrim() {
         String str = "0001001110011000";
-        assert StringUtils.trim(str, "0").equals(StringUtils.trim(str, '0', 3));
-        assert StringUtils.trimStart(str, "0").equals(StringUtils.trim(str, '0', 2));
-        assert StringUtils.trimEnd(str, "0").equals(StringUtils.trim(str, '0', 1));
+        assert StringUtils.trim(str, "0").equals(StringUtils.trim(str, '0', StringUtils.BOTH_TRIM));
+        assert StringUtils.trimStart(str, "0").equals(StringUtils.trim(str, '0', StringUtils.PREFIX_TRIM));
+        assert StringUtils.trimEnd(str, "0").equals(StringUtils.trim(str, '0', StringUtils.SUFFIX_TRIM));
     }
 }

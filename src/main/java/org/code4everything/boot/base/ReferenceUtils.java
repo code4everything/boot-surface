@@ -9,7 +9,7 @@ import java.util.Objects;
  * @author pantao
  * @since 2019/6/26
  */
-public class ReferenceUtils {
+public final class ReferenceUtils {
 
     private ReferenceUtils() {}
 

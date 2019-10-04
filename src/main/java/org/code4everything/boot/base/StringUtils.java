@@ -8,7 +8,13 @@ import cn.hutool.core.util.StrUtil;
  * @author pantao
  * @since 2019/8/21
  */
-public class StringUtils {
+public final class StringUtils {
+
+    public static final int SUFFIX_TRIM = 1;
+
+    public static final int PREFIX_TRIM = 2;
+
+    public static final int BOTH_TRIM = PREFIX_TRIM + SUFFIX_TRIM;
 
     private StringUtils() {}
 
