@@ -1,5 +1,7 @@
 package org.code4everything.boot.web.cors;
 
+import cn.hutool.core.util.BooleanUtil;
+import cn.hutool.core.util.ObjectUtil;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -55,7 +57,15 @@ public final class CorsUtils {
         corsConfiguration.setAllowedHeaders(corsLane.getHeaders());
         corsConfiguration.setAllowedMethods(corsLane.getMethods());
         corsConfiguration.setAllowCredentials(corsLane.getCredential());
+
+        if (ObjectUtil.isNotNull(corsLane.getMaxAge())) {
+            corsConfiguration.setMaxAge(corsLane.getMaxAge());
+        }
         source.registerCorsConfiguration(corsLane.getPath(), corsConfiguration);
+
+        if (BooleanUtil.isTrue(corsLane.getAutoCors())) {
+            return new AutomatedCorsFilter(source, corsLane.getMaxAge());
+        }
         return new CorsFilter(source);
     }
 }

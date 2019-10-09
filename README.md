@@ -33,7 +33,7 @@ Boot Surface主要是一个依赖于Spring框架的Web开发工具类，旨在�
 </dependency>
 ```
 
-> 为了方便打包，项目已发布到了`Maven`中央仓库
+> 或者下载源代码，然后运行`mvn install`安装至本地仓库
 
 ## 使用手册
 

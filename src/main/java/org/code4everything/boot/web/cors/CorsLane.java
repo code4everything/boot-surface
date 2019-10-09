@@ -52,6 +52,20 @@ public class CorsLane implements BaseBean, Serializable {
     private Boolean credential;
 
     /**
+     * 浏览器缓存预检命令OPTIONS的时长，单位秒
+     *
+     * @since 1.1.7
+     */
+    private Long maxAge;
+
+    /**
+     * 自动跨域
+     *
+     * @since 1.1.7
+     */
+    private Boolean autoCors;
+
+    /**
      * 创建 {@link CorsLane}
      *
      * @return {@link CorsLane}
@@ -229,8 +243,26 @@ public class CorsLane implements BaseBean, Serializable {
         return this;
     }
 
+    public Long getMaxAge() {
+        return maxAge;
+    }
+
+    public CorsLane setMaxAge(Long maxAge) {
+        this.maxAge = maxAge;
+        return this;
+    }
+
+    public Boolean getAutoCors() {
+        return autoCors;
+    }
+
+    public CorsLane setAutoCors(Boolean autoCors) {
+        this.autoCors = autoCors;
+        return this;
+    }
+
     @Override
     public String toString() {
-        return "CorsLane{" + "path='" + path + '\'' + ", origins=" + origins + ", headers=" + headers + ", methods=" + methods + ", credential=" + credential + '}';
+        return "CorsLane{" + "path='" + path + '\'' + ", origins=" + origins + ", headers=" + headers + ", methods=" + methods + ", credential=" + credential + ", maxAge=" + maxAge + ", autoCors=" + autoCors + '}';
     }
 }
