@@ -38,7 +38,7 @@
         <slf4j.version>2.0.0-alpha0</slf4j.version>
         <!--Optional Dependency-->
         <javax.servlet.version>4.0.1</javax.servlet.version>
-        <spring.version>5.1.6.RELEASE</spring.version>
+        <spring.version>5.2.3.RELEASE</spring.version>
         <aspectj.version>1.9.2</aspectj.version>
         <spring.redis.version>2.1.6.RELEASE</spring.redis.version>
         <redis.version>2.9.0</redis.version>
